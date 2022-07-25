@@ -22,7 +22,6 @@ const Modal = styled.div`
   overflow: hidden;
   position: fixed;
   text-align: center;
-  z-index: 9999;
   background-color: var(--color-2);
 `
 
