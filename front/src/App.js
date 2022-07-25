@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from  "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
@@ -7,12 +7,11 @@ import MyPage from "./pages/MyPage";
 import UserListPage from "./pages/UserListPage";
 import Header from "./components/Header";
 
-
 import React from "react";
 import logo from "./logo.svg";
-import { Counter } from "./ccomponents/Counter";
+import { Counter } from "./components/example/Counter";
 import "./App.css";
-import './color.css';
+import "./color.css";
 
 function App() {
     return (
@@ -20,12 +19,12 @@ function App() {
             <Router>
                 <Header />
                 <Routes>
-                <Route exact path="/" element={<MainPage />} />
-                <Route exact path="/signup" element={<SignUpPage />} />
-                <Route exact path="/signin" element={<SignInPage />} />
-                <Route exact path="/signout" element={<SignOutPage />} />
-                <Route exact path="/mypage" element={<MyPage />} />
-                <Route exact path="/userlist" element={<UserListPage />} />
+                    <Route exact path="/" element={<MainPage />} />
+                    <Route exact path="/signup" element={<SignUpPage />} />
+                    <Route exact path="/signin" element={<SignInPage />} />
+                    <Route exact path="/signout" element={<SignOutPage />} />
+                    <Route exact path="/mypage" element={<MyPage />} />
+                    <Route exact path="/userlist" element={<UserListPage />} />
                 </Routes>
             </Router>
             <header className="App-header">
