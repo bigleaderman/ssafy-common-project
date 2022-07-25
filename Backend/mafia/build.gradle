@@ -29,6 +29,8 @@ dependencies {
 //	implementation 'io.openvidu:openvidu-java-client'
 //	implementation 'io.openvidu:openvidu-parent'
 
+	compileOnly 'org.projectlombok:lombok'
+
 }
 
 tasks.named('test') {
