@@ -6,7 +6,6 @@ const Container = styled.section`
   display: flex;
   flex-direction: column;
   text-align: center;
-  height: 100vh;
 `
 
 const Button = styled.button`
