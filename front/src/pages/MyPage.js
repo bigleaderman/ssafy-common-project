@@ -1,10 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from 'styled-components';
 import { Container, Button } from '../style.js';
 
 
 const MyPage = (props) => {
+  const [user, setUser] = useState(null);
+
+  const confirmPassword = () => {
+    setUser(true);
+  };
   return (
+    !user ? 
+    <Container>
+      <Content>
+        <span>비밀번호를 입력해주세요</span>
+      </Content>
+      <Content>
+        <input type="password"></input>
+      </Content>
+      <Content>
+        <Button onClick={confirmPassword}>확인</Button>
+        <Button>취소</Button>
+      </Content>
+    </Container>
+  :
     <Container>
       <span>MyPage</span>
       <Content>

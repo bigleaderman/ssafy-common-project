@@ -16,7 +16,6 @@ import './color.css';
 
 
 function App() {
-
     return (
         <div className="App">
             <Router>
@@ -31,8 +30,6 @@ function App() {
                 </Routes>
                 <Footer />
             </Router>
-
-            
         </div>
     );
 }
