@@ -1,12 +1,31 @@
+import { BrowserRouter as Router, Routes, Route } from  "react-router-dom";
+import MainPage from "./pages/MainPage";
+import SignUpPage from "./pages/SignUpPage";
+import SignInPage from "./pages/SignInPage";
+import SignOutPage from "./pages/SignOutPage";
+import MyPage from "./pages/MyPage";
+import Header from "./components/Header";
+
+
 import React from "react";
 import logo from "./logo.svg";
-import { Counter } from "./ccomponents/Counter";
+// import { Counter } from "./ccomponents/Counter";
 import "./App.css";
 import './color.css';
 
 function App() {
     return (
         <div className="App">
+            <Router>
+                <Header />
+                <Routes>
+                <Route exact path="/" element={<MainPage />} />
+                <Route exact path="/signup" element={<SignUpPage />} />
+                <Route exact path="/signin" element={<SignInPage />} />
+                <Route exact path="/signout" element={<SignOutPage />} />
+                <Route exact path="/mypage" element={<MyPage />} />
+                </Routes>
+            </Router>
             <header className="App-header">
                 <img src={logo} className="App-logo" alt="logo" />
                 <Counter />

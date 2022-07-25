@@ -7,17 +7,17 @@ import { Button } from '../style.js';
 const Header = (props) => {
   const navigate = useNavigate()
 
-  const goHome = () => {
+  const goMainPage = () => {
     navigate("/")
   };
-  const goRegisterPage = () => {
-    navigate("/register")
+  const goSignUpPage = () => {
+    navigate("/signup")
   };
-  const goLoginPage = () => {
-    navigate("/login")
+  const goSignInPage = () => {
+    navigate("/signin")
   };
-  const goLogoutPage = () => {
-    navigate("/logout")
+  const goSignOutPage = () => {
+    navigate("/signout")
   };
   const goMyPage = () => {
     navigate("/mypage")
@@ -28,16 +28,16 @@ const Header = (props) => {
 
   return (
     <Container>
-      <Logo onClick={goHome}>
+      <Logo onClick={goMainPage}>
         <img src="logo.svg" alt="logo" />
         <p>모두의 마피아</p>
       </Logo>
       <Menu>
-        <Button variant="contained" color="primary" onClick={goRegisterPage}>회원가입</Button>
-        <Button variant="contained" color="primary" onClick={goLoginPage}>로그인</Button>
-        <Button variant="contained" color="primary" onClick={goLogoutPage}>로그아웃</Button>
-        <Button variant="contained" color="primary" onClick={goMyPage}>마이페이지</Button>
-        <Button variant="contained" color="primary" onClick={goAdminPage}>유저 관리</Button>
+        <Button onClick={goSignUpPage}>회원가입</Button>
+        <Button onClick={goSignInPage}>로그인</Button>
+        <Button onClick={goSignOutPage}>로그아웃</Button>
+        <Button onClick={goMyPage}>마이페이지</Button>
+        <Button>유저 관리</Button>
       </Menu>
     </Container>
   );
