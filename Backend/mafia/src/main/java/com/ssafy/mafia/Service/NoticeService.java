@@ -1,6 +1,7 @@
 package com.ssafy.mafia.Service;
 
 import com.ssafy.mafia.Entity.NoticeBoard;
+import com.ssafy.mafia.Model.NoticeDto;
 import com.ssafy.mafia.Repository.NoticeBoardRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,25 @@ public class NoticeService {
     }
 
     // 글 작성
-    public NoticeBoard writeNotice(NoticeBoard noticeBoard) {
-        return noticeBoardRepo.createNotice(noticeBoard);
+    @Transactional
+    public NoticeBoard writeNotice(NoticeDto noticeDto) {
+        return noticeBoardRepo.createNotice(noticeDto);
     }
+    // 글 수정
+    @Transactional
+    public NoticeBoard updateNotice(int noticeSeq, NoticeDto noticeDto) {
+        return noticeBoardRepo.updateNotice(noticeSeq, noticeDto);
+    }
+
+    //글 삭제
+    @Transactional
+    public void deleteNotice(int noticeSeq) {
+        noticeBoardRepo.deleteNotice(noticeSeq);
+    }
+
+    // 글 제목으로 검색
+    public List<NoticeBoard> noticeByTitle(String title) {
+        return noticeBoardRepo.findByTitle(title);
+    }
+
 }
