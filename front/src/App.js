@@ -2,6 +2,7 @@ import React from "react";
 import logo from "./logo.svg";
 import { Counter } from "./ccomponents/Counter";
 import "./App.css";
+import './color.css';
 
 function App() {
     return (
