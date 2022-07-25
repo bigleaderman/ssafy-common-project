@@ -27,7 +27,7 @@ const Header = (props) => {
   };
 
   return (
-    <Container>
+    <HeaderContainer>
       <Logo onClick={goMainPage}>
         <img src="logo.svg" alt="logo" />
         <p>모두의 마피아</p>
@@ -39,9 +39,23 @@ const Header = (props) => {
         <Button onClick={goMyPage}>마이페이지</Button>
         <Button onClick={goUserListPage}>유저 관리</Button>
       </Menu>
-    </Container>
+    </HeaderContainer>
   );
 };
+
+const HeaderContainer = styled.header`
+    position: sticky;
+    top: 0px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    align-items: center;
+    padding: 0 40px 0 40px;
+    height: 60px;
+    background-color: var(--color-5);
+    justify-content: space-between;
+`
 
 const Logo = styled.a`
     display: flex;
@@ -57,19 +71,6 @@ const Logo = styled.a`
         font-size: 20px;
     }
 `;
-
-const Container = styled.section`
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    text-align: center;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 0 40px 0 40px;
-    height: 60px;
-    background-color: var(--color-5);
-`
 
 const Menu = styled.section`
     overflow: hidden;

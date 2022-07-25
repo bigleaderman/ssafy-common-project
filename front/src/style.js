@@ -6,6 +6,9 @@ const Container = styled.section`
   display: flex;
   flex-direction: column;
   text-align: center;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
 `
 
 const Button = styled.button`

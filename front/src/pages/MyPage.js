@@ -1,14 +1,21 @@
 import React, { useState } from "react";
 import styled from 'styled-components';
 import { Container, Button } from '../style.js';
+import ConfirmWithdrawalModal from "../components/ConfirmWithdrawalModal";
 
 
 const MyPage = (props) => {
   const [user, setUser] = useState(null);
+  const [openModal, setOpenModal] = useState(false);
 
   const confirmPassword = () => {
     setUser(true);
   };
+
+  const confirmWithdrawal = () => {
+    setOpenModal(true);
+  };
+
   return (
     !user ? 
     <Container>
@@ -62,9 +69,10 @@ const MyPage = (props) => {
       <span>당신은 Red User입니다. 매너있는 게임 플레이를 해주세요.</span>
       <span>
         <Button>정보 수정</Button>
-        <Button>탈퇴하기</Button>
+        <Button onClick={confirmWithdrawal}>탈퇴하기</Button>
         <Button>뒤로 가기</Button>
       </span>
+      {openModal ? <ConfirmWithdrawalModal setOpenModal={setOpenModal} /> : null}
     </Container>
   );
 };
