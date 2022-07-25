@@ -22,8 +22,8 @@ const Header = (props) => {
   const goMyPage = () => {
     navigate("/mypage")
   };
-  const goAdminPage = () => {
-    navigate("/admin")
+  const goUserListPage = () => {
+    navigate("/userlist")
   };
 
   return (
@@ -37,7 +37,7 @@ const Header = (props) => {
         <Button onClick={goSignInPage}>로그인</Button>
         <Button onClick={goSignOutPage}>로그아웃</Button>
         <Button onClick={goMyPage}>마이페이지</Button>
-        <Button>유저 관리</Button>
+        <Button onClick={goUserListPage}>유저 관리</Button>
       </Menu>
     </Container>
   );

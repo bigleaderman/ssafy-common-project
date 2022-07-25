@@ -4,12 +4,13 @@ import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
 import SignOutPage from "./pages/SignOutPage";
 import MyPage from "./pages/MyPage";
+import UserListPage from "./pages/UserListPage";
 import Header from "./components/Header";
 
 
 import React from "react";
 import logo from "./logo.svg";
-// import { Counter } from "./ccomponents/Counter";
+import { Counter } from "./ccomponents/Counter";
 import "./App.css";
 import './color.css';
 
@@ -24,6 +25,7 @@ function App() {
                 <Route exact path="/signin" element={<SignInPage />} />
                 <Route exact path="/signout" element={<SignOutPage />} />
                 <Route exact path="/mypage" element={<MyPage />} />
+                <Route exact path="/userlist" element={<UserListPage />} />
                 </Routes>
             </Router>
             <header className="App-header">
