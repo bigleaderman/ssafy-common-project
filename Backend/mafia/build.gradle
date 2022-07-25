@@ -30,6 +30,8 @@ dependencies {
 //	implementation 'io.openvidu:openvidu-parent'
 
 	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
 
 }
 

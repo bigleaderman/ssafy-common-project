@@ -1,7 +1,9 @@
 package com.ssafy.mafia.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -9,9 +11,10 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Setter
+@ToString
 public class NoticeBoard {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int noticeSeq;
 
     @Column(nullable = false, length = 255)
@@ -22,7 +25,12 @@ public class NoticeBoard {
 
     private Timestamp createdAt;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_seq")
+    @JsonIgnore
     private User userSeq;
+
+
+
 }
