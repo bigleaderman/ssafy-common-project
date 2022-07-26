@@ -7,6 +7,7 @@ import MyPage from "./pages/MyPage";
 import UserListPage from "./pages/UserListPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import VideoRoomPage from "./pages/VideoRoomPage";
 
 import React from "react";
 import logo from "./logo.svg";
@@ -21,7 +22,7 @@ function App() {
             <Router>
                 <Header />
                 <Routes>
-                    <Route exact path="/" element={<MainPage />} />
+                    <Route exact path="/" element={<VideoRoomPage />} />  {/* 테스트 위해 MainPage 대신 VideoRoomPage로 연결 */}
                     <Route exact path="/signup" element={<SignUpPage />} />
                     <Route exact path="/signin" element={<SignInPage />} />
                     <Route exact path="/signout" element={<SignOutPage />} />

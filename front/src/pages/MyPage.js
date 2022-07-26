@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Container, Button } from '../style.js';
 import ConfirmWithdrawalModal from "../components/ConfirmWithdrawalModal";
