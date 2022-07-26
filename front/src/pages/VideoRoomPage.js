@@ -2,6 +2,8 @@ import axios from 'axios';
 import { OpenVidu } from 'openvidu-browser';
 import React, { Component } from 'react';
 import UserVideo from '../components/UserVideo';
+import OpenViduVideoComponent from '../components/OvVideo';
+import styled from 'styled-components';
 
 const OPENVIDU_SERVER_URL = 'https://' + window.location.hostname + ':4443';
 const OPENVIDU_SERVER_SECRET = 'MY_SECRET';
@@ -17,6 +19,8 @@ export default class TestPage extends Component {
             mainStreamManager: undefined,
             publisher: undefined,
             subscribers: [],
+            audio: false,
+            video: false,
         };
 
         this.joinSession = this.joinSession.bind(this);
@@ -26,6 +30,9 @@ export default class TestPage extends Component {
         this.handleChangeUserName = this.handleChangeUserName.bind(this);
         this.handleMainVideoStream = this.handleMainVideoStream.bind(this);
         this.onbeforeunload = this.onbeforeunload.bind(this);
+        this.toggleAudio = this.toggleAudio.bind(this);
+        this.toggleVideo = this.toggleVideo.bind(this);
+        this.getNickname = this.getNickname.bind(this);
     }
 
     componentDidMount() {
@@ -136,9 +143,9 @@ export default class TestPage extends Component {
                             let publisher = this.OV.initPublisher(undefined, {
                                 audioSource: undefined, // The source of audio. If undefined default microphone
                                 videoSource: videoDevices[0].deviceId, // The source of video. If undefined default webcam
-                                publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-                                publishVideo: true, // Whether you want to start publishing with your video enabled or not
-                                resolution: '640x480', // The resolution of your video
+                                publishAudio: false, // Whether you want to start publishing with your audio unmuted or not
+                                publishVideo: false, // Whether you want to start publishing with your video enabled or not
+                                resolution: '640x400', // The resolution of your video
                                 frameRate: 30, // The frame rate of your video
                                 insertMode: 'APPEND', // How the video is inserted in the target element 'video-container'
                                 mirror: false, // Whether to mirror your local video or not
@@ -220,6 +227,21 @@ export default class TestPage extends Component {
           }
     }
 
+    getNickname() {
+        return JSON.parse(this.mainStreamManager.stream.connection.data).clientData;
+    }
+
+    toggleAudio() {
+        this.setState({ audio: !this.state.audio });
+        this.state.mainStreamManager.publishAudio(!this.state.audio);
+    };
+    
+    toggleVideo() {
+        this.setState({ video: !this.state.video });
+        this.state.mainStreamManager.publishVideo(!this.state.video);
+    };
+    
+
     render() {
         const mySessionId = this.state.mySessionId;
         const myUserName = this.state.myUserName;
@@ -289,8 +311,30 @@ export default class TestPage extends Component {
                         <div id="video-container" className="col-md-6">
                             {this.state.publisher !== undefined ? (
                                 <div className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(this.state.publisher)}>
-                                    <UserVideo
-                                        streamManager={this.state.publisher} />
+                                    <Video>
+                                        <OpenViduVideoComponent streamManager={this.state.publisher} />
+                                        <Screen>
+                                            <Header>
+                                                <NameTag>
+                                                    {this.state.myUserName}
+                                                </NameTag>
+                                            </Header>
+                                            <Footer>
+                                                <VideoIcon onClick={this.toggleVideo}>
+                                                    <img
+                                                        src={ this.state.video ? "video-solid.svg" : "video-slash-solid.svg" }
+                                                        id={ this.state.video ? "video-active" : "video" }
+                                                    ></img>
+                                                </VideoIcon>
+                                                <MicrophoneIcon onClick={this.toggleAudio}>
+                                                    <img
+                                                        src={ this.state.audio ? "microphone-solid.svg" : "microphone-slash-solid.svg" }
+                                                        id={ this.state.audio ? "microphone-active" : "microphone" }
+                                                    ></img>
+                                                </MicrophoneIcon>
+                                            </Footer>
+                                        </Screen>
+                                    </Video>
                                 </div>
                             ) : null}
                             {this.state.subscribers.map((sub, i) => (
@@ -380,3 +424,87 @@ export default class TestPage extends Component {
         });
     }
 }
+
+
+const Video = styled.div`
+    width: 320px;
+    height: 200px;
+    background-color: var(--color-5);
+    border-radius: 12px;
+    position: relative;
+
+    video {
+        width: 320px;
+        height: 200px;
+        border-radius: 12px;
+    }
+`
+
+const Screen = styled.div`
+    position: absolute;
+    top: 0px;
+    width: 320px;
+    height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+`
+
+const VideoIcon = styled.div`
+    width: 40px;
+    height: 40px;
+    background-color: var(--color-2);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+
+    img {
+        height: 20px;
+        user-select: none;
+    }
+
+    #video {
+        filter: brightness(0) saturate(100%) invert(13%) sepia(36%) saturate(6892%) hue-rotate(356deg) brightness(102%) contrast(109%);
+    }
+`
+
+const MicrophoneIcon = styled.div`
+    width: 40px;
+    height: 40px;
+    background-color: var(--color-2);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-left: 6px;
+
+    img {
+        height: 20px;
+        user-select: none;
+    }
+
+    #microphone {
+        filter: brightness(0) saturate(100%) invert(13%) sepia(36%) saturate(6892%) hue-rotate(356deg) brightness(102%) contrast(109%);
+    }
+`
+
+const Footer = styled.div`
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    padding: 10px;
+`
+
+const Header = styled.div`
+    display: flex;
+`
+
+const NameTag = styled.div`
+    background-color: var(--color-2);
+    border-radius: 12px 6px 6px 6px;
+    padding: 2px 10px;
+    font-size: 14px;
+`

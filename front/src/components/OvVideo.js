@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
+
 export default class OpenViduVideoComponent extends Component {
 
     constructor(props) {
@@ -42,7 +43,7 @@ export default class OpenViduVideoComponent extends Component {
         return (
             <Video>
                 <video autoPlay={true} ref={this.videoRef} />
-                <Screen>
+                {/* <Screen>
                     <Header>
                         <NameTag>
                             {this.getNickname()}
@@ -62,7 +63,7 @@ export default class OpenViduVideoComponent extends Component {
                             ></img>
                         </MicrophoneIcon>
                     </Footer>
-                </Screen>
+                </Screen> */}
             </Video>
         );
     }
@@ -82,71 +83,71 @@ const Video = styled.div`
     }
 `
 
-const Screen = styled.div`
-    position: absolute;
-    top: 0px;
-    width: 320px;
-    height: 200px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-`
+// const Screen = styled.div`
+//     position: absolute;
+//     top: 0px;
+//     width: 320px;
+//     height: 200px;
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: space-between;
+// `
 
-const VideoIcon = styled.div`
-    width: 40px;
-    height: 40px;
-    background-color: var(--color-2);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
+// const VideoIcon = styled.div`
+//     width: 40px;
+//     height: 40px;
+//     background-color: var(--color-2);
+//     border-radius: 50%;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     cursor: pointer;
 
-    img {
-        height: 20px;
-        user-select: none;
-    }
+//     img {
+//         height: 20px;
+//         user-select: none;
+//     }
 
-    #video {
-        filter: brightness(0) saturate(100%) invert(13%) sepia(36%) saturate(6892%) hue-rotate(356deg) brightness(102%) contrast(109%);
-    }
-`
+//     #video {
+//         filter: brightness(0) saturate(100%) invert(13%) sepia(36%) saturate(6892%) hue-rotate(356deg) brightness(102%) contrast(109%);
+//     }
+// `
 
-const MicrophoneIcon = styled.div`
-    width: 40px;
-    height: 40px;
-    background-color: var(--color-2);
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    margin-left: 6px;
+// const MicrophoneIcon = styled.div`
+//     width: 40px;
+//     height: 40px;
+//     background-color: var(--color-2);
+//     border-radius: 50%;
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     cursor: pointer;
+//     margin-left: 6px;
 
-    img {
-        height: 20px;
-        user-select: none;
-    }
+//     img {
+//         height: 20px;
+//         user-select: none;
+//     }
 
-    #microphone {
-        filter: brightness(0) saturate(100%) invert(13%) sepia(36%) saturate(6892%) hue-rotate(356deg) brightness(102%) contrast(109%);
-    }
-`
+//     #microphone {
+//         filter: brightness(0) saturate(100%) invert(13%) sepia(36%) saturate(6892%) hue-rotate(356deg) brightness(102%) contrast(109%);
+//     }
+// `
 
-const Footer = styled.div`
-    display: flex;
-    justify-content: end;
-    align-items: end;
-    padding: 10px;
-`
+// const Footer = styled.div`
+//     display: flex;
+//     justify-content: end;
+//     align-items: end;
+//     padding: 10px;
+// `
 
-const Header = styled.div`
-    display: flex;
-`
+// const Header = styled.div`
+//     display: flex;
+// `
 
-const NameTag = styled.div`
-    background-color: var(--color-2);
-    border-radius: 12px 6px 6px 6px;
-    padding: 2px 10px;
-    font-size: 14px;
-`
+// const NameTag = styled.div`
+//     background-color: var(--color-2);
+//     border-radius: 12px 6px 6px 6px;
+//     padding: 2px 10px;
+//     font-size: 14px;
+// `
