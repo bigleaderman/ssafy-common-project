@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import net.bytebuddy.asm.Advice;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
+@ToString
 public class User {
     public User (){}
 
@@ -47,6 +49,7 @@ public class User {
 
     @Column(nullable = true)
     private String nickname;
+
 
     private boolean isRedUser;
 
