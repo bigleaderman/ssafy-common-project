@@ -20,8 +20,9 @@ public class UserController {
 
     @PostMapping("/join")
     public ResponseEntity<?> joinUser(@RequestBody UserDto userDto){
-        System.out.println(userDto.toString());
+
         User user = new User(userDto.getEmail(), userDto.getPassword());
+        service.join(user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 }
