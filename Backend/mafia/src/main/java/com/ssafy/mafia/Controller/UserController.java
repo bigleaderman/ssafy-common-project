@@ -25,4 +25,11 @@ public class UserController {
         service.join(user);
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
+
+//    @PostMapping("/login")
+//    public ResponseEntity<?> login(@RequestBody UserDto userDto) {
+//        service.login(userDto);
+//        return new ResponseEntity<Void>(HttpStatus.OK);
+//    }
+
 }

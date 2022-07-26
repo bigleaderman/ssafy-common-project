@@ -2,6 +2,7 @@ package com.ssafy.mafia.Service;
 
 
 import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Model.UserDto;
 import com.ssafy.mafia.Repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,4 +19,9 @@ public class UserService {
     public void join(User user){
         userRepo.save(user);
     }
+
+//    @Transactional
+//    public void login(UserDto userDto) {
+//        userRepo.login(userDto);
+//    }
 }
