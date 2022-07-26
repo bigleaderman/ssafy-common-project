@@ -1,7 +1,9 @@
 package com.ssafy.mafia.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -9,6 +11,7 @@ import java.sql.Timestamp;
 @Entity
 @Getter
 @Setter
+//@ToString
 public class Friend {
     @Id
     @GeneratedValue
@@ -19,11 +22,11 @@ public class Friend {
     private Timestamp applyAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "userSeq", name = "friendFrom", nullable = false)
+    @PrimaryKeyJoinColumn(referencedColumnName = "userSeq", name = "friendFrom")
     private User friendFrom;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "userSeq", name = "friendTo", nullable = false)
+    @PrimaryKeyJoinColumn(referencedColumnName = "userSeq", name = "friendTo")
     private User friendTo;
 
 

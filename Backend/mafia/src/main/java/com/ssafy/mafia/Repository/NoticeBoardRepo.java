@@ -56,8 +56,8 @@ public class NoticeBoardRepo {
 
     //글 제목으로 검색
     public List<NoticeBoard> findByTitle(String title) {
-        return em.createQuery("select N from NoticeBoard N where N.title like :title ", NoticeBoard.class)
-                .setParameter("title", "%" + title +"%")
+        return em.createQuery("select N from NoticeBoard N where N.title like :title", NoticeBoard.class)
+                .setParameter("title", "%" + title + "%")
                 .getResultList();
     }
 
