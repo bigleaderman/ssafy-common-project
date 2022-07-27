@@ -7,13 +7,16 @@ import MyPage from "./pages/MyPage";
 import UserListPage from "./pages/UserListPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-import VideoRoomPage from "./pages/VideoRoomPage";
-import GameRoomPage from "./pages/GameRoomPage";
 import NoticeListPage from "./pages/NoticeListPage";
+import CreateNoticePage from "./pages/CreateNoticePage";
+import UpdateNoticePage from "./pages/UpdateNoticePage";
+import NoticeDetailPage from "./pages/NoticeDetailPage";
+import PageNotFoundPage from "./pages/PageNotFoundPage";
+
+// import VideoRoomPage from "./pages/VideoRoomPage";
+// import GameRoomPage from "./pages/GameRoomPage";
 
 import React from "react";
-import logo from "./logo.svg";
-import { Counter } from "./ccomponents/Counter";
 import "./App.css";
 import './color.css';
 
@@ -24,12 +27,17 @@ function App() {
             <Router>
                 <Header />
                 <Routes>
-                    <Route exact path="/" element={<NoticeListPage />} />  {/* 테스트 위해 MainPage 대신 VideoRoomPage로 연결 */}
+                    <Route exact path="/" element={<MainPage />} />  {/* 테스트 위해 MainPage 대신 VideoRoomPage로 연결 */}
                     <Route exact path="/signup" element={<SignUpPage />} />
                     <Route exact path="/signin" element={<SignInPage />} />
                     <Route exact path="/signout" element={<SignOutPage />} />
                     <Route exact path="/mypage" element={<MyPage />} />
                     <Route exact path="/userlist" element={<UserListPage />} />
+                    <Route exact path="/board" element={<NoticeListPage />} />
+                    <Route exact path="/board/create" element={<CreateNoticePage />} />
+                    <Route exact path="/board/:noticeId" element={<NoticeDetailPage />} />
+                    <Route exact path="/board/:noticeId/update" element={<UpdateNoticePage />} />
+                    <Route exact path="/*" element={<PageNotFoundPage />} />
                 </Routes>
                 <Footer />
             </Router>

@@ -6,7 +6,7 @@ import { styleButton } from '../style.js';
 import { Button } from '@mui/material';
 
 const Header = (props) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const goMainPage = () => {
     navigate("/")
@@ -34,11 +34,11 @@ const Header = (props) => {
         <p>모두의 마피아</p>
       </Logo>
       <Menu>
-        <Button style={styleButton} variant="outlined" onClick={goSignUpPage}>회원가입</Button>
-        <Button style={styleButton} variant="outlined" onClick={goSignInPage}>로그인</Button>
-        <Button style={styleButton} variant="outlined" onClick={goSignOutPage}>로그아웃</Button>
-        <Button style={styleButton} variant="outlined" onClick={goMyPage}>마이페이지</Button>
-        <Button style={styleButton} variant="outlined" onClick={goUserListPage}>유저 관리</Button>
+        <Button style={styleButton} onClick={goSignUpPage}>회원가입</Button>
+        <Button style={styleButton} onClick={goSignInPage}>로그인</Button>
+        <Button style={styleButton} onClick={goSignOutPage}>로그아웃</Button>
+        <Button style={styleButton} onClick={goMyPage}>마이페이지</Button>
+        <Button style={styleButton} onClick={goUserListPage}>유저 관리</Button>
       </Menu>
     </HeaderContainer>
   );

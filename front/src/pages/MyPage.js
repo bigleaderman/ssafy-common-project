@@ -36,8 +36,8 @@ const MyPage = (props) => {
         <TextField type="password" id="outlined-basic" placeholder="비밀번호" variant="outlined" />
       </Content>
       <Content>
-        <Button style={styleButton} variant="outlined" onClick={confirmPassword}>확인</Button>
-        <Button style={styleButton} variant="outlined">취소</Button>
+        <Button style={styleButton} onClick={confirmPassword}>확인</Button>
+        <Button style={styleButton}>취소</Button>
       </Content>
     </Container>
   :
@@ -46,12 +46,12 @@ const MyPage = (props) => {
       <Content>
         <label htmlFor="email">이메일</label>
         <TextField style={styleTextField} id="email" name="email" placeholder="이메일" variant="outlined"></TextField>
-        <Button style={styleButton} variant="outlined" onClick={() => {setValue('이메일'); handleModalOpen();}}>중복검사</Button>
+        <Button style={styleButton} onClick={() => {setValue('이메일'); handleModalOpen();}}>중복검사</Button>
       </Content>
       <Content>
         <label htmlFor="nickname">닉네임</label>
         <TextField style={styleTextField} id="nickname" name="nickname" placeholder="닉네임" variant="outlined"></TextField>
-        <Button style={styleButton} variant="outlined" onClick={() => {setValue('닉네임'); handleModalOpen();}}>중복검사</Button>
+        <Button style={styleButton} onClick={() => {setValue('닉네임'); handleModalOpen();}}>중복검사</Button>
       </Content>
       <Content>
         <label htmlFor="password">비밀번호</label>
@@ -78,9 +78,9 @@ const MyPage = (props) => {
       </Content>
       <span>당신은 Red User입니다. 매너있는 게임 플레이를 해주세요.</span>
       <span>
-        <Button style={styleButton} variant="outlined">정보 수정</Button>
-        <Button style={styleButton} variant="outlined" onClick={handleWithdrawalOpen}>탈퇴하기</Button>
-        <Button style={styleButton} variant="outlined">뒤로 가기</Button>
+        <Button style={styleButton}>정보 수정</Button>
+        <Button style={styleButton} onClick={handleWithdrawalOpen}>탈퇴하기</Button>
+        <Button style={styleButton}>뒤로 가기</Button>
       </span>
 
       <Modal
@@ -90,8 +90,8 @@ const MyPage = (props) => {
       >
         <Box sx={{ ...styleModal, width: 400 }}>
           <h2 id="withdrawal-modal-title">정말 탈퇴하시겠습니까?</h2>
-          <Button style={styleButton} variant="outlined" onClick={handleWithdrawalClose}>탈퇴</Button>
-          <Button style={styleButton} variant="outlined" onClick={handleWithdrawalClose}>취소</Button>
+          <Button style={styleButton} onClick={handleWithdrawalClose}>탈퇴</Button>
+          <Button style={styleButton} onClick={handleWithdrawalClose}>취소</Button>
         </Box>
       </Modal>
 
@@ -102,7 +102,7 @@ const MyPage = (props) => {
       >
         <Box sx={{ ...styleModal, width: 400 }}>
           <h2 id="modal-title">이미 사용 중인 {value}입니다.</h2>
-          <Button style={styleButton} variant="outlined" onClick={handleModalClose}>확인</Button>
+          <Button style={styleButton} onClick={handleModalClose}>확인</Button>
         </Box>
       </Modal>
 

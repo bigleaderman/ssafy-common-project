@@ -31,6 +31,7 @@ const styleButton = {
   fontSize: '16px',
   marginLeft: '10px',
   cursor: 'pointer',
+  textDecoration: 'none',
 }
 
 const styleModal = {
