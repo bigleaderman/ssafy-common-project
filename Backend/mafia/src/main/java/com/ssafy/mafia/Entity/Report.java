@@ -1,5 +1,6 @@
 package com.ssafy.mafia.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,11 +21,13 @@ public class Report {
 
     private Timestamp reportAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JsonBackReference
     @PrimaryKeyJoinColumn(referencedColumnName = "userSeq", name = "reporting")
     private User reporting;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JsonBackReference
     @PrimaryKeyJoinColumn(referencedColumnName = "userSeq", name = "reported")
     private User reported;
 }

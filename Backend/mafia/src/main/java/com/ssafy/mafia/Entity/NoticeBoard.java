@@ -1,5 +1,6 @@
 package com.ssafy.mafia.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,8 +27,9 @@ public class NoticeBoard {
     private Timestamp createdAt;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_seq")
+    @JsonBackReference
     @JsonIgnore
     private User userSeq;
 
