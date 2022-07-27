@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Setter
 public class GameInfo {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int gameInfoSeq;
 
     private int mafiaNum;

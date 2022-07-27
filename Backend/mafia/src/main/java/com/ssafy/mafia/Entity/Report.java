@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 public class Report {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int reportSeq;
 
     @Enumerated(EnumType.STRING)
@@ -21,10 +21,10 @@ public class Report {
     private Timestamp reportAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "userSeq", name = "reporting", nullable = false)
+    @PrimaryKeyJoinColumn(referencedColumnName = "userSeq", name = "reporting")
     private User reporting;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "userSeq", name = "reported", nullable = false)
+    @PrimaryKeyJoinColumn(referencedColumnName = "userSeq", name = "reported")
     private User reported;
 }

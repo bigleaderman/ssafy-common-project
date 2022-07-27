@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 public class RoomUser {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int seq;
 
     @JsonIgnore

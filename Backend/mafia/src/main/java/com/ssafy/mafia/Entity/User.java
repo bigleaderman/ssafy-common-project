@@ -36,7 +36,7 @@ public class User {
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userSeq;
 
     @Column(nullable = false, length = 255)
