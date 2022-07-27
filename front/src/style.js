@@ -22,6 +22,17 @@ const Button = styled.button`
   cursor: pointer;
 `
 
+const styleButton = {
+  border: 'solid 2px var(--color-2)',
+  color: 'var(--color-2)',
+  backgroundColor: 'var(--color-5)',
+  padding: '2px 10px',
+  borderRadius: '6px',
+  fontSize: '16px',
+  marginLeft: '10px',
+  cursor: 'pointer',
+}
+
 const styleModal = {
   position: 'absolute',
   top: '50%',
@@ -34,4 +45,10 @@ const styleModal = {
   p: 4,
 };
 
-export { Container, Button, styleModal };
+const styleTextField = {
+  color: 'var(--color-2)',
+  borderRadius: '6px',
+  fontSize: '16px',
+};
+
+export { Container, Button, styleModal, styleButton, styleTextField };

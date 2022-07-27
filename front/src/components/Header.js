@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import '../style.js';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../style.js';
+import { styleButton } from '../style.js';
+import { Button } from '@mui/material';
 
 const Header = (props) => {
   const navigate = useNavigate()
@@ -33,11 +34,11 @@ const Header = (props) => {
         <p>모두의 마피아</p>
       </Logo>
       <Menu>
-        <Button onClick={goSignUpPage}>회원가입</Button>
-        <Button onClick={goSignInPage}>로그인</Button>
-        <Button onClick={goSignOutPage}>로그아웃</Button>
-        <Button onClick={goMyPage}>마이페이지</Button>
-        <Button onClick={goUserListPage}>유저 관리</Button>
+        <Button style={styleButton} variant="outlined" onClick={goSignUpPage}>회원가입</Button>
+        <Button style={styleButton} variant="outlined" onClick={goSignInPage}>로그인</Button>
+        <Button style={styleButton} variant="outlined" onClick={goSignOutPage}>로그아웃</Button>
+        <Button style={styleButton} variant="outlined" onClick={goMyPage}>마이페이지</Button>
+        <Button style={styleButton} variant="outlined" onClick={goUserListPage}>유저 관리</Button>
       </Menu>
     </HeaderContainer>
   );

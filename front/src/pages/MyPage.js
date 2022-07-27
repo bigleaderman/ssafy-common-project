@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Container, Button, styleModal } from '../style.js';
-import { Modal, Box } from '@mui/material';
+import { Container, styleButton, styleModal, styleTextField } from '../style.js';
+import { Modal, Box, Button, TextField } from '@mui/material';
 
 
 const MyPage = (props) => {
@@ -32,36 +32,34 @@ const MyPage = (props) => {
     !user ? 
     <Container>
       <Content>
-        <span>비밀번호를 입력해주세요</span>
+        <h3>비밀번호를 입력해주세요.</h3>
+        <TextField type="password" id="outlined-basic" placeholder="비밀번호" variant="outlined" />
       </Content>
       <Content>
-        <input type="password"></input>
-      </Content>
-      <Content>
-        <Button onClick={confirmPassword}>확인</Button>
-        <Button>취소</Button>
+        <Button style={styleButton} variant="outlined" onClick={confirmPassword}>확인</Button>
+        <Button style={styleButton} variant="outlined">취소</Button>
       </Content>
     </Container>
   :
     <Container>
-      <span>MyPage</span>
+      <h2>MyPage</h2>
       <Content>
         <label htmlFor="email">이메일</label>
-        <input id="email" name="email"></input>
-        <Button onClick={() => {setValue('이메일'); handleModalOpen();}}>중복검사</Button>
+        <TextField style={styleTextField} id="email" name="email" placeholder="이메일" variant="outlined"></TextField>
+        <Button style={styleButton} variant="outlined" onClick={() => {setValue('이메일'); handleModalOpen();}}>중복검사</Button>
       </Content>
       <Content>
         <label htmlFor="nickname">닉네임</label>
-        <input id="nickname" name="nickname"></input>
-        <Button onClick={() => {setValue('닉네임'); handleModalOpen();}}>중복검사</Button>
+        <TextField style={styleTextField} id="nickname" name="nickname" placeholder="닉네임" variant="outlined"></TextField>
+        <Button style={styleButton} variant="outlined" onClick={() => {setValue('닉네임'); handleModalOpen();}}>중복검사</Button>
       </Content>
       <Content>
         <label htmlFor="password">비밀번호</label>
-        <input type="password" id="password" name="password"></input>
+        <TextField style={styleTextField} type="password" id="password" name="password" variant="outlined"></TextField>
       </Content>
       <Content>
         <label htmlFor="password-check">비밀번호 확인</label>
-        <input type="password" id="password-check" name="password-check"></input>
+        <TextField style={styleTextField} type="password" id="password-check" name="password-check" variant="outlined"></TextField>
       </Content>
       <Content>
         <label>가입일자 </label>
@@ -80,9 +78,9 @@ const MyPage = (props) => {
       </Content>
       <span>당신은 Red User입니다. 매너있는 게임 플레이를 해주세요.</span>
       <span>
-        <Button>정보 수정</Button>
-        <Button onClick={handleWithdrawalOpen}>탈퇴하기</Button>
-        <Button>뒤로 가기</Button>
+        <Button style={styleButton} variant="outlined">정보 수정</Button>
+        <Button style={styleButton} variant="outlined" onClick={handleWithdrawalOpen}>탈퇴하기</Button>
+        <Button style={styleButton} variant="outlined">뒤로 가기</Button>
       </span>
 
       <Modal
@@ -92,8 +90,8 @@ const MyPage = (props) => {
       >
         <Box sx={{ ...styleModal, width: 400 }}>
           <h2 id="withdrawal-modal-title">정말 탈퇴하시겠습니까?</h2>
-          <Button onClick={handleWithdrawalClose}>탈퇴</Button>
-          <Button onClick={handleWithdrawalClose}>취소</Button>
+          <Button style={styleButton} variant="outlined" onClick={handleWithdrawalClose}>탈퇴</Button>
+          <Button style={styleButton} variant="outlined" onClick={handleWithdrawalClose}>취소</Button>
         </Box>
       </Modal>
 
@@ -104,7 +102,7 @@ const MyPage = (props) => {
       >
         <Box sx={{ ...styleModal, width: 400 }}>
           <h2 id="modal-title">이미 사용 중인 {value}입니다.</h2>
-          <Button onClick={handleModalClose}>확인</Button>
+          <Button style={styleButton} variant="outlined" onClick={handleModalClose}>확인</Button>
         </Box>
       </Modal>
 

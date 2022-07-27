@@ -1,6 +1,7 @@
 import React from "react";
 import styled from 'styled-components';
-import { Container, Button } from '../style.js';
+import { Container, styleButton } from '../style.js';
+import { Button } from '@mui/material';
 
 
 const ChangePasswordPage = (props) => {
@@ -10,7 +11,7 @@ const ChangePasswordPage = (props) => {
         <Content>
             <label for="email">이메일</label>
             <input id="email" name="email"></input>
-            <Button>이메일 인증</Button>
+            <Button style={styleButton} variant="outlined">이메일 인증</Button>
         </Content>
     </Container>
   );
