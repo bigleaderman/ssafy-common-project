@@ -50,7 +50,7 @@ public class RoomService {
         OpenViduRole role = OpenViduRole.PUBLISHER;
 
         // server
-        String serverData = "{\"serverData\": \"" + httpSession.getAttribute("loggedUser") + "\"}";
+        String serverData = "{\"serverData\": \"" + "test" + "\"}";
         ConnectionProperties connectionProperties = null;
 
         try {
