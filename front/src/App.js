@@ -23,7 +23,7 @@ function App() {
             <Router>
                 <Header />
                 <Routes>
-                    <Route exact path="/" element={<GameRoomPage />} />  {/* 테스트 위해 MainPage 대신 VideoRoomPage로 연결 */}
+                    <Route exact path="/" element={<MainPage />} />  {/* 테스트 위해 MainPage 대신 VideoRoomPage로 연결 */}
                     <Route exact path="/signup" element={<SignUpPage />} />
                     <Route exact path="/signin" element={<SignInPage />} />
                     <Route exact path="/signout" element={<SignOutPage />} />

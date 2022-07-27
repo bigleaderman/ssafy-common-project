@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Container, Button } from '../style.js';
-import ConfirmWithdrawalModal from "../components/ConfirmWithdrawalModal";
+import { Container, Button, styleModal } from '../style.js';
+import { Modal, Box } from '@mui/material';
 
 
 const MyPage = (props) => {
   const [user, setUser] = useState(null);
-  const [openModal, setOpenModal] = useState(false);
+  const [open, setOpen] = React.useState(false);
 
   const confirmPassword = () => {
     setUser(true);
   };
 
-  const confirmWithdrawal = () => {
-    setOpenModal(true);
+  const handleOpen = () => {
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
   };
 
   return (
@@ -69,10 +72,23 @@ const MyPage = (props) => {
       <span>당신은 Red User입니다. 매너있는 게임 플레이를 해주세요.</span>
       <span>
         <Button>정보 수정</Button>
-        <Button onClick={confirmWithdrawal}>탈퇴하기</Button>
+        <Button onClick={handleOpen}>탈퇴하기</Button>
         <Button>뒤로 가기</Button>
       </span>
-      {openModal ? <ConfirmWithdrawalModal setOpenModal={setOpenModal} /> : null}
+      {/* {openModal ? <ConfirmWithdrawalModal setOpenModal={setOpenModal} /> : null} */}
+
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="parent-modal-title"
+        aria-describedby="parent-modal-description"
+      >
+        <Box sx={{ ...styleModal, width: 400 }}>
+          <h2 id="parent-modal-title">정말 탈퇴하시겠습니까?</h2>
+          <Button onClick={handleClose}>탈퇴</Button>
+          <Button onClick={handleClose}>취소</Button>
+        </Box>
+      </Modal>
     </Container>
   );
 };
