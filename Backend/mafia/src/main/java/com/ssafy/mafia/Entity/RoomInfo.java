@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 public class RoomInfo {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int roomSeq;
 
     @Column(nullable = false, length = 255)
