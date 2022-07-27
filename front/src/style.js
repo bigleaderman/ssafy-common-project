@@ -51,4 +51,10 @@ const styleTextField = {
   fontSize: '16px',
 };
 
-export { Container, Button, styleModal, styleButton, styleTextField };
+const styleTableContainer = {
+  padding: '20px',
+  width: '80%',
+}
+
+export { Container, Button };
+export { styleModal, styleButton, styleTextField, styleTableContainer };
