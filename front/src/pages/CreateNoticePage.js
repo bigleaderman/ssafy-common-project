@@ -1,6 +1,5 @@
 import React from "react";
-import { Container } from '../style.js';
-
+import { Container } from "../style.js";
 
 const CreateNoticePage = (props) => {
   return (
