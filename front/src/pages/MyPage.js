@@ -6,17 +6,26 @@ import { Modal, Box } from '@mui/material';
 
 const MyPage = (props) => {
   const [user, setUser] = useState(null);
-  const [open, setOpen] = React.useState(false);
+  const [withdrawalOpen, setWithdrawalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [value, setValue] = useState('');
 
   const confirmPassword = () => {
     setUser(true);
   };
 
-  const handleOpen = () => {
-    setOpen(true);
+  const handleWithdrawalOpen = () => {
+    setWithdrawalOpen(true);
   };
-  const handleClose = () => {
-    setOpen(false);
+  const handleWithdrawalClose = () => {
+    setWithdrawalOpen(false);
+  };
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+  const handleModalClose = () => {
+    setModalOpen(false);
   };
 
   return (
@@ -37,21 +46,21 @@ const MyPage = (props) => {
     <Container>
       <span>MyPage</span>
       <Content>
-        <label for="email">이메일</label>
+        <label htmlFor="email">이메일</label>
         <input id="email" name="email"></input>
-        <Button>중복검사</Button>
+        <Button onClick={() => {setValue('이메일'); handleModalOpen();}}>중복검사</Button>
       </Content>
       <Content>
-        <label for="nickname">닉네임</label>
+        <label htmlFor="nickname">닉네임</label>
         <input id="nickname" name="nickname"></input>
-        <Button>중복검사</Button>
+        <Button onClick={() => {setValue('닉네임'); handleModalOpen();}}>중복검사</Button>
       </Content>
       <Content>
-        <label for="password">비밀번호</label>
+        <label htmlFor="password">비밀번호</label>
         <input type="password" id="password" name="password"></input>
       </Content>
       <Content>
-        <label for="password-check">비밀번호 확인</label>
+        <label htmlFor="password-check">비밀번호 확인</label>
         <input type="password" id="password-check" name="password-check"></input>
       </Content>
       <Content>
@@ -72,23 +81,33 @@ const MyPage = (props) => {
       <span>당신은 Red User입니다. 매너있는 게임 플레이를 해주세요.</span>
       <span>
         <Button>정보 수정</Button>
-        <Button onClick={handleOpen}>탈퇴하기</Button>
+        <Button onClick={handleWithdrawalOpen}>탈퇴하기</Button>
         <Button>뒤로 가기</Button>
       </span>
-      {/* {openModal ? <ConfirmWithdrawalModal setOpenModal={setOpenModal} /> : null} */}
 
       <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
+        open={withdrawalOpen}
+        onClose={handleWithdrawalClose}
+        aria-labelledby="withdrawal-modal-title"
       >
         <Box sx={{ ...styleModal, width: 400 }}>
-          <h2 id="parent-modal-title">정말 탈퇴하시겠습니까?</h2>
-          <Button onClick={handleClose}>탈퇴</Button>
-          <Button onClick={handleClose}>취소</Button>
+          <h2 id="withdrawal-modal-title">정말 탈퇴하시겠습니까?</h2>
+          <Button onClick={handleWithdrawalClose}>탈퇴</Button>
+          <Button onClick={handleWithdrawalClose}>취소</Button>
         </Box>
       </Modal>
+
+      <Modal
+        open={modalOpen}
+        onClose={handleModalClose}
+        aria-labelledby="modal-title"
+      >
+        <Box sx={{ ...styleModal, width: 400 }}>
+          <h2 id="modal-title">이미 사용 중인 {value}입니다.</h2>
+          <Button onClick={handleModalClose}>확인</Button>
+        </Box>
+      </Modal>
+
     </Container>
   );
 };
