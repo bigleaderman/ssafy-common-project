@@ -7,6 +7,8 @@ import MyPage from "./pages/MyPage";
 import UserListPage from "./pages/UserListPage";
 import Header from "./components/Header";
 
+import RoomListPage from './pages/RoomListPage';
+
 import React from "react";
 import logo from "./logo.svg";
 import { Counter } from "./components/example/Counter";
@@ -27,6 +29,7 @@ function App() {
                     <Route exact path="/userlist" element={<UserListPage />} />
                 </Routes>
             </Router>
+            <RoomListPage/>
             <header className="App-header">
                 <img src={logo} className="App-logo" alt="logo" />
                 <Counter />
