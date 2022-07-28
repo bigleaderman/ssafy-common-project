@@ -6,5 +6,4 @@ import lombok.Data;
 public class SettingsDto {
     private RoomInfoDto roomInfo;
     private GameInfoDto gameInfo;
-    private String token;
 }

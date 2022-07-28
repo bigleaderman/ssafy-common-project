@@ -5,11 +5,13 @@ import com.ssafy.mafia.Entity.RoomInfo;
 import com.ssafy.mafia.Model.GameInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
 
 @Repository
+@Transactional
 public class GameRepo {
 
     @Autowired
@@ -34,11 +36,22 @@ public class GameRepo {
     }
 
     // 게임 정보 조회
-    public GameInfo getGameInfo(RoomInfo roomInfo){
-        List<GameInfo> datas = em.createQuery("select g from GameInfo g where g.roomInfoSeq=:roomSeq", GameInfo.class)
-                .setParameter("roomSeq", roomInfo.getRoomSeq())
+    public GameInfo getGameInfo(int roomSeq){
+        // 방 정보 가져오기
+        RoomInfo roomInfo = em.find(RoomInfo.class, roomSeq);
+
+        // 방 정보로 게임 정보 불러오기
+        List<GameInfo> datas = em.createQuery("select g from GameInfo g where g.roomInfoSeq=:roomInfo", GameInfo.class)
+                .setParameter("roomInfo", roomInfo)
                 .getResultList();
+
         if(datas.size() == 0) return null;
         else return datas.get(0);
+    }
+
+    // 게임 정보 삭제
+    public void deleteGameInfo(int roomSeq){
+        GameInfo entity = getGameInfo(roomSeq);
+        em.remove(entity);
     }
 }

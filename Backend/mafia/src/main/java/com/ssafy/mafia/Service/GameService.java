@@ -39,15 +39,6 @@ public class GameService {
             Session session = this.openVidu.createSession();
             System.out.println(session.getSessionId());
             String token = session.createConnection(connectionProperties).getToken();
-
-            SettingsDto response = new SettingsDto();
-            RoomInfoDto roomInfo = new RoomInfoDto();
-            GameInfoDto gameInfo = new GameInfoDto();
-
-            response.setRoomInfo(roomInfo);
-            response.setGameInfo(gameInfo);
-            response.setToken(token);
-
             return token;
         }
         catch (Exception e){
