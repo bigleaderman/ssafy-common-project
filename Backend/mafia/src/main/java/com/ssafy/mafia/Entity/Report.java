@@ -1,5 +1,6 @@
 package com.ssafy.mafia.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +13,7 @@ import java.sql.Timestamp;
 public class Report {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int reportSeq;
 
     @Enumerated(EnumType.STRING)
@@ -20,11 +21,13 @@ public class Report {
 
     private Timestamp reportAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "userSeq", name = "reporting", nullable = false)
+    @ManyToOne
+    @JsonBackReference
+    @PrimaryKeyJoinColumn(referencedColumnName = "userSeq", name = "reporting")
     private User reporting;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "userSeq", name = "reported", nullable = false)
+    @ManyToOne
+    @JsonBackReference
+    @PrimaryKeyJoinColumn(referencedColumnName = "userSeq", name = "reported")
     private User reported;
 }

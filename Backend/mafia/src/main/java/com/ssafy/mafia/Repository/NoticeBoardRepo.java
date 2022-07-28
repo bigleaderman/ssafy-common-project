@@ -29,29 +29,38 @@ public class NoticeBoardRepo {
 
     // 글 작성
     public NoticeBoard createNotice(NoticeDto noticeDto){
-        NoticeBoard noticeBoard = new NoticeBoard();
-        noticeBoard.setTitle(noticeDto.getTitle());
-        noticeBoard.setContent(noticeDto.getContent());
-        noticeBoard.setCreatedAt(Timestamp.from(Instant.now()));
-        int userSeq = noticeDto.getUserSeq();
-        User writer = em.find(User.class,userSeq);
-        noticeBoard.setUserSeq(writer);
-        em.persist(noticeBoard);
-        return noticeBoard;
+        User user = em.find(User.class, noticeDto.getUserSeq());
+        if (user.isAdmin()){
+            NoticeBoard noticeBoard = new NoticeBoard();
+            noticeBoard.setTitle(noticeDto.getTitle());
+            noticeBoard.setContent(noticeDto.getContent());
+            noticeBoard.setCreatedAt(Timestamp.from(Instant.now()));
+            int userSeq = noticeDto.getUserSeq();
+            User writer = em.find(User.class,userSeq);
+            noticeBoard.setUserSeq(writer);
+            em.persist(noticeBoard);
+            return noticeBoard;
+        }
+        return null;
     }
     //글 수정
     public NoticeBoard updateNotice(int noticeSeq, NoticeDto noticeDto) {
-        NoticeBoard noticeBoard = em.find(NoticeBoard.class,noticeSeq);
-        noticeBoard.setTitle(noticeDto.getTitle());
-        noticeBoard.setContent(noticeDto.getContent());
-        em.merge(noticeBoard);
-        return noticeBoard;
+        User user = em.find(User.class, noticeDto.getUserSeq());
+        if (user.isAdmin()){
+            NoticeBoard noticeBoard = em.find(NoticeBoard.class,noticeSeq);
+            noticeBoard.setTitle(noticeDto.getTitle());
+            noticeBoard.setContent(noticeDto.getContent());
+            em.merge(noticeBoard);
+            return noticeBoard;
+        }
+        return null;
     }
 
     //글 삭제
     public void deleteNotice(int noticeSeq) {
         NoticeBoard noticeBoard = findByNo(noticeSeq);
         em.remove(noticeBoard);
+
     }
 
     //글 제목으로 검색

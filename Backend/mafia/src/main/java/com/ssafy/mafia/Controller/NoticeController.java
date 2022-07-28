@@ -43,20 +43,29 @@ public class NoticeController {
     }
 
 
-    //글 작성인데 유저가 admin인지 체크하는 부분 빠짐
+    //글 작성
     @PostMapping
     public ResponseEntity<?> saveNotice(@RequestBody NoticeDto request){
         NoticeBoard noticeBoard = noticeService.writeNotice(request);
-
-       return new ResponseEntity<NoticeBoard>(noticeBoard, HttpStatus.OK);
+        if (noticeBoard != null){
+            return new ResponseEntity<NoticeBoard>(noticeBoard, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<String>("관리자가 아닙니다",HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
-    // 글 수정인데 유저가 admin인지 체크하는 부분 빠짐
+    // 글 수정
     @PutMapping("/{noticeSeq}")
     public ResponseEntity<?> update(@PathVariable("noticeSeq") int noticeSeq,
                                     @RequestBody NoticeDto request){
         NoticeBoard noticeBoard = noticeService.updateNotice(noticeSeq, request);
-        return new ResponseEntity<NoticeBoard>(noticeBoard, HttpStatus.OK);
+        if (noticeBoard != null){
+            return new ResponseEntity<NoticeBoard>(noticeBoard, HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity<String>("관리자가 아닙니다",HttpStatus.NOT_ACCEPTABLE);
+        }
     }
 
     // 글제목으로 검색
