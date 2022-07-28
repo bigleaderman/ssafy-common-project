@@ -11,11 +11,6 @@ const UpdateNoticePage = (props) => {
   const [title, setTitle] = useState('제목');
   const [content, setContent] = useState('내용');
 
-  const resetForm = () => {
-    setTitle('제목');
-    setContent('내용');
-  }
-
   const goNoticeListPage = () => {
     navigate("/board");
   };

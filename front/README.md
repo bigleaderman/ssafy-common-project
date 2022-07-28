@@ -46,4 +46,6 @@
     - 비디오 캠
   - OvVideo.js
     - 비디오 캠 바디
+  - RoomList.js
+    - 대기방 목록
 

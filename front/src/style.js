@@ -57,5 +57,9 @@ const styleTableContainer = {
   width: '80%',
 }
 
+const stylePagination = {
+  backgroundColor: 'var(--color-2)',
+}
+
 export { Container, Button };
-export { styleModal, styleButton, styleTextField, styleTableContainer };
+export { styleModal, styleButton, styleTextField, styleTableContainer, stylePagination };
