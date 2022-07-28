@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 public class GameInfo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int gameInfoSeq;
@@ -29,6 +30,17 @@ public class GameInfo {
     private int day;
 
     private int night;
+
+    // default values
+    public GameInfo() {
+        mafiaNum = 1;
+        policeNum = 0;
+        doctorNum = 0;
+        voteTimeoutSec = 120;
+        talkTimeoutSec = 30;
+        day = 0;
+        night = 0;
+    }
 
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)

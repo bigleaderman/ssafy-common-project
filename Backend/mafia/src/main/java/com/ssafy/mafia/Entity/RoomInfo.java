@@ -22,9 +22,6 @@ public class RoomInfo {
     @Column(nullable = true, length = 1000)
     private String password;
 
-    @Column(columnDefinition = "TEXT")
-    private String session;
-
     private int capacity;
 
     @JsonIgnore
