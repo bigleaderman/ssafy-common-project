@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class RoomInfoDto {
 
+    public RoomInfoDto(){}
 
     public RoomInfoDto(int roomSeq, String hostUser, String title, int capacity) {
         this.roomSeq = roomSeq;
