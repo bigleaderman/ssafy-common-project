@@ -35,7 +35,7 @@ public class NoticeController {
         return new ResponseEntity<NoticeBoard>(noticeBoard ,HttpStatus.OK);
     }
 
-    //글삭제인데 유저가 admin인지 체크하는 부분 빠짐
+    //글삭제
     @DeleteMapping("/{noticeSeq}")
     public ResponseEntity<?> deleteNotice(@PathVariable("noticeSeq") int noticeSeq) {
         noticeService.deleteNotice(noticeSeq);
@@ -47,12 +47,7 @@ public class NoticeController {
     @PostMapping
     public ResponseEntity<?> saveNotice(@RequestBody NoticeDto request){
         NoticeBoard noticeBoard = noticeService.writeNotice(request);
-        if (noticeBoard != null){
-            return new ResponseEntity<NoticeBoard>(noticeBoard, HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<String>("관리자가 아닙니다",HttpStatus.NOT_ACCEPTABLE);
-        }
+        return new ResponseEntity<NoticeBoard>(noticeBoard, HttpStatus.OK);
     }
 
     // 글 수정
@@ -60,12 +55,7 @@ public class NoticeController {
     public ResponseEntity<?> update(@PathVariable("noticeSeq") int noticeSeq,
                                     @RequestBody NoticeDto request){
         NoticeBoard noticeBoard = noticeService.updateNotice(noticeSeq, request);
-        if (noticeBoard != null){
-            return new ResponseEntity<NoticeBoard>(noticeBoard, HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<String>("관리자가 아닙니다",HttpStatus.NOT_ACCEPTABLE);
-        }
+        return new ResponseEntity<NoticeBoard>(noticeBoard, HttpStatus.OK);
     }
 
     // 글제목으로 검색
