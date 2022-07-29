@@ -81,6 +81,8 @@ public class User implements UserDetails {
 
     private int rankPoint;
 
+    private int nowRoomSeq;
+
     @JsonIgnore
     @OneToMany(mappedBy = "userSeq")
     private List<NoticeBoard> noticeBoardList = new ArrayList<>();
@@ -105,9 +107,7 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "hostUser", fetch = FetchType.LAZY)
     private RoomInfo hostUser;
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private RoomUser user;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

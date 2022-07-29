@@ -7,6 +7,7 @@ import com.ssafy.mafia.Model.FriendResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -144,4 +145,19 @@ public class FriendRepo {
         }
         em.remove(friend);
     }
+
+    //친구 따라가기
+//    public void followFriend(String friendNickname, int userSeq){
+//        // 따라갈 친구
+//        TypedQuery<User> query = em.createQuery(
+//                "SELECT u FROM User u WHERE u.nickname = '" + friendNickname + "'", User.class);
+//        User friend = query.getSingleResult();
+//
+//        // 나
+//        User me = em.find(User.class, userSeq);
+//
+//        // 친구가 지금 있는 방
+//
+//
+//    }
 }
