@@ -1,5 +1,6 @@
 package com.ssafy.mafia.Controller;
 
+import com.ssafy.mafia.Model.InviteDto;
 import com.ssafy.mafia.Model.MessageDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -20,4 +21,11 @@ public class MessageController {
     public void roomChat(MessageDto message){
         template.convertAndSend("/sub/room/" + message.getRoomSeq(), message);
     }
+
+    @MessageMapping("/invite")
+    public void invitingFriend(InviteDto message){
+        template.convertAndSend("/sub/invite/" + message.getFriendSeq(), message);
+    }
+
+
 }

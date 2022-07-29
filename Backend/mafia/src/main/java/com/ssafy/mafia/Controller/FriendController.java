@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/friend")
+@RequestMapping("/user/friend")
 @RequiredArgsConstructor
 public class FriendController {
 
@@ -19,9 +19,11 @@ public class FriendController {
     //친구 신청
     @PostMapping("/request")
     public ResponseEntity<?> friendRequest(@RequestBody FriendDto friendDto){
-        if(friendService.friendRequest(friendDto)){
-        return new ResponseEntity<Void>(HttpStatus.OK);
-            }
+        try {
+            if(friendService.friendRequest(friendDto)){
+            return new ResponseEntity<Void>(HttpStatus.OK);
+                }
+        }catch (NullPointerException e){return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);}
         return new ResponseEntity<String>("이미 친구신청을 하였습니다.",HttpStatus.BAD_REQUEST);
     }
 
