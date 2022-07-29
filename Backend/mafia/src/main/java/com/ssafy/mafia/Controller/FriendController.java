@@ -42,26 +42,38 @@ public class FriendController {
     // 친구신청 수락
     @PutMapping("accept/{friendSeq}")
     public ResponseEntity<?> acceptFriend(@PathVariable("friendSeq") int friendSeq) {
-        if (friendService.beFriend(friendSeq)){
-            return new ResponseEntity<Void>(HttpStatus.OK);
-        }
-        else {
-            return new ResponseEntity<String>("이미 친구입니다.", HttpStatus.BAD_REQUEST);
+        try {
+            if (friendService.beFriend(friendSeq)){
+                return new ResponseEntity<Void>(HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<String>("이미 친구입니다.", HttpStatus.BAD_REQUEST);
+            }
+        }catch (Exception e){
+            return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
         }
     }
 
     //친구신청 거절
     @DeleteMapping("accept/refuse/{friendSeq}")
     public ResponseEntity<?> refuseFriend(@PathVariable("friendSeq") int friendSeq) {
-        friendService.refuseFriend(friendSeq);
-        return new ResponseEntity<String>("친구신청을 거절하였습니다", HttpStatus.OK);
+        try {
+            friendService.refuseFriend(friendSeq);
+            return new ResponseEntity<String>("친구신청을 거절하였습니다", HttpStatus.OK);
+        }catch (Exception e) {
+            return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
+        }
     }
 
     //친구삭제
     @DeleteMapping("remove/{friendSeq}")
     public ResponseEntity<?> removeFriend(@PathVariable("friendSeq") int friendSeq){
-        friendService.removeFriend(friendSeq);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        try {
+            friendService.removeFriend(friendSeq);
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
+        }
     }
 
     //친구 따라가기

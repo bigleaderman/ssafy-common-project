@@ -12,15 +12,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/report")
+@RequestMapping("/user/report")
 @RequiredArgsConstructor
 public class ReportController {
 
     private final ReportService reportService;
     @PostMapping
     public ResponseEntity<?> reportRequest(@RequestBody ReportDto reportDto){
-        reportService.report(reportDto);
-        return new ResponseEntity<Void>(HttpStatus.OK);
+        try {
+            reportService.report(reportDto);
+            return new ResponseEntity<Void>(HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
+        }
     }
 }
 
