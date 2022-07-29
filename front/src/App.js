@@ -19,7 +19,7 @@ import PageNotFoundPage from "./pages/PageNotFoundPage";
 // import VideoRoomPage from "./pages/VideoRoomPage";
 // import GameRoomPage from "./pages/GameRoomPage";
 
-import RoomListPage from "./pages/RoomListPage";
+// import RoomListPage from "./pages/RoomListPage";
 
 import React from "react";
 import "./App.css";
@@ -69,7 +69,6 @@ function App() {
                 </Routes>
                 <Footer />
             </Router>
-            <RoomListPage />
         </div>
     );
 }
