@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from  "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
@@ -20,7 +20,7 @@ import PageNotFoundPage from "./pages/PageNotFoundPage";
 
 import React from "react";
 import "./App.css";
-import './color.css';
+import "./color.css";
 
 
 function App() {
