@@ -5,9 +5,13 @@ import lombok.Data;
 @Data
 public class RoomInfoDto {
 
-    public RoomInfoDto(){}
+    public RoomInfoDto(){
+        hostUser = 1;
+        title = "title";
+        capacity = 6;
+    }
 
-    public RoomInfoDto(int roomSeq, String hostUser, String title, int capacity) {
+    public RoomInfoDto(int roomSeq, int hostUser, String title, int capacity) {
         this.roomSeq = roomSeq;
         this.hostUser = hostUser;
         this.title = title;
@@ -15,7 +19,7 @@ public class RoomInfoDto {
     }
 
     private int roomSeq;
-    private String hostUser;
+    private int hostUser;
     private String title;
     private int capacity;
 }
