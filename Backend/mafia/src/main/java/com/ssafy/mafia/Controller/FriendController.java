@@ -65,9 +65,11 @@ public class FriendController {
     }
 
     //친구 따라가기
-//    @PostMapping("/follow")
-//    public ResponseEntity<?> followFriend(@RequestBody FollowDto followDto){
-//
-//    }
+    @PostMapping("/follow")
+    public void followFriend(@RequestBody FollowDto followDto){
+        String friendNickname = followDto.getFriendNickname();
+        int userSeq = followDto.getUserSeq();
+        friendService.followFriend(friendNickname, userSeq);
+    }
 
 }
