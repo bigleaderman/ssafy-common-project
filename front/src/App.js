@@ -6,6 +6,7 @@ import SignOutPage from "./pages/SignOutPage";
 import RoomPage from "./pages/GatherRoomPage";
 import MyPage from "./pages/MyPage";
 import UserListPage from "./pages/UserListPage";
+import UserDetailPage from "./pages/UserDetailPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import NoticeListPage from "./pages/NoticeListPage";
@@ -40,31 +41,13 @@ function App() {
                     <Route exact path="/userlist" element={<UserListPage />} />
                     <Route exact path="/board" element={<NoticeListPage />} />
                     <Route exact path="/gatherroom" element={<RoomPage />} />
-                    <Route
-                        exact
-                        path="/board/create"
-                        element={<CreateNoticePage />}
-                    />
-                    <Route
-                        exact
-                        path="/board/:noticeId"
-                        element={<NoticeDetailPage />}
-                    />
-                    <Route
-                        exact
-                        path="/board/:noticeId/update"
-                        element={<UpdateNoticePage />}
-                    />
-                    <Route
-                        exact
-                        path="/findpassword"
-                        element={<FindPasswordPage />}
-                    />
-                    <Route
-                        exact
-                        path="/changepassword"
-                        element={<ChangePasswordPage />}
-                    />
+                    <Route exact path="/board/create" element={<CreateNoticePage />} />
+                    <Route exact path="/board/:noticeId" element={<NoticeDetailPage />} />
+                    <Route exact path="/board/:noticeId/update" element={<UpdateNoticePage />} />
+                    <Route exact path="/findpassword" element={<FindPasswordPage />} />
+                    <Route exact path="/changepassword" element={<ChangePasswordPage />} />
+                    <Route exact path="/users" element={<UserListPage />} />
+                    <Route exact path="/users/:userId" element={<UserDetailPage />} />
                     <Route exact path="/*" element={<PageNotFoundPage />} />
                 </Routes>
                 <Footer />
