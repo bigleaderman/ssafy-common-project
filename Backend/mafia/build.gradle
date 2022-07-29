@@ -20,9 +20,9 @@ dependencies {
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	// stomb socket
-	implementation 'org.webjars:sockjs-client'
-	implementation 'org.webjars:stomp-websocket'
+	 //stomb socket
+	implementation 'org.webjars:sockjs-client:1.1.2'
+	implementation 'org.webjars:stomp-websocket:2.3.3-1'
 
 	// data base connection
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -30,8 +30,9 @@ dependencies {
 
 
 	// spring security
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
-//	testImplementation 'org.springframework.security:spring-security-test'
+	// 버전 변경
+	implementation 'org.springframework.boot:spring-boot-starter-security:2.6.3'
+	implementation 'org.springframework.security:spring-security-config:5.6.1'
 
 
 	implementation group: 'io.openvidu', name: 'openvidu-java-client', version: '2.22.0'
@@ -40,7 +41,21 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 
+	// 여기부터 skeleton code에서 받아온 코드
 
+	//jwt 코드
+	implementation 'com.auth0:java-jwt:3.10.3'
+	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+
+
+	implementation("io.springfox:springfox-swagger2:3.0.0")
+	implementation("io.springfox:springfox-swagger-ui:3.0.0")
+
+	implementation "com.google.guava:guava:29.0-jre"
+	annotationProcessor("com.google.guava:guava:29.0-jre")
+
+	testImplementation "com.jayway.jsonpath:json-path:2.4.0"
+	implementation 'javax.validation:validation-api:2.0.1.Final'
 }
 
 tasks.named('test') {

@@ -1,12 +1,14 @@
 package com.ssafy.mafia.Entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import net.bytebuddy.asm.Advice;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -14,15 +16,19 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
 @Setter
-@ToString
-public class User {
-    public User (){}
+@Builder
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class User implements UserDetails {
 
     public User(String email, String password){
         this.email = email;
@@ -33,13 +39,12 @@ public class User {
         loseCount = 0;
         isLogin = false;
         reportedCount = 0;
-        createdAt = Timestamp.from(Instant.now());
         rankPoint = 0;
     }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int userSeq;
+    private int UserSeq;
 
     @Column(nullable = false, length = 255)
     private String email;
@@ -51,6 +56,15 @@ public class User {
 
     @Column(nullable = true)
     private String nickname;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
+
+    @CreatedDate
+    @Column(updatable = false)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy-MM-dd", timezone = "Asia/Seoul")
+    private LocalDateTime createdAt;
 
 
     private boolean isRedUser;
@@ -64,8 +78,6 @@ public class User {
     private boolean isLogin;
 
     private int reportedCount;
-
-    private Timestamp createdAt;
 
     private int rankPoint;
 
@@ -96,5 +108,37 @@ public class User {
     @JsonIgnore
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private RoomUser user;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 
 }
