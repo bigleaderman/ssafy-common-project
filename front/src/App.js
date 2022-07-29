@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from  "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import MainPage from "./pages/MainPage";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
@@ -11,7 +11,8 @@ import NoticeListPage from "./pages/NoticeListPage";
 import CreateNoticePage from "./pages/CreateNoticePage";
 import UpdateNoticePage from "./pages/UpdateNoticePage";
 import NoticeDetailPage from "./pages/NoticeDetailPage";
-import WelcomeMessagePage from "./pages/WelcomeMessagePage";
+import FindPasswordPage from "./pages/FindPasswordPage";
+import ChangePasswordPage from "./pages/ChangePasswordPage";
 import PageNotFoundPage from "./pages/PageNotFoundPage";
 
 // import VideoRoomPage from "./pages/VideoRoomPage";
@@ -19,7 +20,7 @@ import PageNotFoundPage from "./pages/PageNotFoundPage";
 
 import React from "react";
 import "./App.css";
-import './color.css';
+import "./color.css";
 
 
 function App() {
@@ -38,8 +39,8 @@ function App() {
                     <Route exact path="/board/create" element={<CreateNoticePage />} />
                     <Route exact path="/board/:noticeId" element={<NoticeDetailPage />} />
                     <Route exact path="/board/:noticeId/update" element={<UpdateNoticePage />} />
-                    <Route exact path="/welcome" element={<WelcomeMessagePage />} />
-
+                    <Route exact path="/findpassword" element={<FindPasswordPage />} />
+                    <Route exact path="/changepassword" element={<ChangePasswordPage />} />
                     <Route exact path="/*" element={<PageNotFoundPage />} />
                 </Routes>
                 <Footer />
