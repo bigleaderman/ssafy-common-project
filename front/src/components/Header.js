@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React from "react";
 import styled from "styled-components";
 import "../style.js";
@@ -6,6 +7,17 @@ import { Button } from "../style.js";
 
 const Header = (props) => {
     const navigate = useNavigate();
+=======
+import React from 'react';
+import styled from 'styled-components';
+import '../style.js';
+import { useNavigate } from 'react-router-dom';
+import { styleButton } from '../style.js';
+import { Button } from '@mui/material';
+
+const Header = (props) => {
+  const navigate = useNavigate();
+>>>>>>> 12cc2f7d2be64eef9fea24423475bd2009c5af06
 
     const goMainPage = () => {
         navigate("/");
@@ -26,6 +38,7 @@ const Header = (props) => {
         navigate("/userlist");
     };
 
+<<<<<<< HEAD
     const goRoomPage = function() {
         navigate("/roompage");
     };
@@ -50,7 +63,38 @@ const Header = (props) => {
             </Menu>
         </Container>
     );
+=======
+  return (
+    <HeaderContainer>
+      <Logo onClick={goMainPage}>
+        <img src="logo.svg" alt="logo" />
+        <p>모두의 마피아</p>
+      </Logo>
+      <Menu>
+        <Button style={styleButton} onClick={goSignUpPage}>회원가입</Button>
+        <Button style={styleButton} onClick={goSignInPage}>로그인</Button>
+        <Button style={styleButton} onClick={goSignOutPage}>로그아웃</Button>
+        <Button style={styleButton} onClick={goMyPage}>마이페이지</Button>
+        <Button style={styleButton} onClick={goUserListPage}>유저 관리</Button>
+      </Menu>
+    </HeaderContainer>
+  );
+>>>>>>> 12cc2f7d2be64eef9fea24423475bd2009c5af06
 };
+
+const HeaderContainer = styled.header`
+    position: sticky;
+    top: 0px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    align-items: center;
+    padding: 0 40px 0 40px;
+    height: 60px;
+    background-color: var(--color-5);
+    justify-content: space-between;
+`
 
 const Logo = styled.a`
     display: flex;
@@ -67,6 +111,7 @@ const Logo = styled.a`
     }
 `;
 
+<<<<<<< HEAD
 const Container = styled.section`
     overflow: hidden;
     display: flex;
@@ -80,6 +125,8 @@ const Container = styled.section`
     background-color: var(--color-5);
 `;
 
+=======
+>>>>>>> 12cc2f7d2be64eef9fea24423475bd2009c5af06
 const Menu = styled.section`
     overflow: hidden;
     display: flex;
