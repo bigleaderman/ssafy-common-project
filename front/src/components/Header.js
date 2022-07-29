@@ -2,10 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import '../style.js';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../style.js';
+import { styleButton } from '../style.js';
+import { Button } from '@mui/material';
 
 const Header = (props) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const goMainPage = () => {
     navigate("/")
@@ -27,21 +28,35 @@ const Header = (props) => {
   };
 
   return (
-    <Container>
+    <HeaderContainer>
       <Logo onClick={goMainPage}>
         <img src="logo.svg" alt="logo" />
         <p>모두의 마피아</p>
       </Logo>
       <Menu>
-        <Button onClick={goSignUpPage}>회원가입</Button>
-        <Button onClick={goSignInPage}>로그인</Button>
-        <Button onClick={goSignOutPage}>로그아웃</Button>
-        <Button onClick={goMyPage}>마이페이지</Button>
-        <Button onClick={goUserListPage}>유저 관리</Button>
+        <Button style={styleButton} onClick={goSignUpPage}>회원가입</Button>
+        <Button style={styleButton} onClick={goSignInPage}>로그인</Button>
+        <Button style={styleButton} onClick={goSignOutPage}>로그아웃</Button>
+        <Button style={styleButton} onClick={goMyPage}>마이페이지</Button>
+        <Button style={styleButton} onClick={goUserListPage}>유저 관리</Button>
       </Menu>
-    </Container>
+    </HeaderContainer>
   );
 };
+
+const HeaderContainer = styled.header`
+    position: sticky;
+    top: 0px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    align-items: center;
+    padding: 0 40px 0 40px;
+    height: 60px;
+    background-color: var(--color-5);
+    justify-content: space-between;
+`
 
 const Logo = styled.a`
     display: flex;
@@ -57,19 +72,6 @@ const Logo = styled.a`
         font-size: 20px;
     }
 `;
-
-const Container = styled.section`
-    overflow: hidden;
-    display: flex;
-    flex-direction: row;
-    text-align: center;
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 0 40px 0 40px;
-    height: 60px;
-    background-color: var(--color-5);
-`
 
 const Menu = styled.section`
     overflow: hidden;
