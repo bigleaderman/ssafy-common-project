@@ -19,7 +19,7 @@ const SignInPage = (props) => {
 
       <p>
         <Link style={styleButton} to={`/signup`}>회원가입</Link>
-        <Link style={styleButton} to={``}>비밀번호 찾기</Link>
+        <Link style={styleButton} to={`/findpassword`}>비밀번호 찾기</Link>
       </p>
 
       <Button style={styleButton}>이메일로 로그인</Button>
