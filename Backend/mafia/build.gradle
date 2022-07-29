@@ -29,6 +29,7 @@ dependencies {
 	implementation 'mysql:mysql-connector-java'
 
 
+
 	// spring security
 	// 버전 변경
 	implementation 'org.springframework.boot:spring-boot-starter-security:2.6.3'
