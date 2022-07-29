@@ -1,5 +1,6 @@
 package com.ssafy.mafia.Controller;
 
+import com.ssafy.mafia.Model.FollowDto;
 import com.ssafy.mafia.Model.FriendDto;
 import com.ssafy.mafia.Model.FriendResponseDto;
 import com.ssafy.mafia.Service.FriendService;
@@ -61,6 +62,14 @@ public class FriendController {
     public ResponseEntity<?> removeFriend(@PathVariable("friendSeq") int friendSeq){
         friendService.removeFriend(friendSeq);
         return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    //친구 따라가기
+    @PostMapping("/follow")
+    public void followFriend(@RequestBody FollowDto followDto){
+        String friendNickname = followDto.getFriendNickname();
+        int userSeq = followDto.getUserSeq();
+        friendService.followFriend(friendNickname, userSeq);
     }
 
 }
