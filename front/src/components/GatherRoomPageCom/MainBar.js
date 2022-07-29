@@ -2,22 +2,15 @@ import React from "react";
 import Grid from "@mui/material/Grid";
 export function MainBar() {
     return (
-        <Grid container>
-            <Grid xs={4}>
-                <p>빙 번호 : ???</p>
-                <p>방 제목 : ???</p>
+        <Grid container spacing={2}>
+            <Grid item xs={4}>
+                빙 번호 : ??? 방 제목 : ???
             </Grid>
-            <Grid xs={4}>
+            <Grid item xs={4}>
+                <Grid>현재 인원 / 최대 인원 : [현재 인원] / [최대 인원]</Grid>
                 <Grid>
-                    <p>현재 인원 / 최대 인원 : [현재 인원] / [최대 인원]</p>
-                </Grid>
-                <Grid>
-                    <p>
-                        시민 : [???]명
-                        <p>의사 : [???]명</p>
-                        <p>경찰 : [???]명</p>
-                        <p>마피아 : [???]명</p>
-                    </p>
+                    시민 : [???]명 의사 : [???]명 경찰 : [???]명 마피아 :
+                    [???]명
                 </Grid>
             </Grid>
         </Grid>

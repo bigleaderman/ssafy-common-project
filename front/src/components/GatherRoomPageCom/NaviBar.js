@@ -1,9 +1,7 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Container } from "@mui/material";
 export default function NaviBar() {
     const theme = createTheme({
         typography: {

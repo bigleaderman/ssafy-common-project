@@ -10,16 +10,8 @@ export default function SideBar() {
 }
 
 export function ChatBar() {
-    return (
-        <div>
-            <p>this is ChatBar</p>
-        </div>
-    );
+    return <span>this is ChatBar</span>;
 }
 export function UserBar() {
-    return (
-        <div>
-            <p>this is UserBar</p>
-        </div>
-    );
+    return <span>this is UserBar</span>;
 }
