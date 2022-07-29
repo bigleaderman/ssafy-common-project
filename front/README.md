@@ -31,9 +31,21 @@
     - 대기방 페이지
   - GameRoomPage.js
     - 게임방 페이지
-  - PageNotFoundPage
+  - PageNotFoundPage.js
     - 404 페이지
+  - VedooRoomPage.js
+    - 비디오 룸 페이지(비디오 테스트용)
 - components
   - Header.js
     - 내비게이션 바
+  - Footer.js
+    - 푸터
+  - ConfirmWithdrawalModal.js
+    - 탈퇴 확인 모달
+  - UserVideo.js
+    - 비디오 캠
+  - OvVideo.js
+    - 비디오 캠 바디
+  - RoomList.js
+    - 대기방 목록
 
