@@ -28,11 +28,12 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements UserDetails {
+public class User extends BaseTimeEntity{
 
-    public User(String email, String password){
+    public User(String email, String password, Authority authority){
         this.email = email;
         this.password = password;
+        this.authority = authority;
         isAuth = false;
         isRedUser = false;
         winCount = 0;
@@ -57,14 +58,9 @@ public class User implements UserDetails {
     @Column(nullable = true)
     private String nickname;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Builder.Default
-    private List<String> roles = new ArrayList<>();
+    @Enumerated(EnumType.STRING)
+    private Authority authority;
 
-    @CreatedDate
-    @Column(updatable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yy-MM-dd", timezone = "Asia/Seoul")
-    private LocalDateTime createdAt;
 
 
     private boolean isRedUser;
@@ -108,37 +104,5 @@ public class User implements UserDetails {
     @JsonIgnore
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
     private RoomUser user;
-
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return this.roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 
 }

@@ -1,52 +1,31 @@
 package com.ssafy.mafia.auth.controller;
 
+
 import com.ssafy.mafia.Entity.User;
-import com.ssafy.mafia.Model.ReportDto;
-import com.ssafy.mafia.auth.jwt.JwtTokenProvider;
-import com.ssafy.mafia.auth.repository.UserRepository;
-import lombok.Getter;
+import com.ssafy.mafia.auth.controller.dto.UserResponseDto;
+import com.ssafy.mafia.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
-import java.util.Map;
 
 
 @RequiredArgsConstructor
 @RestController
 public class UserController {
 
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-
-    @GetMapping("/hello")
-    public ResponseEntity<?> helli(){
-        return new ResponseEntity<Void>(HttpStatus.OK);
+    // 자신의 회원 정보 조회
+    @GetMapping("/user/me")
+    public ResponseEntity<User> getMyUserInfo() {
+        return ResponseEntity.ok(userService.getMyInfo());
     }
 
-    // 회원가입
-    @PostMapping("/join")
-    public int join(@RequestBody Map<String, String> user) {
-        return userRepository.save(User.builder()
-                .email(user.get("email"))
-                .password(passwordEncoder.encode(user.get("password")))
-                .roles(Collections.singletonList("ROLE_USER")) // 최초 가입시 USER 로 설정
-                .build()).getUserSeq();
+    //유저 상세 조회 filter 기능
+    @GetMapping("/admin/{email}")
+    public ResponseEntity<User> getUSerInfo(@PathVariable String email) {
+        return ResponseEntity.ok(userService.getUserInfo(email));
     }
 
-    // 로그인
-    @PostMapping("/login")
-    public String login(@RequestBody Map<String, String> user) {
-        User member = userRepository.findByEmail(user.get("email"))
-                .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
-        if (!passwordEncoder.matches(user.get("password"), member.getPassword())) {
-            throw new IllegalArgumentException("잘못된 비밀번호입니다.");
-        }
-        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
-    }
 }
