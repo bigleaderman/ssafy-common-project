@@ -3,20 +3,28 @@ package com.ssafy.mafia.Controller;
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.AdminDto;
 import com.ssafy.mafia.Service.AdminService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
+@Api("AdminController V1")
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController {
 
+
     private final AdminService adminService;
+
+
     //유저 전체 리스트 조회
+    @ApiOperation(value = "유저전체 리스트조회",notes = "모든 유저 정보를 반환한다.", response = Map.class)
     @GetMapping ("/all/list")
     public ResponseEntity<?> getAllUser() {
         try {
@@ -27,6 +35,7 @@ public class AdminController {
     }
 
     // 레드유저 관리
+    @ApiOperation(value = "레드유저 해제 및 등록", notes = "현재 유저의 레드유저 상태를 반전한다", response = Map.class)
     @PostMapping("/red/{userSeq}")
     public ResponseEntity<?> redUserControl(@PathVariable("userSeq") int userSeq){
         try {
