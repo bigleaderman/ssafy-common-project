@@ -5,6 +5,7 @@ import com.ssafy.mafia.Model.AdminDto;
 import com.ssafy.mafia.Service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class AdminController {
     // 레드유저 관리
     @ApiOperation(value = "레드유저 해제 및 등록", notes = "현재 유저의 레드유저 상태를 반전한다", response = Map.class)
     @PostMapping("/red/{userSeq}")
-    public ResponseEntity<?> redUserControl(@PathVariable("userSeq") int userSeq){
+    public ResponseEntity<?> redUserControl(@PathVariable("userSeq")@ApiParam(value = "대상유저 pk", readOnly = true) int userSeq){
         try {
             adminService.redControl(userSeq);
             return new ResponseEntity<Void>(HttpStatus.OK);

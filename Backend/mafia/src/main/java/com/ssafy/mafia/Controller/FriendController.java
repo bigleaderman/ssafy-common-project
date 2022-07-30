@@ -6,6 +6,7 @@ import com.ssafy.mafia.Model.FriendResponseDto;
 import com.ssafy.mafia.Service.FriendService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,20 +37,20 @@ public class FriendController {
     //친구 신청 목록 조회
     @ApiOperation(value = "친구신청 목록조회", notes = "요청 회원을 대상으로한 친구신청의 목록을 반환한다", response = Map.class)
     @GetMapping("/request-list/{userSeq}")
-    public ResponseEntity<?> checkRequest(@PathVariable("userSeq") int userSeq){
+    public ResponseEntity<?> checkRequest(@PathVariable("userSeq")@ApiParam(value = "요청유저의 pk", required = true) int userSeq){
         return new ResponseEntity<List<FriendResponseDto>>(friendService.findFriendRequest(userSeq),HttpStatus.OK);
     }
 
     //친구 목록 조회
     @ApiOperation(value = "친구목록 조회", notes = "친구신청을 수락한 유저들의 목록을 반환한다", response = Map.class)
     @GetMapping("/friend-list/{userSeq}")
-    public ResponseEntity<?> findFriend(@PathVariable("userSeq") int useSeq) {
+    public ResponseEntity<?> findFriend(@PathVariable("userSeq")@ApiParam(value = "요청유저의 pk", required = true) int useSeq) {
         return new ResponseEntity<List<FriendResponseDto>>(friendService.findFriend(useSeq),HttpStatus.OK);
     }
     // 친구신청 수락
     @ApiOperation(value = "친구신청 수락", notes = "Frined 테이블에 해당 데이터에서 is_accept컬럼을 true변환 후 양방향 데이터를 생성한다", response = Map.class)
     @PutMapping("accept/{friendSeq}")
-    public ResponseEntity<?> acceptFriend(@PathVariable("friendSeq") int friendSeq) {
+    public ResponseEntity<?> acceptFriend(@PathVariable("friendSeq")@ApiParam(value = "해당 친구신청데이터의 Friend 테이블의 pk", required = true) int friendSeq) {
         try {
             if (friendService.beFriend(friendSeq)){
                 return new ResponseEntity<Void>(HttpStatus.OK);
@@ -65,7 +66,7 @@ public class FriendController {
     //친구신청 거절
     @ApiOperation(value = "친구신청 거절", notes = "Friend 테이블에서 해당 데이터를 삭제한다", response = Map.class)
     @DeleteMapping("accept/refuse/{friendSeq}")
-    public ResponseEntity<?> refuseFriend(@PathVariable("friendSeq") int friendSeq) {
+    public ResponseEntity<?> refuseFriend(@PathVariable("friendSeq")@ApiParam(value = "해당 친구신청데이터의 Friend 테이블의 pk", required = true) int friendSeq) {
         try {
             friendService.refuseFriend(friendSeq);
             return new ResponseEntity<String>("친구신청을 거절하였습니다", HttpStatus.OK);
@@ -77,7 +78,7 @@ public class FriendController {
     //친구삭제
     @ApiOperation(value = "친구삭제", notes = "Friend 테이블에서 해당 데이터 및 해당 데이터와 양방향 관계의 데이터를 삭제한다", response = Map.class)
     @DeleteMapping("remove/{friendSeq}")
-    public ResponseEntity<?> removeFriend(@PathVariable("friendSeq") int friendSeq){
+    public ResponseEntity<?> removeFriend(@PathVariable("friendSeq")@ApiParam(value = "해당 친구데이터의 Friend 테이블의 pk", required = true) int friendSeq){
         try {
             friendService.removeFriend(friendSeq);
             return new ResponseEntity<Void>(HttpStatus.OK);
