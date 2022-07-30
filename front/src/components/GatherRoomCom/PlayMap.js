@@ -7,11 +7,9 @@ export default function PlayMap() {
     return (
         <div>
             {/* 게임맵 */}
-            <div
-                style={{ width: 500, height: 500, background: "orange" }}
-            >
+            <div style={{ width: 500, height: 500, background: "orange" }}>
                 {/* 플레이어 */}
-                <div style={{width:20, height:20, background:}}></div>
+                <div style={{ width: 20, height: 20, background: "" }}></div>
             </div>
             <a>playmap</a>
         </div>

@@ -8,24 +8,24 @@ import { Button } from '@mui/material';
 const Header = (props) => {
   const navigate = useNavigate();
 
-  const goMainPage = () => {
-    navigate("/")
-  };
-  const goSignUpPage = () => {
-    navigate("/signup")
-  };
-  const goSignInPage = () => {
-    navigate("/signin")
-  };
-  const goSignOutPage = () => {
-    navigate("/signout")
-  };
-  const goMyPage = () => {
-    navigate("/mypage")
-  };
-  const goUserListPage = () => {
-    navigate("/userlist")
-  };
+    const goMainPage = () => {
+        navigate("/");
+    };
+    const goSignUpPage = () => {
+        navigate("/signup");
+    };
+    const goSignInPage = () => {
+        navigate("/signin");
+    };
+    const goSignOutPage = () => {
+        navigate("/signout");
+    };
+    const goMyPage = () => {
+        navigate("/mypage");
+    };
+    const goUserListPage = () => {
+        navigate("/userlist");
+    };
 
   return (
     <HeaderContainer>
@@ -78,6 +78,6 @@ const Menu = styled.section`
     display: flex;
     flex-direction: row;
     align-items: center;
-`
+`;
 
 export default Header;
