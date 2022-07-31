@@ -2,6 +2,7 @@ package com.ssafy.mafia.auth.controller;
 
 
 import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
 import com.ssafy.mafia.auth.controller.dto.UserResponseDto;
 import com.ssafy.mafia.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,14 @@ public class UserController {
     }
 
     //유저 상세 조회 filter 기능
-    @GetMapping("/admin/{email}")
-    public ResponseEntity<User> getUSerInfo(@PathVariable String email) {
+    @GetMapping("/admin/findUser")
+    public ResponseEntity<User> getUserInfo(@RequestBody String email) {
         return ResponseEntity.ok(userService.getUserInfo(email));
+    }
+
+    @GetMapping("/email")
+    public Boolean checkEmail(@RequestBody UserRequestDto userRequestDto) {
+        return userService.checkEmail(userRequestDto.getEmail());
     }
 
 }
