@@ -11,6 +11,7 @@ import com.ssafy.mafia.auth.controller.dto.UserResponseDto;
 import com.ssafy.mafia.auth.jwt.TokenProvider;
 import com.ssafy.mafia.auth.repository.RefreshTokenRepository;
 import com.ssafy.mafia.auth.repository.UserRepository;
+import com.ssafy.mafia.auth.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,6 +19,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.EntityManager;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,8 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final TokenProvider tokenProvider;
     private final RefreshTokenRepository refreshTokenRepository;
+
+    private final EntityManager em;
 
     @Transactional
     public UserResponseDto signup(UserRequestDto userRequestDto) {
@@ -90,6 +95,13 @@ public class AuthService {
 
         // 토큰 발급
         return tokenDto;
+    }
+
+    @Transactional
+    public void logout() {
+        String key = Integer.toString(SecurityUtil.getCurrentUserId());
+        RefreshToken refreshToken = em.find(RefreshToken.class,  key);
+        refreshTokenRepository.delete(refreshToken);
     }
 }
 
