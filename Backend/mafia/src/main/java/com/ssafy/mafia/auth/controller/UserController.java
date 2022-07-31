@@ -34,4 +34,22 @@ public class UserController {
         return userService.checkEmail(userRequestDto.getEmail());
     }
 
+    @GetMapping("/checkNickname")
+    public Boolean checkNickname(@RequestBody UserRequestDto userRequestDto) {
+        return userService.checkNickname(userRequestDto.getNickname());
+    }
+
+    @PutMapping("/user/enrollNickname")
+    public ResponseEntity<User> enrollNickname(@RequestBody UserRequestDto userRequestDto) {
+        return ResponseEntity.ok(userService.enrollNickname(userRequestDto.getNickname()));
+    }
+
+    @DeleteMapping("/user/delete")
+    public void deleteUser() {
+        userService.deleteUser();
+    }
+
+
+
+
 }

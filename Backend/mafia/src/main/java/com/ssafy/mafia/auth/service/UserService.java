@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.Optional;
 
 
@@ -17,6 +18,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final EntityManager em;
+
 
     @Transactional(readOnly=true)
     public User getUserInfo(String email) {
@@ -33,7 +36,24 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public Boolean checkEmail(String email) {
-        Boolean bool = userRepository.existsByEmail(email);
-        return bool;
+        return userRepository.existsByEmail(email);
+    }
+
+    @Transactional(readOnly = true)
+    public Boolean checkNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
+    }
+
+    @Transactional
+    public User enrollNickname(String nickname) {
+        User user = em.find(User.class, SecurityUtil.getCurrentUserId());
+        user.setNickname(nickname);
+        return user;
+    }
+
+    @Transactional
+    public void deleteUser() {
+        User user = em.find(User.class, SecurityUtil.getCurrentUserId());
+        userRepository.delete(user);
     }
  }

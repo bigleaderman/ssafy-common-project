@@ -17,6 +17,8 @@ public class UserRequestDto {
 
     private String password;
 
+    private String nickname;
+
     public User toUser(PasswordEncoder passwordEncoder) {
         return User.builder()
                 .email(email)
