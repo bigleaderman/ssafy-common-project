@@ -7,9 +7,9 @@ import com.ssafy.mafia.auth.controller.dto.UserResponseDto;
 import com.ssafy.mafia.auth.repository.UserRepository;
 import com.ssafy.mafia.auth.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import java.util.Optional;
 
@@ -20,6 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final EntityManager em;
 
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional(readOnly=true)
     public User getUserInfo(String email) {
@@ -44,16 +45,31 @@ public class UserService {
         return userRepository.existsByNickname(nickname);
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public User enrollNickname(String nickname) {
         User user = em.find(User.class, SecurityUtil.getCurrentUserId());
         user.setNickname(nickname);
         return user;
     }
 
-    @Transactional
+    @Transactional(readOnly = false)
     public void deleteUser() {
         User user = em.find(User.class, SecurityUtil.getCurrentUserId());
         userRepository.delete(user);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean checkPw(String password) {
+        User user = em.find(User.class, SecurityUtil.getCurrentUserId());
+
+        return  passwordEncoder.matches(password, user.getPassword());
+    }
+
+    @Transactional
+    public User changePw(String password) {
+        User user = em.find(User.class, SecurityUtil.getCurrentUserId());
+        user.setPassword(passwordEncoder.encode(password));
+        return user;
+
     }
  }

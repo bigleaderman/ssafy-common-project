@@ -29,7 +29,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getUserInfo(email));
     }
 
-    @GetMapping("/email")
+    @GetMapping("/checkEmail")
     public Boolean checkEmail(@RequestBody UserRequestDto userRequestDto) {
         return userService.checkEmail(userRequestDto.getEmail());
     }
@@ -47,6 +47,16 @@ public class UserController {
     @DeleteMapping("/user/delete")
     public void deleteUser() {
         userService.deleteUser();
+    }
+
+    @GetMapping("/user/checkPw")
+    public boolean checkPw(@RequestBody UserRequestDto userRequestDto) {
+        return userService.checkPw(userRequestDto.getPassword());
+    }
+
+    @PostMapping("user/changePw")
+    public User changePw(@RequestBody UserRequestDto userRequestDto) {
+        return userService.changePw(userRequestDto.getPassword());
     }
 
 
