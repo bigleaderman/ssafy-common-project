@@ -77,6 +77,8 @@ public class User extends BaseTimeEntity{
 
     private int rankPoint;
 
+    private int nowRoomSeq;
+
     @JsonIgnore
     @OneToMany(mappedBy = "userSeq")
     private List<NoticeBoard> noticeBoardList = new ArrayList<>();
@@ -101,8 +103,6 @@ public class User extends BaseTimeEntity{
     @OneToOne(mappedBy = "hostUser", fetch = FetchType.LAZY)
     private RoomInfo hostUser;
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
-    private RoomUser user;
+
 
 }

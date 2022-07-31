@@ -34,9 +34,7 @@ public class RoomInfo {
     @OneToOne(mappedBy = "roomInfoSeq", fetch = FetchType.LAZY)
     private GameInfo roomInfoSeq;
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "room", fetch = FetchType.LAZY)
-    private RoomUser room;
+
 
 
 }
