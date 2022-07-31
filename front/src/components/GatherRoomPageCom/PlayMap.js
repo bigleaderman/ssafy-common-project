@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
+export default function PlayMap(props) {
+    const size = 700;
+    const mapFocus = useRef();
+    useEffect(() => {
+        mapFocus.current.focus();
+    }, []);
 
-export default function PlayMap() {
     return (
         <div>
-            <span style={{ width: 500, height: 500 }}></span>
-            playmap
+            <div
+                ref={mapFocus}
+                style={{ width: size, height: size, background: "orange" }}
+            ></div>
+            playMap
         </div>
     );
 }
