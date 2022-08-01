@@ -36,8 +36,9 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Boolean checkEmail(String email) {
+    public boolean checkEmail(String email) {
         return userRepository.existsByEmail(email);
+        //em.createQuery("SELECT m.UserSeq FROM USER m WHERE m.email=:email", User.class).setParameter("email", email).getSingleResult();
     }
 
     @Transactional(readOnly = true)

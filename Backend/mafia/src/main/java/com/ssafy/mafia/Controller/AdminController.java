@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Api("AdminController V1")
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 @RequiredArgsConstructor
 public class AdminController {
 

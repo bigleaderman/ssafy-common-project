@@ -6,6 +6,7 @@ import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
 import com.ssafy.mafia.auth.controller.dto.UserResponseDto;
 import com.ssafy.mafia.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.mapstruct.Mapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/api")
 public class UserController {
 
     private final UserService userService;
@@ -30,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("/checkEmail")
-    public Boolean checkEmail(@RequestBody UserRequestDto userRequestDto) {
+    public boolean checkEmail(@RequestBody UserRequestDto userRequestDto) {
         return userService.checkEmail(userRequestDto.getEmail());
     }
 
@@ -64,7 +66,6 @@ public class UserController {
         return userService.validationUser(userId, num);
     }
 
-    @GetMapping("/")
 
 
 }
