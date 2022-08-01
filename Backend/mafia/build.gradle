@@ -60,6 +60,13 @@ dependencies {
 
 	testImplementation "com.jayway.jsonpath:json-path:2.4.0"
 	implementation 'javax.validation:validation-api:2.0.1.Final'
+
+	// https://mvnrepository.com/artifact/javax.mail/mail
+	implementation 'javax.mail:mail:1.4.7'
+	// https://mvnrepository.com/artifact/org.springframework/spring-context-support
+	implementation 'org.springframework:spring-context-support:5.3.22'
+
+
 }
 
 tasks.named('test') {

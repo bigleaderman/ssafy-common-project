@@ -38,7 +38,6 @@ public class User extends BaseTimeEntity{
         isRedUser = false;
         winCount = 0;
         loseCount = 0;
-        isLogin = false;
         reportedCount = 0;
         rankPoint = 0;
     }
@@ -65,13 +64,9 @@ public class User extends BaseTimeEntity{
 
     private boolean isRedUser;
 
-    private boolean isAdmin;
-
     private int winCount;
 
     private int loseCount;
-
-    private boolean isLogin;
 
     private int reportedCount;
 
@@ -79,7 +74,11 @@ public class User extends BaseTimeEntity{
 
     private int nowRoomSeq;
 
+
     private Timestamp beRedUserAt;
+
+    private int emailCode;
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "userSeq")
