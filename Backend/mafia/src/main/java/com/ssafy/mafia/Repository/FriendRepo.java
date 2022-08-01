@@ -1,12 +1,16 @@
 package com.ssafy.mafia.Repository;
 
 import com.ssafy.mafia.Entity.Friend;
+import com.ssafy.mafia.Entity.RoomInfo;
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.FriendDto;
 import com.ssafy.mafia.Model.FriendResponseDto;
+import com.ssafy.mafia.Model.UserDto;
+import com.ssafy.mafia.Service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -17,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class FriendRepo {
     private final EntityManager em;
+    private final RoomService roomService;
 
     //최초 친구신청
     //이미 친구신청을 했었니?그럼 안돼 로직을 작성
@@ -143,5 +148,26 @@ public class FriendRepo {
             }
         }
         em.remove(friend);
+    }
+
+    //친구 따라가기
+    public void followFriend(String friendNickname, int userSeq){
+        // 따라갈 친구
+        TypedQuery<User> query = em.createQuery(
+                "SELECT u FROM User u WHERE u.nickname = '" + friendNickname + "'", User.class);
+        User friend = query.getSingleResult();
+
+        // 나
+        User me = em.find(User.class, userSeq);
+
+        // 친구가 지금 있는 방
+        RoomInfo room = em.find(RoomInfo.class, friend.getNowRoomSeq());
+
+        // 나 DTO만들기
+        UserDto meDto = new UserDto();
+        meDto.setEmail(me.getEmail());
+        meDto.setPassword(me.getPassword());
+        // 방에 입장하기
+        roomService.joinRoom(room.getRoomSeq(), meDto);
     }
 }

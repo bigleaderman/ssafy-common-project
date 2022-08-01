@@ -2,6 +2,7 @@ package com.ssafy.mafia.Service;
 
 import com.ssafy.mafia.Entity.Friend;
 import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Model.FollowDto;
 import com.ssafy.mafia.Model.FriendDto;
 import com.ssafy.mafia.Model.FriendResponseDto;
 import com.ssafy.mafia.Repository.FriendRepo;
@@ -51,5 +52,11 @@ public class FriendService {
     @Transactional
     public void removeFriend(int friendSeq) {
         friendRepo.deleteFriend(friendSeq);
+    }
+
+    //친구 따라가기
+    @Transactional
+    public void followFriend(String friendNickname, int userSeq){
+        friendRepo.followFriend(friendNickname, userSeq);
     }
 }

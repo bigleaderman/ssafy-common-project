@@ -1,0 +1,37 @@
+package com.ssafy.mafia.auth.controller;
+
+import com.ssafy.mafia.auth.controller.dto.TokenDto;
+import com.ssafy.mafia.auth.controller.dto.TokenRequestDto;
+import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
+import com.ssafy.mafia.auth.controller.dto.UserResponseDto;
+import com.ssafy.mafia.auth.service.AuthService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequiredArgsConstructor
+public class AuthController {
+    private final AuthService authService;
+
+    @PostMapping("/signup")
+    public ResponseEntity<UserResponseDto> signup(@RequestBody UserRequestDto userRequestDto) {
+        return ResponseEntity.ok(authService.signup(userRequestDto));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<TokenDto> login(@RequestBody UserRequestDto userRequestDto) {
+        return ResponseEntity.ok(authService.login(userRequestDto));
+    }
+
+    @PostMapping("/reissue")
+    public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
+        return ResponseEntity.ok(authService.reissue(tokenRequestDto));
+    }
+
+    @DeleteMapping("user/logout")
+    public void logout() {
+        authService.logout();
+    }
+
+}

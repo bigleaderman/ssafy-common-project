@@ -46,17 +46,27 @@ dependencies {
 
 	//jwt 코드
 	implementation 'com.auth0:java-jwt:3.10.3'
-	implementation 'io.jsonwebtoken:jjwt:0.9.1'
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
 
 
-	implementation("io.springfox:springfox-swagger2:3.0.0")
-	implementation("io.springfox:springfox-swagger-ui:3.0.0")
+	implementation 'io.springfox:springfox-swagger-ui:2.9.2'
+	implementation 'io.springfox:springfox-swagger2:2.9.2'
+
 
 	implementation "com.google.guava:guava:29.0-jre"
 	annotationProcessor("com.google.guava:guava:29.0-jre")
 
 	testImplementation "com.jayway.jsonpath:json-path:2.4.0"
 	implementation 'javax.validation:validation-api:2.0.1.Final'
+
+	// https://mvnrepository.com/artifact/javax.mail/mail
+	implementation 'javax.mail:mail:1.4.7'
+	// https://mvnrepository.com/artifact/org.springframework/spring-context-support
+	implementation 'org.springframework:spring-context-support:5.3.22'
+
+
 }
 
 tasks.named('test') {
