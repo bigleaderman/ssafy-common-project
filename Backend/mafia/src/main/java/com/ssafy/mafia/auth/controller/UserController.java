@@ -59,6 +59,12 @@ public class UserController {
         return userService.changePw(userRequestDto.getPassword());
     }
 
+    @GetMapping("user/validationUser/{userId}/{num}")
+    public boolean validationUser(@PathVariable("userId") int userId,@PathVariable("num") int num) throws Exception {
+        return userService.validationUser(userId, num);
+    }
+
+    @GetMapping("/")
 
 
 }

@@ -72,4 +72,16 @@ public class UserService {
         return user;
 
     }
+
+    @Transactional
+    public boolean validationUser(int userId, int num) throws Exception {
+        User user = em.find(User.class, userId);
+        if (user.getEmailCode() == num ) {
+            user.setAuth(true);
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
  }
