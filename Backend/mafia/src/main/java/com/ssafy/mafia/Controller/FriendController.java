@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Api("FriendController V1")
 @RestController
-@RequestMapping("/user/friend")
+@RequestMapping("/api/user/friend")
 @RequiredArgsConstructor
 public class FriendController {
 

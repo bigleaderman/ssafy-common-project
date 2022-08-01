@@ -36,8 +36,9 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Boolean checkEmail(String email) {
+    public boolean checkEmail(String email) {
         return userRepository.existsByEmail(email);
+        //em.createQuery("SELECT m.UserSeq FROM USER m WHERE m.email=:email", User.class).setParameter("email", email).getSingleResult();
     }
 
     @Transactional(readOnly = true)
@@ -71,5 +72,17 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
         return user;
 
+    }
+
+    @Transactional
+    public boolean validationUser(int userId, int num) throws Exception {
+        User user = em.find(User.class, userId);
+        if (user.getEmailCode() == num ) {
+            user.setAuth(true);
+            return true;
+        }
+        else{
+            return false;
+        }
     }
  }

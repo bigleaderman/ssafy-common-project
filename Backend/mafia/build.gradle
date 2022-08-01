@@ -66,6 +66,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springframework/spring-context-support
 	implementation 'org.springframework:spring-context-support:5.3.22'
 
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf:2.6.6'
+
 
 }
 

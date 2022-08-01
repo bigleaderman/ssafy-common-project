@@ -18,6 +18,7 @@ import java.util.Map;
 @Api("NoticeController V1")
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class NoticeController {
 
 

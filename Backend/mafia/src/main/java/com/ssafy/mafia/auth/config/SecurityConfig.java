@@ -54,8 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(jwtAccessDeniedHandler)
                 .and()
                 .authorizeRequests()// 요청에 대한 사용권한 체크
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers("/user/**").hasRole("USER")
+                .antMatchers("/api/admin/**").hasRole("ADMIN")
+                .antMatchers("/api/user/**").hasRole("USER")
                 .anyRequest().permitAll()
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider)); // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
