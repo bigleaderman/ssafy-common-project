@@ -69,7 +69,7 @@ public class UserController {
     }
 
     @GetMapping("user/{nickname}")
-    public ResponseEntity<UserInfoResponseDto> userInfomation(@PathVariable("nickname") String nickname) {
+    public ResponseEntity<UserInfoResponseDto> userInformation(@PathVariable("nickname") String nickname) {
         return ResponseEntity.ok(UserInfoResponseDto.convert(userService.userInfomation(nickname)));
     }
 

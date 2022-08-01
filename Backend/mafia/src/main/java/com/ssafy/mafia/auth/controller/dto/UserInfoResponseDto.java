@@ -26,4 +26,5 @@ public class UserInfoResponseDto {
     public static UserInfoResponseDto convert(User user){
         return new UserInfoResponseDto(user.getEmail(), user.getNickname(), user.isRedUser(), user.isAuth(), user.getWinCount(), user.getLoseCount(), user.getRankPoint());
     }
+
 }
