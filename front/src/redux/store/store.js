@@ -1,14 +1,19 @@
 //combineReducers = reducer가 여러 개일 때 하나로 묶어줌
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-import GatherConCntReducer from "../slice/GatherConCntSlice";
-import GatherNameSlice from "../slice/GatherNameSlice";
-import UserSlice from "../slice/UserSlice";
+
+// redux로 관리할 데이터
+import GatherMapPosYSlice from "../slice/GatherMapPosYSlice";
+import GatherMapPosXSlice from "../slice/GatherMapPosXSlice";
+
 //redux-persist 관련 함수
 import { persistReducer, persistStore } from "redux-persist";
+
 //thunk = 실행을 지연시켜줌
 import thunk from "redux-thunk";
+
 //storageSession = 세션스토리지에 저장
 import storage from "redux-persist/lib/storage/session";
+
 //persist 설정
 const persistConfig = {
     key: "root",
@@ -18,9 +23,8 @@ const persistConfig = {
 
 //rootReducer = 조합된 최종 리듀서
 const rootReducer = combineReducers({
-    conCnt: GatherConCntReducer,
-    gatherName: GatherNameSlice,
-    user: UserSlice,
+    posY: GatherMapPosYSlice,
+    posX: GatherMapPosXSlice,
 });
 
 //persistReducer(설정, 최종 리듀서)
