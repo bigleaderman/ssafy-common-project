@@ -17,8 +17,9 @@ import java.util.Map;
 
 @Api("ReportController V1")
 @RestController
-@RequestMapping("/user/report")
+@RequestMapping("/api/user/report")
 @RequiredArgsConstructor
+
 public class ReportController {
 
     private final ReportService reportService;

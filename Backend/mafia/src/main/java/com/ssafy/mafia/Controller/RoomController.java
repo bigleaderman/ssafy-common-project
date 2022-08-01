@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/room")
+@RequestMapping("api/room")
 @CrossOrigin("*")
 @Api(tags = {"방 관련 기능"})
 public class RoomController {

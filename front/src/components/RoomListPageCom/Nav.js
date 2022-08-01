@@ -8,7 +8,6 @@ import SearchIcon from "@mui/icons-material/Search";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import SettingsIcon from "@mui/icons-material/Settings";
-
 // 방만들기(모달), 랜덤매칭, 방검색(검색창 옆으로), 새로고침, 환경설정(모달), 도움말(모달)
 function Nav() {
     const [search, setSearch] = useState(false);
