@@ -74,7 +74,11 @@ public class User extends BaseTimeEntity{
 
     private int nowRoomSeq;
 
+
+    private Timestamp beRedUserAt;
+
     private int emailCode;
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "userSeq")
