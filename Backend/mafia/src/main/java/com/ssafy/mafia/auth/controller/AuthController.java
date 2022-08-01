@@ -6,6 +6,7 @@ import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
 import com.ssafy.mafia.auth.controller.dto.UserResponseDto;
 import com.ssafy.mafia.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,8 +32,9 @@ public class AuthController {
     }
 
     @DeleteMapping("user/logout")
-    public void logout() {
+    public ResponseEntity<?> logout() {
         authService.logout();
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

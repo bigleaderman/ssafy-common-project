@@ -2,6 +2,7 @@ package com.ssafy.mafia.auth.controller;
 
 
 import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.auth.controller.dto.UserInfoResponseDto;
 import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
 import com.ssafy.mafia.auth.controller.dto.UserResponseDto;
 import com.ssafy.mafia.auth.service.UserService;
@@ -10,6 +11,7 @@ import org.mapstruct.Mapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -21,14 +23,14 @@ public class UserController {
 
     // 자신의 회원 정보 조회
     @GetMapping("/user/me")
-    public ResponseEntity<User> getMyUserInfo() {
-        return ResponseEntity.ok(userService.getMyInfo());
+    public ResponseEntity<UserInfoResponseDto> getMyUserInfo() {
+        return ResponseEntity.ok(UserInfoResponseDto.convert(userService.getMyInfo()));
     }
 
     //유저 상세 조회 filter 기능
     @GetMapping("/admin/findUser")
-    public ResponseEntity<User> getUserInfo(@RequestBody String email) {
-        return ResponseEntity.ok(userService.getUserInfo(email));
+    public ResponseEntity<UserInfoResponseDto> getUserInfo(@RequestBody String email) {
+        return ResponseEntity.ok(UserInfoResponseDto.convert(userService.getUserInfo(email)));
     }
 
     @GetMapping("/checkEmail")
@@ -42,7 +44,7 @@ public class UserController {
     }
 
     @PutMapping("/user/enrollNickname")
-    public ResponseEntity<User> enrollNickname(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<UserInfoResponseDto> enrollNickname(@RequestBody UserRequestDto userRequestDto) {
         return ResponseEntity.ok(userService.enrollNickname(userRequestDto.getNickname()));
     }
 
@@ -57,7 +59,7 @@ public class UserController {
     }
 
     @PostMapping("user/changePw")
-    public User changePw(@RequestBody UserRequestDto userRequestDto) {
+    public UserInfoResponseDto changePw(@RequestBody UserRequestDto userRequestDto) {
         return userService.changePw(userRequestDto.getPassword());
     }
 
@@ -66,6 +68,10 @@ public class UserController {
         return userService.validationUser(userId, num);
     }
 
+    @GetMapping("user/{nickname}")
+    public ResponseEntity<UserInfoResponseDto> userInfomation(@PathVariable("nickname") String nickname) {
+        return ResponseEntity.ok(UserInfoResponseDto.convert(userService.userInfomation(nickname)));
+    }
 
 
 }
