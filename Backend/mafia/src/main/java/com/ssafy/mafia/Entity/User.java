@@ -79,6 +79,8 @@ public class User extends BaseTimeEntity{
 
     private int nowRoomSeq;
 
+    private Timestamp beRedUserAt;
+
     @JsonIgnore
     @OneToMany(mappedBy = "userSeq")
     private List<NoticeBoard> noticeBoardList = new ArrayList<>();
