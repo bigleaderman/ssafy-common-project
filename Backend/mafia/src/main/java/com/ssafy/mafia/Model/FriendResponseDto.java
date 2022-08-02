@@ -1,8 +1,11 @@
 package com.ssafy.mafia.Model;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiParam;
 import lombok.Data;
 
+@ApiModel
 @Data
 public class FriendResponseDto {
     //friend 테이블의 pk값

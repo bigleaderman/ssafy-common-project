@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@Api("AdminController V1")
+@Api(value = "AdminController V1", tags = {"관리자기능"})
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor
@@ -27,16 +27,16 @@ public class AdminController {
     //유저 전체 리스트 조회
     @ApiOperation(value = "유저전체 리스트조회",notes = "모든 유저 정보를 반환한다.", response = Map.class)
     @GetMapping ("/all/list")
-    public ResponseEntity<?> getAllUser() {
+    public ResponseEntity<List<User>> getAllUser() {
         try {
             return new ResponseEntity<List<User>>(adminService.getAllUser(), HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
+            return null;
         }
     }
 
     // 레드유저 관리
-    @ApiOperation(value = "레드유저 해제 및 등록", notes = "현재 유저의 레드유저 상태를 반전한다", response = Map.class)
+    @ApiOperation(value = "레드유저 해제 및 등록", notes = "해당 유저의 레드유저 상태를 반전한다")
     @PostMapping("/red/{userSeq}")
     public ResponseEntity<?> redUserControl(@PathVariable("userSeq")@ApiParam(value = "대상유저 pk", readOnly = true) int userSeq){
         try {
