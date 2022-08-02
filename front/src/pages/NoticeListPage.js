@@ -2,14 +2,22 @@ import React, { useEffect, useState } from "react";
 import { Container, styleTableContainer, styleButton } from '../style.js';
 import { Table, TableHead, TableFooter, TableContainer, TableBody, Paper, TableRow, TableCell, TablePagination, Button } from '@mui/material';
 import { Link, useNavigate } from  "react-router-dom";
+import {useSelector} from "react-redux"
 import axios from 'axios';
 
 
 const NoticeListPage = (props) => {
   const [noticeData, setNoticeData] = useState([]);
 
+  const token = useSelector(state=>state.user.accessToken)
+
   useEffect(() => {
-    axios.get('/api/board')
+    axios.get('/api/board',{},{
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token
+      }
+    })
     .then(response => {
       console.log(response.data);
       setNoticeData(response.data);
@@ -46,7 +54,6 @@ const NoticeListPage = (props) => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    handleChangeRowsPerPage(); // 일단 여기에 추가해둠
   }
 
   const handleChangeRowsPerPage = (event) => {
@@ -94,18 +101,18 @@ const NoticeListPage = (props) => {
           </TableBody>
           <TableFooter>
             <TableRow>
+            <Button style={styleButton} onClick={goCreateNoticePage}>작성하기</Button>
               <TablePagination
                 page={page}
-                count={Math.ceil(noticeDataList.length/rowsPerPage)}
+                count={noticeDataList.length}
                 rowsPerPage={rowsPerPage}
                 onPageChange={handleChangePage}
-                // onChangeRowsPerPage={handleChangeRowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
               />
             </TableRow>
           </TableFooter>
         </Table>
       </TableContainer>
-      <Button style={styleButton} onClick={goCreateNoticePage}>작성하기</Button>
     </Container>
   );
 };
