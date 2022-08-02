@@ -16,6 +16,7 @@ public class EmailController {
 
 
     @PostMapping("user/sendEmail")
+
     public void sendEmail() throws Exception {
         emailService.sendEmail();
     }

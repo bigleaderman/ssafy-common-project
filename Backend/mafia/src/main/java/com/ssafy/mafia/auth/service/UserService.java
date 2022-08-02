@@ -2,8 +2,7 @@ package com.ssafy.mafia.auth.service;
 
 
 import com.ssafy.mafia.Entity.User;
-import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
-import com.ssafy.mafia.auth.controller.dto.UserResponseDto;
+import com.ssafy.mafia.auth.controller.dto.UserInfoResponseDto;
 import com.ssafy.mafia.auth.repository.UserRepository;
 import com.ssafy.mafia.auth.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
-import java.util.Optional;
 
 
 @Service
@@ -21,6 +19,8 @@ public class UserService {
     private final EntityManager em;
 
     private final PasswordEncoder passwordEncoder;
+
+
 
     @Transactional(readOnly=true)
     public User getUserInfo(String email) {
@@ -47,10 +47,10 @@ public class UserService {
     }
 
     @Transactional(readOnly = false)
-    public User enrollNickname(String nickname) {
+    public UserInfoResponseDto enrollNickname(String nickname) {
         User user = em.find(User.class, SecurityUtil.getCurrentUserId());
         user.setNickname(nickname);
-        return user;
+        return UserInfoResponseDto.convert(user);
     }
 
     @Transactional(readOnly = false)
@@ -67,10 +67,11 @@ public class UserService {
     }
 
     @Transactional
-    public User changePw(String password) {
+    public UserInfoResponseDto changePw(String password) {
         User user = em.find(User.class, SecurityUtil.getCurrentUserId());
         user.setPassword(passwordEncoder.encode(password));
-        return user;
+        return UserInfoResponseDto.convert(user);
+        //return user;
 
     }
 
@@ -84,5 +85,11 @@ public class UserService {
         else{
             return false;
         }
+    }
+
+    @Transactional(readOnly = true)
+    public User userInfomation(String nickname) {
+        return userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
     }
  }

@@ -2,46 +2,50 @@ package com.ssafy.mafia.auth.controller;
 
 
 import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.auth.controller.dto.UserInfoResponseDto;
 import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
 import com.ssafy.mafia.auth.service.UserService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
+@Api(tags = "로그")
 public class UserController {
 
     private final UserService userService;
 
     // 자신의 회원 정보 조회
     @GetMapping("/user/me")
-    public ResponseEntity<User> getMyUserInfo() {
-        return ResponseEntity.ok(userService.getMyInfo());
+    public ResponseEntity<UserInfoResponseDto> getMyUserInfo() {
+        return ResponseEntity.ok(UserInfoResponseDto.convert(userService.getMyInfo()));
     }
 
     //유저 상세 조회 filter 기능
     @GetMapping("/admin/findUser")
-    public ResponseEntity<User> getUserInfo(@RequestBody String email) {
-        return ResponseEntity.ok(userService.getUserInfo(email));
+    public ResponseEntity<UserInfoResponseDto> getUserInfo(@RequestBody String email) {
+        return ResponseEntity.ok(UserInfoResponseDto.convert(userService.getUserInfo(email)));
     }
 
     @GetMapping("/checkEmail")
-    public boolean checkEmail(@RequestBody UserRequestDto userRequestDto) {
-        return userService.checkEmail(userRequestDto.getEmail());
+    public boolean checkEmail(@RequestBody String email) {
+        return userService.checkEmail(email);
     }
 
     @GetMapping("/checkNickname")
-    public Boolean checkNickname(@RequestBody UserRequestDto userRequestDto) {
-        return userService.checkNickname(userRequestDto.getNickname());
+    public Boolean checkNickname(@RequestBody String nickname) {
+        return userService.checkNickname(nickname);
     }
 
     @PutMapping("/user/enrollNickname")
-    public ResponseEntity<User> enrollNickname(@RequestBody UserRequestDto userRequestDto) {
-        return ResponseEntity.ok(userService.enrollNickname(userRequestDto.getNickname()));
+    public ResponseEntity<UserInfoResponseDto> enrollNickname(@RequestBody String nickname) {
+        return ResponseEntity.ok(userService.enrollNickname(nickname));
     }
 
     @DeleteMapping("/user/delete")
@@ -50,13 +54,13 @@ public class UserController {
     }
 
     @GetMapping("/user/checkPw")
-    public boolean checkPw(@RequestBody UserRequestDto userRequestDto) {
-        return userService.checkPw(userRequestDto.getPassword());
+    public boolean checkPw(@RequestBody String password) {
+        return userService.checkPw(password);
     }
 
     @PostMapping("user/changePw")
-    public User changePw(@RequestBody UserRequestDto userRequestDto) {
-        return userService.changePw(userRequestDto.getPassword());
+    public UserInfoResponseDto changePw(@RequestBody String password) {
+        return userService.changePw(password);
     }
 
     @GetMapping("user/validationUser/{userId}/{num}")
@@ -64,6 +68,10 @@ public class UserController {
         return userService.validationUser(userId, num);
     }
 
+    @GetMapping("user/{nickname}")
+    public ResponseEntity<UserInfoResponseDto> userInformation(@PathVariable("nickname") String nickname) {
+        return ResponseEntity.ok(UserInfoResponseDto.convert(userService.userInfomation(nickname)));
+    }
 
 
 }
