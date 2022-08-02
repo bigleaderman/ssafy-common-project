@@ -163,11 +163,7 @@ public class FriendRepo {
         // 친구가 지금 있는 방
         RoomInfo room = em.find(RoomInfo.class, friend.getNowRoomSeq());
 
-        // 나 DTO만들기
-        UserDto meDto = new UserDto();
-        meDto.setEmail(me.getEmail());
-        meDto.setPassword(me.getPassword());
         // 방에 입장하기
-        roomService.joinRoom(room.getRoomSeq(), meDto);
+        roomService.joinRoom(room.getRoomSeq(), userSeq);
     }
 }
