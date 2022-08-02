@@ -1,9 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container, styleTableContainer, styleButton } from '../style.js';
 import { Table, TableHead, TableFooter, TableContainer, TableBody, Paper, TableRow, TableCell, TablePagination, Button } from '@mui/material';
 import { Link, useNavigate } from  "react-router-dom";
+import axios from 'axios';
+
 
 const NoticeListPage = (props) => {
+  const [noticeData, setNoticeData] = useState([]);
+
+  useEffect(() => {
+    axios.get('/api/board')
+    .then(response => {
+      console.log(response.data);
+      setNoticeData(response.data);
+    });
+  }, []);
 
   const noticeDataList = [
     {
@@ -58,6 +69,7 @@ const NoticeListPage = (props) => {
   return (
     <Container>
       <h2>공지사항</h2>
+      <p>{noticeData}</p>
       <TableContainer style={styleTableContainer} component={Paper}>
         <Table size="medium">
           <TableHead>
