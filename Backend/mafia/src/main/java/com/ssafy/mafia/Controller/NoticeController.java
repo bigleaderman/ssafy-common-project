@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 
-@Api("NoticeController V1")
+@Api(value = "NoticeController V1", tags = {"공지사항관련기능"})
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")

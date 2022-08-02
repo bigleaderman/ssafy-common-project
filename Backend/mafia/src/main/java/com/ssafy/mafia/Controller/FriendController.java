@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@Api("FriendController V1")
+@Api(value = "FriendController V1", tags = {"친구관련기능"})
 @RestController
 @RequestMapping("/api/user/friend")
 @RequiredArgsConstructor

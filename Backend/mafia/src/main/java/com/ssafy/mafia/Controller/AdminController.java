@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@Api("AdminController V1")
+@Api(value = "AdminController V1", tags = {"관리자기능"})
 @RestController
 @RequestMapping("/api/admin")
 @RequiredArgsConstructor

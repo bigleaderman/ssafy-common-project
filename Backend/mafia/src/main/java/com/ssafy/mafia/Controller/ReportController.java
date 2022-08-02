@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 
-@Api("ReportController V1")
+@Api(value = "ReportController V1",tags = {"신고관련기능"})
 @RestController
 @RequestMapping("/api/user/report")
 @RequiredArgsConstructor
