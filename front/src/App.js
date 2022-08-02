@@ -3,7 +3,7 @@ import MainPage from "./pages/MainPage";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
 import SignOutPage from "./pages/SignOutPage";
-import RoomPage from "./pages/GatherRoomPage";
+import GatherRoomPage from "./pages/GatherRoomPage";
 import MyPage from "./pages/MyPage";
 import UserListPage from "./pages/UserListPage";
 import Header from "./components/Header";
