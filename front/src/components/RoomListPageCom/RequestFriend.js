@@ -11,12 +11,13 @@ import React from "react";
 function RequestFriend() {
     const SendRequest = () => {
         return axios.post(
-            "/user/friend/request",
+            "https://i7d106.p.ssafy.io:8080/user/friend/request",
             {
-                me: "1",
+               me: "1",
                 friend: "2",
-            }).then(function(res) {
+            }).then((res) =>{
                 console.log(res);
+                // 모달로 친구신청했다.
             })
     };
     return (

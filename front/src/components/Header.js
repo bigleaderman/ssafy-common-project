@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { styleButton } from "../style.js";
 import { Button } from "@mui/material";
 
-const Header = (props) => {
+const Header = () => {
     const navigate = useNavigate();
 
     const goMainPage = () => {

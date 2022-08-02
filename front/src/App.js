@@ -29,7 +29,7 @@ function App() {
     return (
         <div className="App">
             <Router>
-                <Header />
+                <Header/>
                 <Routes>
                     <Route exact path="/" element={<MainPage />} />{" "}
                     {/* 테스트 위해 MainPage 대신 VideoRoomPage로 연결 */}
@@ -40,36 +40,12 @@ function App() {
                     <Route exact path="/userlist" element={<UserListPage />} />
                     <Route exact path="/board" element={<NoticeListPage />} />
                     <Route exact path="/gatherroom" element={<RoomPage />} />
-                    <Route
-                        exact
-                        path="/board/create"
-                        element={<CreateNoticePage />}
-                    />
-                    <Route
-                        exact
-                        path="/board/:noticeId"
-                        element={<NoticeDetailPage />}
-                    />
-                    <Route
-                        exact
-                        path="/board/:noticeId/update"
-                        element={<UpdateNoticePage />}
-                    />
-                    <Route
-                        exact
-                        path="/findpassword"
-                        element={<FindPasswordPage />}
-                    />
-                    <Route
-                        exact
-                        path="/changepassword"
-                        element={<ChangePasswordPage />}
-                    />
-                    <Route
-                        exact
-                        path="/roomlist"
-                        element={<RoomListPage />}
-                    />
+                    <Route exact path="/board/create" element={<CreateNoticePage />} />
+                    <Route exact path="/board/:noticeId" element={<NoticeDetailPage />} />
+                    <Route exact path="/board/:noticeId/update" element={<UpdateNoticePage />} />
+                    <Route exact path="/findpassword" element={<FindPasswordPage />} />
+                    <Route exact path="/changepassword" element={<ChangePasswordPage />} />
+                    <Route exact path="/roomlist" element={<RoomListPage />} />
                     <Route exact path="/*" element={<PageNotFoundPage />} />
                 </Routes>
                 <Footer />

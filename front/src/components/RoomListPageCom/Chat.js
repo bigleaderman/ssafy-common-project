@@ -10,7 +10,7 @@ function Chat() {
     const [Chats, setChats] = useState([]);
     // 보내는 채팅
     const [userChat, setUserChat] = useState({
-        nickname: "이름",
+        name: "이름",
         message: "",
     });
     // roomListPage 들어오면 연결
@@ -19,7 +19,7 @@ function Chat() {
     }, []);
 
     const connect = () => {
-        let Sock = new SockJS("https://i7d106.p.ssafy.io:8000/ws");
+        let Sock = new SockJS("https://i7d106.p.ssafy.io:8080/ws");
         stompClient = over(Sock);
         stompClient.connect({}, onConnected, onError);
     };
@@ -48,7 +48,7 @@ function Chat() {
     const sendValue = () => {
         if (stompClient) {
             var chatMessage = {
-                senderName: userChat.nickname,
+                name: userChat.name,
                 message: userChat.message,
             };
             stompClient.send("/pub/lobby", {}, JSON.stringify(chatMessage));
@@ -64,7 +64,7 @@ function Chat() {
                     {Chats.map((chat, index) => {
                         return (
                             <li key={index}>
-                                {chat.senderName} : {chat.message}
+                                {chat.name} : {chat.message}
                             </li>
                         );
                     })}

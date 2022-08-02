@@ -1,6 +1,6 @@
 import React from "react";
 import Nav from "../components/RoomListPageCom/Nav";
-import UserList from "../components/RoomListPageCom/UserList";
+import SideBar from "../components/RoomListPageCom/SideBar";
 import RoomList from "../components/RoomListPageCom/RoomList";
 import MyProfile from "../components/RoomListPageCom/MyProfile";
 import Chat from "../components/RoomListPageCom/Chat";
@@ -17,7 +17,7 @@ function RoomListPage() {
                         <Nav />
                     </Grid>
                     <Grid item xs={3}>
-                        <UserList />
+                        <SideBar />
                     </Grid>
                     <Grid item xs={9}>
                         <RoomList />

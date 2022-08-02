@@ -35,7 +35,7 @@ function a11yProps(index) {
       'aria-controls': `simple-tabpanel-${index}`,
     };
   }
-function UserList() {
+function SideBar() {
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -62,4 +62,4 @@ function UserList() {
   );
 }
 
-export default UserList;
+export default SideBar;
