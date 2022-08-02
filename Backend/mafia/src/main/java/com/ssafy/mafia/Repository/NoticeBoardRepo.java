@@ -1,15 +1,17 @@
 package com.ssafy.mafia.Repository;
 
 import com.ssafy.mafia.Entity.NoticeBoard;
+import com.ssafy.mafia.Model.NoticeListResponseDto;
+import com.ssafy.mafia.Model.NoticeResponseDto;
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.NoticeDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -19,16 +21,38 @@ public class NoticeBoardRepo {
     private final EntityManager em;
 
     //전체 글 목록 반환
-    public List<NoticeBoard> findAll() {
-        return em.createQuery("select N from NoticeBoard N", NoticeBoard.class).getResultList();
+    public List<NoticeListResponseDto> findAll() {
+
+        List<NoticeBoard> noticeBoardList = em.createQuery("select N from NoticeBoard N", NoticeBoard.class).getResultList();
+        List<NoticeListResponseDto> result = new ArrayList<>();
+        for (NoticeBoard noticeBoard : noticeBoardList) {
+            NoticeListResponseDto noticeListResponseDto = new NoticeListResponseDto();
+            User writer = em.find(User.class,noticeBoard.getUserSeq());
+            noticeListResponseDto.setNoticeSeq(noticeBoard.getNoticeSeq());
+            noticeListResponseDto.setTitle(noticeBoard.getTitle());
+            noticeListResponseDto.setCreateAt(noticeBoard.getCreatedAt());
+            noticeListResponseDto.setWriter(writer.getNickname());
+            result.add(noticeListResponseDto);
+        }
+
+
+        return result;
     }
     // 선택 글 정보 반환
-    public NoticeBoard findByNo(int noticeSeq) {
-        return em.find(NoticeBoard.class, noticeSeq);
+    public NoticeResponseDto findByNo(int noticeSeq) {
+        NoticeBoard noticeBoard = em.find(NoticeBoard.class, noticeSeq);
+        User writer = em.find(User.class,noticeBoard.getUserSeq());
+        NoticeResponseDto noticeResponseDto = new NoticeResponseDto();
+        noticeResponseDto.setNoticeSeq(noticeSeq);
+        noticeResponseDto.setTitle(noticeBoard.getTitle());
+        noticeResponseDto.setContent(noticeBoard.getContent());
+        noticeResponseDto.setWriter(writer.getNickname());
+        noticeResponseDto.setCreateAt(noticeBoard.getCreatedAt());
+        return noticeResponseDto;
     }
 
     // 글 작성
-    public NoticeBoard createNotice(NoticeDto noticeDto){
+    public NoticeResponseDto createNotice(NoticeDto noticeDto){
         NoticeBoard noticeBoard = new NoticeBoard();
         noticeBoard.setTitle(noticeDto.getTitle());
         noticeBoard.setContent(noticeDto.getContent());
@@ -37,30 +61,62 @@ public class NoticeBoardRepo {
         User writer = em.find(User.class,userSeq);
         noticeBoard.setUserSeq(writer);
         em.persist(noticeBoard);
-        return noticeBoard;
+
+        NoticeResponseDto noticeResponseDto = new NoticeResponseDto();
+        noticeResponseDto.setTitle(noticeBoard.getTitle());
+        noticeResponseDto.setContent(noticeBoard.getContent());
+        noticeResponseDto.setWriter(writer.getNickname());
+        noticeResponseDto.setCreateAt(noticeBoard.getCreatedAt());
+        noticeResponseDto.setNoticeSeq(noticeBoard.getNoticeSeq());
+        return noticeResponseDto;
 
     }
     //글 수정
-    public NoticeBoard updateNotice(int noticeSeq, NoticeDto noticeDto) {
+    public NoticeResponseDto updateNotice(int noticeSeq, NoticeDto noticeDto) {
         NoticeBoard noticeBoard = em.find(NoticeBoard.class,noticeSeq);
         noticeBoard.setTitle(noticeDto.getTitle());
         noticeBoard.setContent(noticeDto.getContent());
         em.merge(noticeBoard);
-        return noticeBoard;
+
+        int userSeq = noticeDto.getUserSeq();
+        User writer = em.find(User.class,userSeq);
+
+        NoticeResponseDto noticeResponseDto = new NoticeResponseDto();
+        noticeResponseDto.setTitle(noticeBoard.getTitle());
+        noticeResponseDto.setContent(noticeBoard.getContent());
+        noticeResponseDto.setCreateAt(noticeBoard.getCreatedAt());
+        noticeResponseDto.setWriter(writer.getNickname());
+        noticeResponseDto.setNoticeSeq(noticeBoard.getNoticeSeq());
+
+        return noticeResponseDto;
 
     }
 
     //글 삭제
     public void deleteNotice(int noticeSeq) {
-        NoticeBoard noticeBoard = findByNo(noticeSeq);
+        NoticeBoard noticeBoard = em.find(NoticeBoard.class, noticeSeq);
         em.remove(noticeBoard);
     }
 
     //글 제목으로 검색
-    public List<NoticeBoard> findByTitle(String title) {
-        return em.createQuery("select N from NoticeBoard N where N.title like :title", NoticeBoard.class)
+    public List<NoticeListResponseDto> findByTitle(String title) {
+
+        List<NoticeBoard> noticeBoardList = em.createQuery("select N from NoticeBoard N where N.title like :title", NoticeBoard.class)
                 .setParameter("title", "%" + title + "%")
                 .getResultList();
+        List<NoticeListResponseDto> result = new ArrayList<>();
+        for (NoticeBoard noticeBoard : noticeBoardList) {
+            NoticeListResponseDto noticeListResponseDto = new NoticeListResponseDto();
+            User writer = em.find(User.class,noticeBoard.getUserSeq());
+            noticeListResponseDto.setNoticeSeq(noticeBoard.getNoticeSeq());
+            noticeListResponseDto.setTitle(noticeBoard.getTitle());
+            noticeListResponseDto.setCreateAt(noticeBoard.getCreatedAt());
+            noticeListResponseDto.setWriter(writer.getNickname());
+            result.add(noticeListResponseDto);
+        }
+
+
+        return result;
     }
 
 
