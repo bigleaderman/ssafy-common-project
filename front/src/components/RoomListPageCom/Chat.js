@@ -1,74 +1,85 @@
-import React, { useState, useRef,useEffect } from "react";
-import { Paper, TextField, Container, Button, Grid } from "@mui/material";
-import io from "socket.io-client";
+import React, { useState, useEffect } from "react";
+import SockJS from "sockjs-client";
+import { over } from "stompjs";
 
+// <남은 일>
+// 닉네임을 받아와야함 : login하면 닉네임이 redux에 저장되니 거기서 가져오자
+var stompClient = null;
 function Chat() {
     // 채팅 목록
-    const [chats, setChats] = useState([]);
-    // 내가 지금 보낼 채팅
-    const [chat, setChat] = useState("");
+    const [Chats, setChats] = useState([]);
+    // 보내는 채팅
+    const [userChat, setUserChat] = useState({
+        nickname: "이름",
+        message: "",
+    });
+    // roomListPage 들어오면 연결
+    useEffect(() => {
+        connect();
+    }, []);
 
-    const socketRef = useRef();
+    const connect = () => {
+        let Sock = new SockJS("https://i7d106.p.ssafy.io:8000/ws");
+        stompClient = over(Sock);
+        stompClient.connect({}, onConnected, onError);
+    };
 
-    useEffect(()=>{
-        socketRef.current = io.connect('/')
-        socketRef.current.on('chatting',(chat) => {
-            receivedChat(chat)
-        })
-    },[])
-
+    const onConnected = () => {
+        stompClient.subscribe("/sub/lobby", onMessageReceived);
+    };
     // 채팅 받기
-    function receivedChat(chat){
-        setChats(oldChats => [...oldChats,chat])
-    }
-    // 채팅 보내기
-    function sendChat(){
-        const chatInfo = {
-            nickname : 'nickname',
-            body : chat
-        }
-        console.log(chatInfo)
-        setChat('')
-        socketRef.current.emit('chatting',chatInfo)
-    }
-    function handleChange(e) {
-        setChat(e.target.value);
-    }
+    const onMessageReceived = (payload) => {
+        var payloadData = JSON.parse(payload.body);
+        Chats.push(payloadData);
+        setChats([...Chats]);
+    };
+
+    const onError = (err) => {
+        console.log(err);
+    };
+
+    // 채팅 적기
+    const handleMessage = (event) => {
+        const { value } = event.target;
+        setUserChat({ ...userChat, message: value });
+    };
     
+    // 채팅 전송
+    const sendValue = () => {
+        if (stompClient) {
+            var chatMessage = {
+                senderName: userChat.nickname,
+                message: userChat.message,
+            };
+            stompClient.send("/pub/lobby", {}, JSON.stringify(chatMessage));
+            setUserChat({ ...userChat, message: "" });
+        }
+    };
+
     return (
-        <Paper>
-            <Container>
+        <div>
+            <div>
                 <h1>Chat</h1>
-                <Grid container spacing={0}>
-                    <Grid item xs={12}>
-                        {chats.map((chat,index) => {
-                            return (
-                                <div key={index}>
-                                    {chat.nickname} : {chat.body}
-                                </div>
-                                
-                            )
-                        })}
-                    </Grid>
-                    
-                    <Grid item xs={11}>
-                        <TextField
-                            fullWidth
-                            id="outlined-textarea"
-                            value = {chat}
-                            onChange={handleChange}
-                            placeholder="Chat"
-                            size="small"
-                        />
-                    </Grid>
-                    <Grid item xs={1}>
-                        <Button variant="outlined" size="medium" onClick={sendChat}>
-                            전송
-                        </Button>
-                    </Grid>
-                </Grid>
-            </Container>
-        </Paper>
+                <ul>
+                    {Chats.map((chat, index) => {
+                        return (
+                            <li key={index}>
+                                {chat.senderName} : {chat.message}
+                            </li>
+                        );
+                    })}
+                </ul>
+                <div>
+                    <input
+                        type="text"
+                        value={userChat.message}
+                        onChange={handleMessage}
+                    />
+                    <button onClick={sendValue}>send</button>
+                </div>
+            </div>
+        </div>
     );
 }
 export default Chat;
+
