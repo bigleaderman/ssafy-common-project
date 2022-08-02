@@ -19,34 +19,10 @@ const NoticeListPage = (props) => {
       }
     })
     .then(response => {
-      console.log(response.data);
       setNoticeData(response.data);
     });
   }, []);
 
-  const noticeDataList = [
-    {
-      id: 1,
-      title: '제목1',
-      content: '내용1',
-      username: '이름1',
-      createdAt: '2022.07.27',
-    },
-    {
-      id: 2,
-      title: '제목2',
-      content: '내용2',
-      username: '이름2',
-      createdAt: '2022.07.27',
-    },
-    {
-      id: 3,
-      title: '제목3',
-      content: '내용3',
-      username: '이름3',
-      createdAt: '2022.07.27',
-    },
-  ];
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -76,7 +52,7 @@ const NoticeListPage = (props) => {
   return (
     <Container>
       <h2>공지사항</h2>
-      <p>{noticeData}</p>
+      {/* <p>{noticeData}</p> */}
       <TableContainer style={styleTableContainer} component={Paper}>
         <Table size="medium">
           <TableHead>
@@ -87,15 +63,15 @@ const NoticeListPage = (props) => {
             </TableRow>
           </TableHead>
             <TableBody>
-              {noticeDataList
+              {noticeData
                 .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
-                .map(({ id, title, createdAt }, i) => (
-                  <TableRow key={id}>
+                .map(({ noticeSeq, title, createAt }, i) => (
+                  <TableRow key={noticeSeq}>
                     <TableCell component="th" scope="row">
                       {page * rowsPerPage + i + 1}
                     </TableCell>
-                    <TableCell align="center"><Link to={`/board/${id}`}>{title}</Link></TableCell>
-                    <TableCell align="right">{createdAt}</TableCell>
+                    <TableCell align="center"><Link to={`/board/${noticeSeq}`}>{title}</Link></TableCell>
+                    <TableCell align="right">{createAt}</TableCell>
                   </TableRow>
                 ))}
           </TableBody>
@@ -104,7 +80,7 @@ const NoticeListPage = (props) => {
             <Button style={styleButton} onClick={goCreateNoticePage}>작성하기</Button>
               <TablePagination
                 page={page}
-                count={noticeDataList.length}
+                count={noticeData.length}
                 rowsPerPage={rowsPerPage}
                 onPageChange={handleChangePage}
                 onRowsPerPageChange={handleChangeRowsPerPage}
