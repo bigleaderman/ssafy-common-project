@@ -117,27 +117,11 @@ export default function PlayMap(props) {
         mapFocus.current.focus();
     }, []);
 
-<<<<<<< HEAD
-=======
-    //렌더링될 때마다 myChar가 #myCharacter 를 가르킴
-    useEffect(() => {
-        myChar = document.getElementById("myCharacter");
-
-        //랜더링 종료 시 인터벌 종료
-        return () => {
-            clearInterval(inputCheck);
-            console.log("pX : ", pX.current);
-            console.log("pY : ", pY.current);
-        };
-    });
-
->>>>>>> 32528ff (S07P12D106-110/아바타조작 구현 중)
     //맵 클릭 시 입력 포커싱 지정
     const changeFocus = () => {
         mapFocus.current.focus();
     };
 
-<<<<<<< HEAD
     //키 눌렀을 때 해당 값 true로 변환
     const handleKeyDown = (e) => {
         keyPress[e.keyCode.toString()] = true;
@@ -165,42 +149,12 @@ export default function PlayMap(props) {
                 id="inputTag"
                 onChange={(e) => setValue(e.target.value)}
                 value={"a"}
-=======
-    const handleKeyDown = (e) => {
-        keyPress[e.keyCode.toString()] = true;
-    };
-    const handleKeyUp = (e) => {
-        keyPress[e.keyCode.toString()] = false;
-    };
-    return (
-        <div>
-            <div
-                onClick={changeFocus}
-                style={{
-                    width: size,
-                    height: size,
-                    background: "orange",
-                }}
-            >
-                <div
-                    id="myCharacter"
-                    style={{
-                        width: 50,
-                        height: 50,
-                        background: "red",
-                        position: "relative",
-                    }}
-                ></div>
-            </div>
-            <input
->>>>>>> 32528ff (S07P12D106-110/아바타조작 구현 중)
                 // style={{ display: "none" }}
                 type="text"
                 ref={mapFocus}
                 onKeyDown={handleKeyDown}
                 onKeyUp={handleKeyUp}
                 readOnly
-<<<<<<< HEAD
                 style={{
                     border: "none",
                     cursor: "default",
@@ -261,10 +215,6 @@ export default function PlayMap(props) {
                     }}
                 ></div>
             </div>
-=======
-            />
-            playMap
->>>>>>> 32528ff (S07P12D106-110/아바타조작 구현 중)
         </div>
     );
 }
