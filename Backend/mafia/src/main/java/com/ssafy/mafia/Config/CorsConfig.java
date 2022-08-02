@@ -12,6 +12,7 @@ public class CorsConfig implements WebMvcConfigurer {
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("headers")
+                .allowCredentials(false)
                 .maxAge(3000);
     }
 }
