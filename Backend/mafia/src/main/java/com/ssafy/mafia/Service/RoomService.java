@@ -1,21 +1,13 @@
 package com.ssafy.mafia.Service;
 
-import com.mysql.cj.x.protobuf.MysqlxCursor;
 import com.ssafy.mafia.Entity.GameInfo;
 import com.ssafy.mafia.Entity.RoomInfo;
 import com.ssafy.mafia.Entity.User;
-import com.ssafy.mafia.Model.GameInfoDto;
-import com.ssafy.mafia.Model.RoomInfoDto;
-import com.ssafy.mafia.Model.SettingsDto;
-import com.ssafy.mafia.Model.UserDto;
+import com.ssafy.mafia.Model.*;
 import com.ssafy.mafia.Repository.GameRepo;
 import com.ssafy.mafia.Repository.RoomRepo;
-import com.ssafy.mafia.Repository.UserRepo;
-import io.openvidu.java.client.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.handler.UserRoleAuthorizationInterceptor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +26,6 @@ public class RoomService {
     private RoomRepo roomRepo;
 
     @Autowired
-    private UserRepo userRepo;
-
-    @Autowired
     private GameRepo gameRepo;
 
 
@@ -47,6 +36,20 @@ public class RoomService {
         List<RoomInfoDto> result = new ArrayList<>();
         for(RoomInfo room : list) {
             result.add(new RoomInfoDto(room.getRoomSeq(), room.getHostUser().getUserSeq(), room.getTitle(), room.getCapacity()));
+        }
+        return result;
+    }
+
+    // 방 필터로 검색하기
+    public List<RoomInfoDto> searchRoomsByFilter(RoomSearchFilterDto filter){
+        List<RoomInfo> list = roomRepo.getAllRooms();
+        List<RoomInfoDto> result = new ArrayList<>();
+        for(RoomInfo room : list) {
+            GameInfo game = gameRepo.getGameInfo(room.getRoomSeq());
+            if(room.getTitle().equals(filter.getTitle())
+                    && room.getCapacity() >= filter.getCapacity()
+                    && game.getMafiaNum() == filter.getMafiaNum())
+                result.add(new RoomInfoDto(room.getRoomSeq(), room.getHostUser().getUserSeq(), room.getTitle(), room.getCapacity()));
         }
         return result;
     }
@@ -72,10 +75,19 @@ public class RoomService {
         return response;
     }
 
+    // 방 상세 정보 조회
+    public RoomInfoDto getRoomInfo(int roomSeq){
+        RoomInfo room = roomRepo.getRoomInfo(roomSeq);
+        RoomInfoDto dto = new RoomInfoDto(room.getRoomSeq(), room.getHostUser().getUserSeq(), room.getTitle(), room.getCapacity());
+        return dto;
+    }
+
     // 방 정보 수정
-    public void modifyRoomInfo(RoomInfoDto roomInfo){
+    public RoomInfoDto modifyRoomInfo(RoomInfoDto roomInfo){
         // Todo : 호스트 유저만 방 정보 수정 가능
-        roomRepo.modifyRoomInfo(roomInfo);
+        RoomInfo room =  roomRepo.modifyRoomInfo(roomInfo);
+        RoomInfoDto dto = new RoomInfoDto(room.getRoomSeq(), room.getHostUser().getUserSeq(), room.getTitle(), room.getCapacity());
+        return dto;
     }
 
     // 방 삭제
@@ -85,9 +97,9 @@ public class RoomService {
     }
 
     // 방 입장
-    public SettingsDto joinRoom(int roomSeq, UserDto user){
+    public SettingsDto joinRoom(int roomSeq, int userSeq){
         // 방에 유저 추가
-        roomRepo.joinRoom(roomSeq, 1);
+        roomRepo.joinRoom(roomSeq, userSeq);
         
         // { roominfo, gameinfo } 데이터 리턴
         return new SettingsDto();
@@ -98,5 +110,4 @@ public class RoomService {
         // 방 정보 리스트에서 유저 삭제
         roomRepo.leavRoom(roomSeq, userSeq);
     }
-
 }
