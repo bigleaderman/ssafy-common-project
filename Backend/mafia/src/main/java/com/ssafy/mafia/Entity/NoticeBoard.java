@@ -26,12 +26,7 @@ public class NoticeBoard {
 
     private Timestamp createdAt;
 
-
-    @ManyToOne
-    @JoinColumn(name = "user_seq")
-    @JsonBackReference
-    @JsonIgnore
-    private User userSeq;
+    private int writer;
 
 
 
