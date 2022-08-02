@@ -9,9 +9,11 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,11 +22,12 @@ public class EmailService {
     private final EntityManager em;
     private final JavaMailSender mailSender;
 
-
-    public void sendEmail() throws  Exception {
+    @Transactional
+    public void sendEmail(String email) throws  Exception {
         int num = Integer.parseInt(makeSecretnumberUtil.numberGen(6,1));
-        User user = em.find(User.class, SecurityUtil.getCurrentUserId());
-        user.setEmailCode(num);
+        User user = em.createQuery("SELECT u FROM User u WHERE u.email like :email", User.class).setParameter("email", email).getSingleResult();
+        User changeUser = em.find(User.class, user.getUserSeq());
+        changeUser.setEmailCode(num);
 
         try {
             MimeMessage mail = mailSender.createMimeMessage();

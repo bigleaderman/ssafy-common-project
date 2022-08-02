@@ -1,5 +1,6 @@
 package com.ssafy.mafia.auth.controller.dto;
 
+import com.ssafy.mafia.Entity.Authority;
 import com.ssafy.mafia.Entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -13,6 +14,8 @@ import lombok.NoArgsConstructor;
 public class UserInfoResponseDto {
     @ApiParam(value = "유저번호", required = true)
     private int userSeq;
+
+    private Authority authority;
 
     @ApiParam(value = "이메일", required = true)
     private String email;
@@ -36,8 +39,8 @@ public class UserInfoResponseDto {
     private  int rankPoint;
 
     public static UserInfoResponseDto convert(User user){
-        return new UserInfoResponseDto(user.getUserSeq(), user.getEmail(), user.getNickname(), user.isRedUser(),
-                user.isAuth(), user.getWinCount(), user.getLoseCount(), user.getRankPoint());
+        return new UserInfoResponseDto(user.getUserSeq(),user.getAuthority(), user.getEmail(), user.getNickname(), user.isRedUser(),
+                user.isAuth(), user.getWinCount(), user.getLoseCount(), user.getRankPoint() );
     }
 
 }

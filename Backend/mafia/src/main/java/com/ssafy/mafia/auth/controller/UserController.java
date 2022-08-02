@@ -6,7 +6,10 @@ import com.ssafy.mafia.auth.controller.dto.UserInfoResponseDto;
 import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
 import com.ssafy.mafia.auth.service.UserService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,59 +19,69 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
-@Api(tags = "로그")
+@Api(tags = "회원관리기능")
 public class UserController {
 
     private final UserService userService;
 
     // 자신의 회원 정보 조회
     @GetMapping("/user/me")
+    @ApiOperation(value = "자신의 정보조회", notes = "Token으로 정보를 받기 때문에 ", response = UserInfoResponseDto.class)
     public ResponseEntity<UserInfoResponseDto> getMyUserInfo() {
         return ResponseEntity.ok(UserInfoResponseDto.convert(userService.getMyInfo()));
     }
 
     //유저 상세 조회 filter 기능
     @GetMapping("/admin/findUser")
-    public ResponseEntity<UserInfoResponseDto> getUserInfo(@RequestBody String email) {
-        return ResponseEntity.ok(UserInfoResponseDto.convert(userService.getUserInfo(email)));
+    @ApiOperation(value = "관리자가 유저상세조회", notes = "유저 이메일을 통해서 상세 조회", response = UserInfoResponseDto.class)
+    public ResponseEntity<User> getUserInfo(@ApiParam(value = "email", example = "ssafy@naver.com") @RequestBody String email) {
+        return ResponseEntity.ok(userService.getUserInfo(email));
     }
 
     @GetMapping("/checkEmail")
-    public boolean checkEmail(@RequestBody String email) {
+    @ApiOperation(value = "이메일중복확인", notes="DB에 유저 이메일이 있는지 확인", response = boolean.class)
+    public boolean checkEmail(@ApiParam(value = "email", example = "ssafy@naver.com") @RequestBody String email) {
         return userService.checkEmail(email);
     }
 
     @GetMapping("/checkNickname")
-    public Boolean checkNickname(@RequestBody String nickname) {
+    @ApiOperation(value = "닉네임중복확인", notes = "DB에 유저 닉네임이 있는지 확인", response = boolean.class)
+    public Boolean checkNickname(@ApiParam(value = "nickname", example = "닉네임명")@RequestBody String nickname) {
         return userService.checkNickname(nickname);
     }
 
     @PutMapping("/user/enrollNickname")
-    public ResponseEntity<UserInfoResponseDto> enrollNickname(@RequestBody String nickname) {
-        return ResponseEntity.ok(userService.enrollNickname(nickname));
+    @ApiOperation(value = "닉네임등록", notes = "유저닉네임 등록하기", response = boolean.class)
+    public ResponseEntity<?> enrollNickname(@ApiParam(value = "nickname", example = "닉네임명")@RequestBody String nickname) {
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/user/delete")
+    @ApiOperation(value = "유저삭제", notes = "현재 접속해 있는 유저를 삭제함", response = void.class)
     public void deleteUser() {
         userService.deleteUser();
     }
 
     @GetMapping("/user/checkPw")
+    @ApiOperation(value = "비밀번호확인", notes = "입력받은 비밀번호와 현재 유저의 비밀번호가 같은지 확인", response = boolean.class)
     public boolean checkPw(@RequestBody String password) {
         return userService.checkPw(password);
     }
 
-    @PostMapping("user/changePw")
-    public UserInfoResponseDto changePw(@RequestBody String password) {
+    @PostMapping("/user/changePw")
+    @ApiOperation(value = "비밀번호변경", notes = "입력받은 비밀번호로 변경하기", response = UserInfoResponseDto.class)
+    public UserInfoResponseDto changePw(@ApiParam(value = "새비밀번호", example = "ssafy1!") @RequestBody String password) {
         return userService.changePw(password);
     }
 
-    @GetMapping("user/validationUser/{userId}/{num}")
+    @GetMapping("/validationUser/{userId}/{num}")
+    @ApiOperation(value = "유저 인증하기", notes = "받은 이메일을 통해서 유저 인증하기", response = boolean.class)
     public boolean validationUser(@PathVariable("userId") int userId,@PathVariable("num") int num) throws Exception {
         return userService.validationUser(userId, num);
     }
 
     @GetMapping("user/{nickname}")
+    @ApiOperation(value = "닉네임으로 유저정보 제공", notes = "유저 정보 제공하기", response = UserInfoResponseDto.class)
     public ResponseEntity<UserInfoResponseDto> userInformation(@PathVariable("nickname") String nickname) {
         return ResponseEntity.ok(UserInfoResponseDto.convert(userService.userInfomation(nickname)));
     }
