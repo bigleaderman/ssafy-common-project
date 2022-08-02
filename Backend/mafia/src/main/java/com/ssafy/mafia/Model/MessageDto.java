@@ -5,6 +5,6 @@ import lombok.Data;
 @Data
 public class MessageDto {
     private String roomSeq;
-    private String name;
+    private String senderNickname;
     private String message;
 }
