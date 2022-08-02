@@ -6,6 +6,7 @@ import com.ssafy.mafia.auth.controller.dto.UserInfoResponseDto;
 import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
 import com.ssafy.mafia.auth.controller.dto.UserResponseDto;
 import com.ssafy.mafia.auth.service.UserService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.mapstruct.Mapper;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api")
+@Api(tags = "로그")
 public class UserController {
 
     private final UserService userService;
@@ -34,18 +36,18 @@ public class UserController {
     }
 
     @GetMapping("/checkEmail")
-    public boolean checkEmail(@RequestBody UserRequestDto userRequestDto) {
-        return userService.checkEmail(userRequestDto.getEmail());
+    public boolean checkEmail(@RequestBody String email) {
+        return userService.checkEmail(email);
     }
 
     @GetMapping("/checkNickname")
-    public Boolean checkNickname(@RequestBody UserRequestDto userRequestDto) {
-        return userService.checkNickname(userRequestDto.getNickname());
+    public Boolean checkNickname(@RequestBody String nickname) {
+        return userService.checkNickname(nickname);
     }
 
     @PutMapping("/user/enrollNickname")
-    public ResponseEntity<UserInfoResponseDto> enrollNickname(@RequestBody UserRequestDto userRequestDto) {
-        return ResponseEntity.ok(userService.enrollNickname(userRequestDto.getNickname()));
+    public ResponseEntity<UserInfoResponseDto> enrollNickname(@RequestBody String nickname) {
+        return ResponseEntity.ok(userService.enrollNickname(nickname));
     }
 
     @DeleteMapping("/user/delete")
@@ -54,13 +56,13 @@ public class UserController {
     }
 
     @GetMapping("/user/checkPw")
-    public boolean checkPw(@RequestBody UserRequestDto userRequestDto) {
-        return userService.checkPw(userRequestDto.getPassword());
+    public boolean checkPw(@RequestBody String password) {
+        return userService.checkPw(password);
     }
 
     @PostMapping("user/changePw")
-    public UserInfoResponseDto changePw(@RequestBody UserRequestDto userRequestDto) {
-        return userService.changePw(userRequestDto.getPassword());
+    public UserInfoResponseDto changePw(@RequestBody String password) {
+        return userService.changePw(password);
     }
 
     @GetMapping("user/validationUser/{userId}/{num}")

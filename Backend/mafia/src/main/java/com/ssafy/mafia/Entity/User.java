@@ -11,6 +11,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -44,9 +47,11 @@ public class User extends BaseTimeEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int UserSeq;
+    private int userSeq;
 
     @Column(nullable = false, length = 255)
+    @NotBlank(message = "닉네임은 필수 입력입니다")
+    @Email(message = "이메일 형식에 맞지 않습니다.")
     private String email;
 
     private boolean isAuth;
