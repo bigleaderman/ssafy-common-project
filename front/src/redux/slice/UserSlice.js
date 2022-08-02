@@ -25,12 +25,20 @@ export const UserSlice = createSlice({
                     accessToken: action.payload.accessToken,
                     refreshToken: action.payload.refreshToken,
                 };
+                return state;
             })
+        },
+        logout: (state) => {
+            state = {
+                accessToken: null,
+                refreshToken: null,
+            }
+            return state;
         }
     },
 });
 
-export const { toggle, login } = UserSlice.actions;
+export const { login, logout } = UserSlice.actions;
 
 export const selectUser = (state) => state.user;
 
