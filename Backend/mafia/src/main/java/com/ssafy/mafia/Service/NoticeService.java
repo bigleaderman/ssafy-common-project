@@ -1,6 +1,8 @@
 package com.ssafy.mafia.Service;
 
 import com.ssafy.mafia.Entity.NoticeBoard;
+import com.ssafy.mafia.Model.NoticeListResponseDto;
+import com.ssafy.mafia.Model.NoticeResponseDto;
 import com.ssafy.mafia.Model.NoticeDto;
 import com.ssafy.mafia.Repository.NoticeBoardRepo;
 import lombok.RequiredArgsConstructor;
@@ -17,23 +19,23 @@ public class NoticeService {
     private final NoticeBoardRepo noticeBoardRepo;
 
     //공지사항 전체 목록 조회
-    public List<NoticeBoard> getAllNotice(){
+    public List<NoticeListResponseDto> getAllNotice(){
         return noticeBoardRepo.findAll();
     }
 
     //공지사항 1개 조회
-    public NoticeBoard noticeDetail(int noticeSeq) {
+    public NoticeResponseDto noticeDetail(int noticeSeq) {
         return noticeBoardRepo.findByNo(noticeSeq);
     }
 
     // 글 작성
     @Transactional
-    public NoticeBoard writeNotice(NoticeDto noticeDto) {
+    public NoticeResponseDto writeNotice(NoticeDto noticeDto) {
         return noticeBoardRepo.createNotice(noticeDto);
     }
     // 글 수정
     @Transactional
-    public NoticeBoard updateNotice(int noticeSeq, NoticeDto noticeDto) {
+    public NoticeResponseDto updateNotice(int noticeSeq, NoticeDto noticeDto) {
         return noticeBoardRepo.updateNotice(noticeSeq, noticeDto);
     }
 
@@ -44,7 +46,7 @@ public class NoticeService {
     }
 
     // 글 제목으로 검색
-    public List<NoticeBoard> noticeByTitle(String title) {
+    public List<NoticeListResponseDto> noticeByTitle(String title) {
         return noticeBoardRepo.findByTitle(title);
     }
 
