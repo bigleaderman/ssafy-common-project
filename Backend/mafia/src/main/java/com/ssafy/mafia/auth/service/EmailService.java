@@ -1,11 +1,9 @@
 package com.ssafy.mafia.auth.service;
 
 
-import com.ssafy.mafia.Entity.User;
-import com.ssafy.mafia.auth.util.SecurityUtil;
+import com.ssafy.mafia.Repository.Entity.User;
 import com.ssafy.mafia.auth.util.makeSecretnumberUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -13,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

@@ -1,10 +1,9 @@
-package com.ssafy.mafia.Entity;
+package com.ssafy.mafia.Repository.Entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.util.Lazy;
 
 import javax.persistence.*;
 

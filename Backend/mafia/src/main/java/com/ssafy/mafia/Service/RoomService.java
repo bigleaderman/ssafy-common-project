@@ -1,9 +1,8 @@
 package com.ssafy.mafia.Service;
 
-import com.mysql.cj.x.protobuf.MysqlxCursor;
-import com.ssafy.mafia.Entity.GameInfo;
-import com.ssafy.mafia.Entity.RoomInfo;
-import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Repository.Entity.GameInfo;
+import com.ssafy.mafia.Repository.Entity.RoomInfo;
+import com.ssafy.mafia.Repository.Entity.User;
 import com.ssafy.mafia.Model.GameInfoDto;
 import com.ssafy.mafia.Model.RoomInfoDto;
 import com.ssafy.mafia.Model.SettingsDto;
@@ -11,11 +10,8 @@ import com.ssafy.mafia.Model.UserDto;
 import com.ssafy.mafia.Repository.GameRepo;
 import com.ssafy.mafia.Repository.RoomRepo;
 import com.ssafy.mafia.Repository.UserRepo;
-import io.openvidu.java.client.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.servlet.handler.UserRoleAuthorizationInterceptor;
 
 import java.util.ArrayList;
 import java.util.List;

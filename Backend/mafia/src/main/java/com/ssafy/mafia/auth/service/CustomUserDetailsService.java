@@ -1,6 +1,6 @@
 package com.ssafy.mafia.auth.service;
 
-import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Repository.Entity.User;
 import com.ssafy.mafia.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;

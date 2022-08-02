@@ -1,8 +1,6 @@
 package com.ssafy.mafia.Repository;
 
-import com.ssafy.mafia.Entity.User;
-import com.ssafy.mafia.Model.UserDto;
-import org.hibernate.boot.model.naming.IllegalIdentifierException;
+import com.ssafy.mafia.Repository.Entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

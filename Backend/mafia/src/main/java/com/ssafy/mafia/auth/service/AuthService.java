@@ -2,8 +2,8 @@ package com.ssafy.mafia.auth.service;
 
 
 
-import com.ssafy.mafia.Entity.RefreshToken;
-import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Repository.Entity.RefreshToken;
+import com.ssafy.mafia.Repository.Entity.User;
 import com.ssafy.mafia.auth.controller.dto.TokenDto;
 import com.ssafy.mafia.auth.controller.dto.TokenRequestDto;
 import com.ssafy.mafia.auth.controller.dto.UserRequestDto;

@@ -1,6 +1,6 @@
 package com.ssafy.mafia.auth.repository;
 
-import com.ssafy.mafia.Entity.RefreshToken;
+import com.ssafy.mafia.Repository.Entity.RefreshToken;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

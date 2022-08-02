@@ -1,8 +1,7 @@
 package com.ssafy.mafia.auth.controller.dto;
 
-import com.ssafy.mafia.Entity.Authority;
-import com.ssafy.mafia.Entity.User;
-import io.swagger.annotations.Api;
+import com.ssafy.mafia.Repository.Entity.Authority;
+import com.ssafy.mafia.Repository.Entity.User;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

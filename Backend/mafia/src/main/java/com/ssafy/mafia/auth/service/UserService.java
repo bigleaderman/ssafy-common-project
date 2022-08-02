@@ -1,7 +1,7 @@
 package com.ssafy.mafia.auth.service;
 
 
-import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Repository.Entity.User;
 import com.ssafy.mafia.auth.controller.dto.UserInfoResponseDto;
 import com.ssafy.mafia.auth.repository.UserRepository;
 import com.ssafy.mafia.auth.util.SecurityUtil;
@@ -42,7 +42,7 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Boolean checkNickname(String nickname) {
+    public boolean checkNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
 
@@ -67,28 +67,23 @@ public class UserService {
     }
 
     @Transactional
-    public UserInfoResponseDto changePw(String password) {
+    public void changePw(String password) {
         User user = em.find(User.class, SecurityUtil.getCurrentUserId());
         user.setPassword(passwordEncoder.encode(password));
-        return UserInfoResponseDto.convert(user);
         //return user;
 
     }
 
     @Transactional
-    public boolean validationUser(int userId, int num) throws Exception {
+    public void validationUser(int userId, int num) throws Exception {
         User user = em.find(User.class, userId);
         if (user.getEmailCode() == num ) {
             user.setAuth(true);
-            return true;
-        }
-        else{
-            return false;
         }
     }
 
     @Transactional(readOnly = true)
-    public User userInfomation(String nickname) {
+    public User userInformation(String nickname) {
         return userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
     }
