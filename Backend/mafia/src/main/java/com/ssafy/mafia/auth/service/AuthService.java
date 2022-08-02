@@ -34,13 +34,14 @@ public class AuthService {
     private final EntityManager em;
 
     @Transactional
-    public UserResponseDto signup(UserRequestDto userRequestDto) {
+    public String  signup(UserRequestDto userRequestDto) {
         if (userRepository.existsByEmail(userRequestDto.getEmail())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }
 
         User user = userRequestDto.toUser(passwordEncoder);
-        return UserResponseDto.of(userRepository.save(user));
+        UserResponseDto.of(userRepository.save(user));
+        return user.getEmail();
     }
 
     @Transactional

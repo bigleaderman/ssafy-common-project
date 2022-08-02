@@ -15,24 +15,24 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@Api(tags = "회원관리")
+@Api(tags = "회원등록/토큰관리")
 public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
     @ApiOperation(value="회원가입", notes="회원가입한다.", response = UserResponseDto.class)
-    public ResponseEntity<UserResponseDto> signup(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<String > signup(@RequestBody UserRequestDto userRequestDto) {
         return ResponseEntity.ok(authService.signup(userRequestDto));
     }
 
     @PostMapping("/login")
-    @ApiOperation(value = "로그인", notes="로그인을 한다")
+    @ApiOperation(value = "로그인", notes="로그인을 한다", response = TokenDto.class)
     public ResponseEntity<TokenDto> login(@RequestBody UserRequestDto userRequestDto) {
         return ResponseEntity.ok(authService.login(userRequestDto));
     }
 
     @PostMapping("/reissue")
-    @ApiOperation(value = "토큰재발급", notes = "access및 refresh토큰을 재발급한다.")
+    @ApiOperation(value = "토큰재발급", notes = "access및 refresh토큰을 재발급한다.", response = TokenDto.class)
     public ResponseEntity<TokenDto> reissue(@RequestBody TokenRequestDto tokenRequestDto) {
         return ResponseEntity.ok(authService.reissue(tokenRequestDto));
     }
