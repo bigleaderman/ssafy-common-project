@@ -31,6 +31,7 @@ public class AdminController {
         try {
             return new ResponseEntity<List<User>>(adminService.getAllUser(), HttpStatus.OK);
         }catch (Exception e){
+            e.printStackTrace();
             return null;
         }
     }
@@ -43,6 +44,7 @@ public class AdminController {
             adminService.redControl(userSeq);
             return new ResponseEntity<Void>(HttpStatus.OK);
         }catch (Exception e){
+            e.printStackTrace();
             return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
         }
     }

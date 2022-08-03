@@ -36,6 +36,7 @@ public class ReportController {
             reportService.report(reportDto);
             return new ResponseEntity<Void>(HttpStatus.OK);
         }catch (Exception e){
+            e.printStackTrace();
             return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
         }
     }
