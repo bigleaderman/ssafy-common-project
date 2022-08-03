@@ -28,19 +28,19 @@ public class UserController {
     }
 
     //유저 상세 조회 filter 기능
-    @GetMapping("/admin/findUser")
+    @PostMapping("/admin/findUser")
     @ApiOperation(value = "관리자가 유저상세조회", notes = "유저 이메일을 통해서 상세 조회", response = UserInfoResponseDto.class)
     public ResponseEntity<User> getUserInfo(@ApiParam(value = "email", example = "ssafy@naver.com") @RequestBody String email) {
         return ResponseEntity.ok(userService.getUserInfo(email));
     }
 
-    @GetMapping("/checkEmail")
+    @PostMapping("/checkEmail")
     @ApiOperation(value = "이메일중복확인", notes="DB에 유저 이메일이 있는지 확인", response = boolean.class)
     public boolean checkEmail(@ApiParam(value = "email", example = "ssafy@naver.com") @RequestBody String email) {
         return userService.checkEmail(email);
     }
 
-    @GetMapping("/user/checkNickname")
+    @PostMapping("/user/checkNickname")
     @ApiOperation(value = "닉네임중복확인", notes = "DB에 유저 닉네임이 있는지 확인", response = boolean.class)
     public boolean checkNickname(@ApiParam(value = "nickname", example = "닉네임명")@RequestBody String nickname) {
         return userService.checkNickname(nickname);
@@ -58,7 +58,7 @@ public class UserController {
         userService.deleteUser();
     }
 
-    @GetMapping("/user/checkPw")
+    @PostMapping("/user/checkPw")
     @ApiOperation(value = "비밀번호확인", notes = "입력받은 비밀번호와 현재 유저의 비밀번호가 같은지 확인", response = boolean.class)
     public boolean checkPw(@RequestBody String password) {
          return userService.checkPw(password);
