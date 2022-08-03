@@ -19,18 +19,22 @@ const NoticeDetailPage = () => {
   const goNoticeListPage = () => {
     navigate("/board");
   };
-  const goUpdateNoticePage = () => {
-    navigate(`/board/${noticeId}/update`);
-  };
-  useEffect(() => {
-    axios.get(`/api/board/${noticeId}`,{},{
+
+  const deleteNotice = () => {
+    axios.delete(`/api/admin/board/${noticeId}`,{
       headers: {
         "Content-Type": "application/json",
-        "Authorization": token
+        "Authorization": `Bearer ${token}`
       }
-    })
+    }).then(goNoticeListPage)
+  } 
+
+  const goUpdateNoticePage = () => {
+    navigate(`/board/${noticeId}/update`, {state : noticeData});
+  };
+  useEffect(() => {
+    axios.get(`/api/board/${noticeId}`,{})
     .then(response => {
-      console.log(response.data);
       setNoticeData(response.data);
     });
   }, []);
@@ -46,7 +50,7 @@ const NoticeDetailPage = () => {
       <p>작성자:{noticeData.writer}</p>
       <span>
         <Button style={styleButton} onClick={goUpdateNoticePage}>수정하기</Button>
-        <Button style={styleButton} onClick={goNoticeListPage}>삭제하기</Button>
+        <Button style={styleButton} onClick={deleteNotice}>삭제하기</Button>
         <Button style={styleButton} onClick={goNoticeListPage}>목록으로</Button>
       </span>
     </Container>

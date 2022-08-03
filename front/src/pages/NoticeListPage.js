@@ -11,6 +11,8 @@ const NoticeListPage = (props) => {
 
   const token = useSelector(state=>state.user.accessToken)
 
+  const [keyword, setKeyword] = useState("");
+
   useEffect(() => {
     axios.get('/api/board',{},{
       headers: {
@@ -22,6 +24,18 @@ const NoticeListPage = (props) => {
       setNoticeData(response.data);
     });
   }, []);
+
+  const searchKeyword = () =>{
+    axios.get(`/api/board/search/${keyword}`,{
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token
+      }
+    })
+    .then(response => {
+      setNoticeData(response.data);
+    });
+  }
 
 
   const [page, setPage] = useState(0);
@@ -52,6 +66,17 @@ const NoticeListPage = (props) => {
   return (
     <Container>
       <h2>공지사항</h2>
+      <span>
+        <label htmlFor="search">검색:</label>
+        <input id="search" type={'text'}
+        value={keyword}
+        onChange={(e) => {
+            setKeyword(e.target.value);
+        }}
+        ></input>
+        <button
+        onClick={searchKeyword}>검색</button>
+      </span>
       {/* <p>{noticeData}</p> */}
       <TableContainer style={styleTableContainer} component={Paper}>
         <Table size="medium">
@@ -68,7 +93,7 @@ const NoticeListPage = (props) => {
                 .map(({ noticeSeq, title, createAt }, i) => (
                   <TableRow key={noticeSeq}>
                     <TableCell component="th" scope="row">
-                      {page * rowsPerPage + i + 1}
+                       {noticeSeq}
                     </TableCell>
                     <TableCell align="center"><Link to={`/board/${noticeSeq}`}>{title}</Link></TableCell>
                     <TableCell align="right">{createAt}</TableCell>

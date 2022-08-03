@@ -21,7 +21,7 @@ const CreateNoticePage = (props) => {
         navigate("/board");
     };
 
-    const check =()=>{
+    const createNotice =()=>{
         axios.post('/api/admin/board',{
             content,
             title
@@ -66,7 +66,7 @@ const CreateNoticePage = (props) => {
                 <Button style={styleButton} onClick={resetForm}>
                     초기화
                 </Button>
-                <Button style={styleButton} onClick={check}>
+                <Button style={styleButton} onClick={createNotice}>
                     작성 완료
                 </Button>
                 <Button style={styleButton} onClick={goNoticeListPage}>
