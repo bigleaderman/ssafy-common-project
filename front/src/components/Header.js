@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { styleButton } from "../style.js";
 import { Button } from "@mui/material";
 
-const Header = (props) => {
+const Header = () => {
     const navigate = useNavigate();
 
     const goMainPage = () => {
@@ -29,6 +29,9 @@ const Header = (props) => {
     const goGatherRoomPage = () => {
         navigate("/gatherroom");
     };
+    const NoticeListPage = () => {
+        navigate("/board");
+    };
 
     return (
         <HeaderContainer>
@@ -37,6 +40,9 @@ const Header = (props) => {
                 <p>모두의 마피아</p>
             </Logo>
             <Menu>
+                <Button style={styleButton} onClick={NoticeListPage}>
+                    공지사항
+                </Button>
                 <Button style={styleButton} onClick={goSignUpPage}>
                     회원가입
                 </Button>
