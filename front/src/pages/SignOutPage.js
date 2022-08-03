@@ -9,7 +9,7 @@ const SignOutPage = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(useSelector(state => state.user.accessToken));
+  const [isLoggedIn, setIsLoggedIn] = useState(useSelector(state => state.user.accessToken) ? true : false);
 
   const handleLogoutClose = () => {
     setIsLoggedIn(false);
