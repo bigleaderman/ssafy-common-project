@@ -2,43 +2,41 @@ import React, { useEffect, useState } from "react";
 import { Container, styleTableContainer, styleButton } from '../style.js';
 import { Table, TableHead, TableFooter, TableContainer, TableBody, Paper, TableRow, TableCell, TablePagination, Button } from '@mui/material';
 import { Link, useNavigate } from  "react-router-dom";
+import {useSelector} from "react-redux"
 import axios from 'axios';
 
 
 const NoticeListPage = (props) => {
   const [noticeData, setNoticeData] = useState([]);
 
+  const token = useSelector(state=>state.user.accessToken)
+
+  const [keyword, setKeyword] = useState("");
+
   useEffect(() => {
-    axios.get('/api/board')
+    axios.get('/api/board',{},{
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token
+      }
+    })
     .then(response => {
-      console.log(response.data);
       setNoticeData(response.data);
     });
   }, []);
 
-  const noticeDataList = [
-    {
-      id: 1,
-      title: '제목1',
-      content: '내용1',
-      username: '이름1',
-      createdAt: '2022.07.27',
-    },
-    {
-      id: 2,
-      title: '제목2',
-      content: '내용2',
-      username: '이름2',
-      createdAt: '2022.07.27',
-    },
-    {
-      id: 3,
-      title: '제목3',
-      content: '내용3',
-      username: '이름3',
-      createdAt: '2022.07.27',
-    },
-  ];
+  const searchKeyword = () =>{
+    axios.get(`/api/board/search/${keyword}`,{
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": token
+      }
+    })
+    .then(response => {
+      setNoticeData(response.data);
+    });
+  }
+
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -46,7 +44,6 @@ const NoticeListPage = (props) => {
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
-    handleChangeRowsPerPage(); // 일단 여기에 추가해둠
   }
 
   const handleChangeRowsPerPage = (event) => {
@@ -69,7 +66,18 @@ const NoticeListPage = (props) => {
   return (
     <Container>
       <h2>공지사항</h2>
-      <p>{noticeData}</p>
+      <span>
+        <label htmlFor="search">검색:</label>
+        <input id="search" type={'text'}
+        value={keyword}
+        onChange={(e) => {
+            setKeyword(e.target.value);
+        }}
+        ></input>
+        <button
+        onClick={searchKeyword}>검색</button>
+      </span>
+      {/* <p>{noticeData}</p> */}
       <TableContainer style={styleTableContainer} component={Paper}>
         <Table size="medium">
           <TableHead>
@@ -80,32 +88,32 @@ const NoticeListPage = (props) => {
             </TableRow>
           </TableHead>
             <TableBody>
-              {noticeDataList
+              {noticeData
                 .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
-                .map(({ id, title, createdAt }, i) => (
-                  <TableRow key={id}>
+                .map(({ noticeSeq, title, createAt }, i) => (
+                  <TableRow key={noticeSeq}>
                     <TableCell component="th" scope="row">
-                      {page * rowsPerPage + i + 1}
+                       {noticeSeq}
                     </TableCell>
-                    <TableCell align="center"><Link to={`/board/${id}`}>{title}</Link></TableCell>
-                    <TableCell align="right">{createdAt}</TableCell>
+                    <TableCell align="center"><Link to={`/board/${noticeSeq}`}>{title}</Link></TableCell>
+                    <TableCell align="right">{createAt}</TableCell>
                   </TableRow>
                 ))}
           </TableBody>
           <TableFooter>
             <TableRow>
+            <Button style={styleButton} onClick={goCreateNoticePage}>작성하기</Button>
               <TablePagination
                 page={page}
-                count={Math.ceil(noticeDataList.length/rowsPerPage)}
+                count={noticeData.length}
                 rowsPerPage={rowsPerPage}
                 onPageChange={handleChangePage}
-                // onChangeRowsPerPage={handleChangeRowsPerPage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
               />
             </TableRow>
           </TableFooter>
         </Table>
       </TableContainer>
-      <Button style={styleButton} onClick={goCreateNoticePage}>작성하기</Button>
     </Container>
   );
 };
