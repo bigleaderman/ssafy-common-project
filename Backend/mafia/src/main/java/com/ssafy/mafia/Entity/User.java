@@ -1,7 +1,6 @@
-package com.ssafy.mafia.Repository.Entity;
+package com.ssafy.mafia.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.persistence.*;

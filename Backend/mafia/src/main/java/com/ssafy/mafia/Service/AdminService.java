@@ -1,6 +1,6 @@
 package com.ssafy.mafia.Service;
 
-import com.ssafy.mafia.Repository.Entity.User;
+import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Repository.AdminRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

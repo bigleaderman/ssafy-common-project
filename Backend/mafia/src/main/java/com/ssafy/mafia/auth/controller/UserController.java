@@ -1,7 +1,7 @@
 package com.ssafy.mafia.auth.controller;
 
 
-import com.ssafy.mafia.Repository.Entity.User;
+import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.auth.controller.dto.UserInfoResponseDto;
 import com.ssafy.mafia.auth.service.UserService;
 import io.swagger.annotations.Api;
