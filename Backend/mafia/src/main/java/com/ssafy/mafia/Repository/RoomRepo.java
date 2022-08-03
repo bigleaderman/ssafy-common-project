@@ -75,7 +75,7 @@ public class RoomRepo {
     }
 
     // 방 상세정보 조회
-    public RoomInfo getRoomInfo(String roomSeq){
+    public RoomInfo getRoomInfo(int roomSeq){
         return em.find(RoomInfo.class, roomSeq);
     }
 

@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 @Repository
@@ -23,6 +25,9 @@ public class AdminRepo {
         User user = em.find(User.class, userSeq);
         boolean isRed = user.isRedUser();
         user.setRedUser(!isRed);
+        if (!isRed) {
+            user.setBeRedUserAt(Timestamp.from(Instant.now()));
+        }
         em.merge(user);
     }
 }

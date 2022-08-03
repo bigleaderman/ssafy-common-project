@@ -24,10 +24,11 @@ public class NoticeBoardRepo {
     public List<NoticeListResponseDto> findAll() {
 
         List<NoticeBoard> noticeBoardList = em.createQuery("select N from NoticeBoard N", NoticeBoard.class).getResultList();
+        System.out.println(noticeBoardList);
         List<NoticeListResponseDto> result = new ArrayList<>();
         for (NoticeBoard noticeBoard : noticeBoardList) {
             NoticeListResponseDto noticeListResponseDto = new NoticeListResponseDto();
-            User writer = em.find(User.class,noticeBoard.getUserSeq());
+            User writer = em.find(User.class,noticeBoard.getWriter());
             noticeListResponseDto.setNoticeSeq(noticeBoard.getNoticeSeq());
             noticeListResponseDto.setTitle(noticeBoard.getTitle());
             noticeListResponseDto.setCreateAt(noticeBoard.getCreatedAt());
@@ -41,7 +42,8 @@ public class NoticeBoardRepo {
     // 선택 글 정보 반환
     public NoticeResponseDto findByNo(int noticeSeq) {
         NoticeBoard noticeBoard = em.find(NoticeBoard.class, noticeSeq);
-        User writer = em.find(User.class,noticeBoard.getUserSeq());
+        System.out.println(noticeBoard);
+        User writer = em.find(User.class,noticeBoard.getWriter());
         NoticeResponseDto noticeResponseDto = new NoticeResponseDto();
         noticeResponseDto.setNoticeSeq(noticeSeq);
         noticeResponseDto.setTitle(noticeBoard.getTitle());
@@ -59,7 +61,7 @@ public class NoticeBoardRepo {
         noticeBoard.setCreatedAt(Timestamp.from(Instant.now()));
         int userSeq = noticeDto.getUserSeq();
         User writer = em.find(User.class,userSeq);
-        noticeBoard.setUserSeq(writer);
+        noticeBoard.setWriter(writer.getUserSeq());
         em.persist(noticeBoard);
 
         NoticeResponseDto noticeResponseDto = new NoticeResponseDto();
@@ -107,7 +109,7 @@ public class NoticeBoardRepo {
         List<NoticeListResponseDto> result = new ArrayList<>();
         for (NoticeBoard noticeBoard : noticeBoardList) {
             NoticeListResponseDto noticeListResponseDto = new NoticeListResponseDto();
-            User writer = em.find(User.class,noticeBoard.getUserSeq());
+            User writer = em.find(User.class,noticeBoard.getWriter());
             noticeListResponseDto.setNoticeSeq(noticeBoard.getNoticeSeq());
             noticeListResponseDto.setTitle(noticeBoard.getTitle());
             noticeListResponseDto.setCreateAt(noticeBoard.getCreatedAt());

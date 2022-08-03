@@ -75,9 +75,7 @@ public class User extends BaseTimeEntity{
     private int emailCode;
 
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "userSeq")
-    private List<NoticeBoard> noticeBoardList = new ArrayList<>();
+
 
     @JsonIgnore
     @OneToMany(mappedBy = "reporting")

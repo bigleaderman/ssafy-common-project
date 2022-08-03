@@ -40,7 +40,7 @@ public class UserController {
         return userService.checkEmail(email);
     }
 
-    @GetMapping("user/checkNickname")
+    @GetMapping("/user/checkNickname")
     @ApiOperation(value = "닉네임중복확인", notes = "DB에 유저 닉네임이 있는지 확인", response = boolean.class)
     public boolean checkNickname(@ApiParam(value = "nickname", example = "닉네임명")@RequestBody String nickname) {
         return userService.checkNickname(nickname);

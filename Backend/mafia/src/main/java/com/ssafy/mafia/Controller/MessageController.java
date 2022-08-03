@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessageController {
     private final SimpMessagingTemplate template;
 
-    @MessageMapping("/lobby")
+    @MessageMapping("/lobby-chat")
     public MessageDto lobbyChat(@Payload MessageDto message){
-        template.convertAndSend("/sub/lobby", message);
+        template.convertAndSend("/sub/lobby-chat", message);
         return message;
     }
 
-    @MessageMapping("/room")
+    @MessageMapping("/room-chat")
     public MessageDto roomChat(@Payload MessageDto message){
-        template.convertAndSend("/sub/room/" + message.getRoomSeq(), message);
+        template.convertAndSend("/sub/room-chat/" + message.getRoomSeq(), message);
         return message;
     }
 
