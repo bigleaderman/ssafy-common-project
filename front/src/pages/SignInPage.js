@@ -5,7 +5,7 @@ import { Modal, Box, Button, TextField } from '@mui/material';
 import { Link, useNavigate, Navigate } from  "react-router-dom";
 import styled from 'styled-components';
 import axios from 'axios';
-import { login } from "../redux/slice/UserSlice";
+import { login, getUser } from "../redux/slice/UserSlice";
 
 
 const SignInPage = (props) => {
@@ -32,13 +32,24 @@ const SignInPage = (props) => {
     })
     .then(response => {
       dispatch(login(response.data));
-      navigate("/");
+      axios({
+        method: 'get',
+        url: '/api/user/me',
+        headers: {
+            Authorization: `Bearer ` + response.data.accessToken,
+        }
+      })
+      .then(response2 => {
+        dispatch(getUser(response2.data));
+        navigate("/");
+      })
     })
     .catch(error => {
       if (error.response.status === 401) {
         setWrongInputData(true);
       }
     })
+    
   }
   
   return (

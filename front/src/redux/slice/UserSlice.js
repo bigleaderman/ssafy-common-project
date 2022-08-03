@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from 'axios';
 
 
 export const UserSlice = createSlice({
@@ -12,33 +11,28 @@ export const UserSlice = createSlice({
         login: (state, action) => {
             state.accessToken = action.payload.accessToken;
             state.refreshToken = action.payload.refreshToken;
-            axios({
-                method: 'get',
-                url: '/api/user/me',
-                headers: {
-                    Authorization: `Bearer ` + state.accessToken,
-                }
-            })
-            .then((response) => {
-                state = {
-                    ...response.data,
-                    accessToken: action.payload.accessToken,
-                    refreshToken: action.payload.refreshToken,
-                };
-                return state;
-            })
+            return state;
         },
         logout: (state) => {
-            state = {
-                accessToken: null,
-                refreshToken: null,
-            }
+            state = {};
             return state;
-        }
+        },
+        getUser: (state, action) => {
+            state.auth = action.payload.auth;
+            state.authority = action.payload.authority;
+            state.email = action.payload.email;
+            state.loseCount = action.payload.loseCount;
+            state.nickname = action.payload.nickname;
+            state.rankPoint = action.payload.rankPoint;
+            state.redUser = action.payload.redUser;
+            state.userSeq = action.payload.userSeq;
+            state.winCount = action.payload.winCount;
+            return state;
+        },
     },
 });
 
-export const { login, logout } = UserSlice.actions;
+export const { login, logout, getUser } = UserSlice.actions;
 
 export const selectUser = (state) => state.user;
 
