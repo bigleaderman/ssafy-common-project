@@ -29,6 +29,9 @@ const Header = () => {
     const goGatherRoomPage = () => {
         navigate("/gatherroom");
     };
+    const NoticeListPage = () => {
+        navigate("/board");
+    };
 
     return (
         <HeaderContainer>
@@ -37,6 +40,9 @@ const Header = () => {
                 <p>모두의 마피아</p>
             </Logo>
             <Menu>
+                <Button style={styleButton} onClick={NoticeListPage}>
+                    공지사항
+                </Button>
                 <Button style={styleButton} onClick={goSignUpPage}>
                     회원가입
                 </Button>

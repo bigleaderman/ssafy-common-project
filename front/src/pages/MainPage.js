@@ -10,22 +10,25 @@ import {
     TextField,
     ClickAwayListener,
     Tooltip,
+    Grid,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import axios from 'axios';
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import Rank from "../components/Rank";
 
 // 모달 창 style
 const style = {
     position: "absolute",
     top: "50%",
-    left: "50%",
+    left: "65%",
     transform: "translate(-50%, -50%)",
     width: 400,
     bgcolor: "background.paper",
     border: "1px solid #000",
     boxShadow: 24,
 };
+
 const Logo = styled.a`
     display: flex;
     flex-direction: row;
@@ -36,11 +39,11 @@ const Logo = styled.a`
     }
 `;
 
-
 const MainPage = () => {
     // redux에 내 정보 가져오기
     // const me = useSelector(state => state.user);
-    const me = { nickname: null };
+    // const dispatch = useDispatch();
+    const me = {};
     const navigate = useNavigate();
     // 닉네임 중복
     const [dup, setDup] = useState(false);
@@ -68,8 +71,9 @@ const MainPage = () => {
     // 상태 구분
     const HandleOpen = () => {
         // 로그인 안 된 상태
-        console.log("one");
+        console.log('gg',me)
         if (me === {}) {
+            console.log('gg')
             return HandleOpenOne();
         } // 로그인 되었지만 닉네임이 없어
         else {
@@ -77,7 +81,12 @@ const MainPage = () => {
                 return HandleOpenTwo();
             } // 로그인 되고 닉네임 있음
             else {
-                return navigate("/roomList");
+                return (
+                    // dispatch(userList());
+                    // dispatch(friend(me.seq));
+                    // dispatch(wantedFriend(me.id))
+                    navigate("/roomList")
+                );
             }
         }
     };
@@ -94,61 +103,78 @@ const MainPage = () => {
             method: "get",
             url: "api/checkNickname",
             data: {
-                
-                nickname: nickname
+                nickname: nickname,
             },
         }).then((response) => {
-            // 사용 가능  
-            if (response){
-              setDup(true)
-              alert('사용 가능한 닉네임입니다!')
+            // 사용 가능
+            if (response) {
+                setDup(true);
+                alert("사용 가능한 닉네임입니다!");
             } else {
-              alert('이미 존재하는 닉네임입니다!')
+                alert("이미 존재하는 닉네임입니다!");
             }
         });
     };
 
     // 게임 시작 버튼
     const CheckGameGo = () => {
-      // 중복 검사 통과
-      if (dup){
-        // 닉네임 등록
-        axios({
-          method: "post",
-          url: "api/user/enrollNickname",
-          data: {
-              nickname,
-          },
-      })
-        // 유저정보 받아오기
-        navigate("/roomList")
-      } else {
-        alert('닉네임 등록이 필요합니다.')
-      }
-    }
+        // 중복 검사 통과
+        if (dup) {
+            // 닉네임 등록
+            axios({
+                method: "post",
+                url: "api/user/enrollNickname",
+                data: {
+                    nickname,
+                },
+            }).then(() => {
+                // store에 nickname 변경 : UserSlice.js 건드려야함 : 머지 후 하기
+                // 유저정보 받아오기
+                // dispatch(userList());
+                // dispatch(friend(me.seq));
+                // dispatch(wantedFriend(me.id))
+                navigate("/roomList");
+            });
+        } else {
+            alert("닉네임 등록이 필요합니다.");
+        }
+    };
     return (
-        <Container>
-            <ClickAwayListener onClickAway={HandleCloseOne}>
-                <Tooltip
-                    PopperProps={{
-                        disablePortal: true,
+        <Container maxWidth="md">
+            <Grid container spacing={2}>
+                <Grid item xs={4}>
+                    <Rank />
+                </Grid>
+                <Grid item
+                    xs={8}
+                    sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignContent: "center",
+                        alignItems: 'center'
                     }}
-                    onClose={HandleCloseOne}
-                    open={openOne}
-                    disableFocusListener
-                    disableHoverListener
-                    disableTouchListener
-                    title="로그인 하세요"
                 >
-                    <Button variant="outlined" onClick={HandleOpen}>
-                        Game Start
-                    </Button>
-                </Tooltip>
-            </ClickAwayListener>
-
-            <Link to="/board">
-                <Button variant="outlined">공지사항</Button>
-            </Link>
+                    <Box>
+                        <ClickAwayListener onClickAway={HandleCloseOne}>
+                            <Tooltip
+                                PopperProps={{
+                                    disablePortal: true,
+                                }}
+                                onClose={HandleCloseOne}
+                                open={openOne}
+                                disableFocusListener
+                                disableHoverListener
+                                disableTouchListener
+                                title="로그인 하세요"
+                            >
+                                <Button variant="outlined" onClick={HandleOpen}>
+                                    Game Start
+                                </Button>
+                            </Tooltip>
+                        </ClickAwayListener>
+                    </Box>
+                </Grid>
+            </Grid>
             <Modal
                 open={openTwo}
                 onClose={HandleCloseTwo}
@@ -158,7 +184,7 @@ const MainPage = () => {
                 <Box sx={style}>
                     <Box
                         sx={{
-                            width: 401,
+                            width: 402,
                             height: 31,
                             backgroundColor: "var(--color-5);",
                         }}
@@ -216,7 +242,9 @@ const MainPage = () => {
                                 borderRadius: 1,
                             }}
                         >
-                            <Button variant="outlined" onClick={CheckGameGo}>게임 시작</Button>
+                            <Button variant="outlined" onClick={CheckGameGo}>
+                                게임 시작
+                            </Button>
                             <Button
                                 variant="outlined"
                                 onClick={HandleCloseTwo}
