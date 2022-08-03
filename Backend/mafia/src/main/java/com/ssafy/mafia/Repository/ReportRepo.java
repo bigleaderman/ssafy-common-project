@@ -44,25 +44,24 @@ public class ReportRepo {
 
     //레드유저 기간체크
     public void checkRedPeriod(){
-        List<User> userList = em.createQuery("select U from User u", User.class).getResultList();
-        for (User user : userList){
-            // 레드유저이고 신고당한지 5일이 지났다면 레드유저해제
-            if (user.isRedUser()){
-                // 뺀값이 5이상이면 바로처리
+        List<User> userList = em.createQuery("select U from User U where U.isRedUser = true", User.class).getResultList();
+        if (!userList.isEmpty()){
+            for (User user : userList){
+                // 신고당한지 5일이 지났다면 레드유저해제
+                    // 뺀값이 5이상이면 바로처리
                 if (Timestamp.from(Instant.now()).getDate() - user.getBeRedUserAt().getDate() >= 5){
                     user.setRedUser(false);
-                // 만약 5이하인데 0보다 작은경우
-                }else if (Timestamp.from(Instant.now()).getDate() - user.getBeRedUserAt().getDate() < 0){
-                    if (user.getBeRedUserAt().getDate() == 30 && Timestamp.from(Instant.now()).getDate() + 30 - user.getBeRedUserAt().getDate() >=5){
-                        user.setRedUser(false);
-                    }else if (user.getBeRedUserAt().getDate() == 31 && Timestamp.from(Instant.now()).getDate() + 31 - user.getBeRedUserAt().getDate() >=5){
-                        user.setRedUser(false);
-                    }
+                    em.merge(user);}
+                    //5미만인데 0미만이면
+                else if (Timestamp.from(Instant.now()).getDate() - user.getBeRedUserAt().getDate() < 0 &&
+                        Timestamp.from(Instant.now()).getDate() + 31 - user.getBeRedUserAt().getDate() >= 5){
+                    user.setRedUser(false);
+                    em.merge(user);
                 }
             }
-            em.merge(user);
         }
     }
-
-
 }
+
+
+
