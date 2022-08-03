@@ -72,7 +72,7 @@ public class UserController {
 
 
 
-    @GetMapping("/user/findUserByNickname")
+    @PostMapping("/user/findUserByNickname")
     @ApiOperation(value = "닉네임으로 유저정보 제공", notes = "유저 정보 제공하기", response = UserInfoResponseDto.class)
     public ResponseEntity<UserInfoResponseDto> userInformation(@ApiParam(value = "nickname", example = "ssafy1!") @RequestBody String nickname) {
         return ResponseEntity.ok(UserInfoResponseDto.convert(userService.userInformation(nickname)));
