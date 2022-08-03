@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
@@ -21,7 +23,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     @ApiOperation(value="회원가입", notes="회원가입한다.", response = UserResponseDto.class)
-    public ResponseEntity<String > signup(@RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<String > signup(@Valid @RequestBody UserRequestDto userRequestDto) {
         return ResponseEntity.ok(authService.signup(userRequestDto));
     }
 
