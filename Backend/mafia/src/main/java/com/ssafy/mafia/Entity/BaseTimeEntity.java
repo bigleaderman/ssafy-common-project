@@ -1,4 +1,4 @@
-package com.ssafy.mafia.Repository.Entity;
+package com.ssafy.mafia.Entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.CreatedDate;

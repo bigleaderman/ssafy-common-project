@@ -1,7 +1,7 @@
 package com.ssafy.mafia.auth.service;
 
 
-import com.ssafy.mafia.Repository.Entity.User;
+import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.auth.util.makeSecretnumberUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;

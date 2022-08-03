@@ -1,18 +1,13 @@
 package com.ssafy.mafia.auth.controller.dto;
 
-import com.ssafy.mafia.Repository.Entity.Authority;
-import com.ssafy.mafia.Repository.Entity.User;
-import io.swagger.annotations.ApiModelProperty;
+import com.ssafy.mafia.Entity.Authority;
+import com.ssafy.mafia.Entity.User;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
 
 @Getter
 @AllArgsConstructor
