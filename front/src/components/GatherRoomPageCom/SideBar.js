@@ -55,6 +55,7 @@ export default function SideBar() {
                 >
                     <Tab label="채팅" {...a11yProps(0)} />
                     <Tab label="접속 유저" {...a11yProps(1)} />
+                    <Tab label="친구 목록" {...a11yProps(2)} />
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
@@ -63,6 +64,7 @@ export default function SideBar() {
             <TabPanel value={value} index={1}>
                 <UserBar />
             </TabPanel>
+            <TabPanel value={value} index={2}></TabPanel>
         </div>
     );
 }

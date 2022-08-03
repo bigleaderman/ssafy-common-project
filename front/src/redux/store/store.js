@@ -1,19 +1,9 @@
 //combineReducers = reducer가 여러 개일 때 하나로 묶어줌
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
-<<<<<<< Updated upstream
 
 // redux로 관리할 데이터
 import GatherMapPosYSlice from "../slice/GatherMapPosYSlice";
 import GatherMapPosXSlice from "../slice/GatherMapPosXSlice";
-=======
-import GatherConCntReducer from "../slice/GatherConCntSlice";
-import GatherNameSlice from "../slice/GatherNameSlice";
-import GatherMaxConSlice from "../slice/GatherNumSlice";
-import GatherNumCivilSlice from "../slice/GatherCntCivilSlice";
-import GatherNumCopSlice from "../slice/GatherCntCopSlice";
-import GatherNumDocSlice from "../slice/GatherCntDocSlice";
-import GatherNumMafSlice from "../slice/GatherCntMafSlice";
->>>>>>> Stashed changes
 
 //redux-persist 관련 함수
 import { persistReducer, persistStore } from "redux-persist";
@@ -33,18 +23,8 @@ const persistConfig = {
 
 //rootReducer = 조합된 최종 리듀서
 const rootReducer = combineReducers({
-<<<<<<< Updated upstream
     posY: GatherMapPosYSlice,
     posX: GatherMapPosXSlice,
-=======
-    conCnt: GatherConCntReducer,
-    gatherName: GatherNameSlice,
-    maxCon: GatherMaxConSlice,
-    civil: GatherNumCivilSlice,
-    cop: GatherNumCopSlice,
-    doc: GatherNumDocSlice,
-    maf: GatherNumMafSlice,
->>>>>>> Stashed changes
 });
 
 //persistReducer(설정, 최종 리듀서)
