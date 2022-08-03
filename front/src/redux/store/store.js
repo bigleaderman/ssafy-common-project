@@ -2,7 +2,7 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import GatherConCntReducer from "../slice/GatherConCntSlice";
 import GatherNameSlice from "../slice/GatherNameSlice";
-// import FriendSlice from "../slice/FriendSlice";
+import UserSlice from "../slice/UserSlice";
 //redux-persist 관련 함수
 import { persistReducer, persistStore } from "redux-persist";
 //thunk = 실행을 지연시켜줌
@@ -20,6 +20,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
     conCnt: GatherConCntReducer,
     gatherName: GatherNameSlice,
+    user: UserSlice,
 });
 
 //persistReducer(설정, 최종 리듀서)
