@@ -43,6 +43,7 @@ public class User extends BaseTimeEntity{
 
     private boolean isAuth;
 
+    @JsonIgnore
     @Column(nullable = false, length = 1023)
     @NotBlank(message = "비밀번호를 입력해주세요.")
     @Pattern(regexp = "^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$",
@@ -76,11 +77,11 @@ public class User extends BaseTimeEntity{
 
 
 
-    @JsonIgnore
+
     @OneToMany(mappedBy = "reporting")
     private List<Report> reporting = new ArrayList<>();
 
-    @JsonIgnore
+
     @OneToMany(mappedBy = "reported")
     private List<Report> reported = new ArrayList<>();
 
