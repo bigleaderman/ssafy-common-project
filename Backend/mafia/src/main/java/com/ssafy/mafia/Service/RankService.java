@@ -1,6 +1,6 @@
 package com.ssafy.mafia.Service;
 
-import com.ssafy.mafia.Repository.Entity.User;
+import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.RankDto;
 import com.ssafy.mafia.auth.repository.UserRepository;
 import com.ssafy.mafia.auth.util.SecurityUtil;

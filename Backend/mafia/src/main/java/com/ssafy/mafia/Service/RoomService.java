@@ -1,8 +1,8 @@
 package com.ssafy.mafia.Service;
 
-import com.ssafy.mafia.Repository.Entity.GameInfo;
-import com.ssafy.mafia.Repository.Entity.RoomInfo;
-import com.ssafy.mafia.Repository.Entity.User;
+import com.ssafy.mafia.Entity.GameInfo;
+import com.ssafy.mafia.Entity.RoomInfo;
+import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.GameInfoDto;
 import com.ssafy.mafia.Model.RoomInfoDto;
 import com.ssafy.mafia.Model.SettingsDto;

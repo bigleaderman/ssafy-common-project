@@ -1,7 +1,7 @@
 package com.ssafy.mafia.Model;
 
 
-import com.ssafy.mafia.Repository.Entity.User;
+import com.ssafy.mafia.Entity.User;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
