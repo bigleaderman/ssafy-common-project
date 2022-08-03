@@ -41,7 +41,11 @@ function App() {
                     <Route exact path="/mypage" element={<MyPage />} />
                     <Route exact path="/userlist" element={<UserListPage />} />
                     <Route exact path="/board" element={<NoticeListPage />} />
-                    <Route exact path="/gatherroom" element={<RoomPage />} />
+                    <Route
+                        exact
+                        path="/gatherroom"
+                        element={<GatherRoomPage />}
+                    />
                     <Route
                         exact
                         path="/board/create"
