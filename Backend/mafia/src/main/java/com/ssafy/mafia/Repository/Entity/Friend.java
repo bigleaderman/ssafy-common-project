@@ -1,8 +1,7 @@
-package com.ssafy.mafia.Entity;
+package com.ssafy.mafia.Repository.Entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import javax.persistence.*;

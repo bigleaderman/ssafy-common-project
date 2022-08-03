@@ -1,4 +1,4 @@
-package com.ssafy.mafia.Entity;
+package com.ssafy.mafia.Repository.Entity;
 
 import lombok.Builder;
 import lombok.Getter;

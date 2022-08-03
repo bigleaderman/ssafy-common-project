@@ -1,7 +1,6 @@
 package com.ssafy.mafia.Controller;
 
-import com.ssafy.mafia.Entity.User;
-import com.ssafy.mafia.Model.AdminDto;
+import com.ssafy.mafia.Repository.Entity.User;
 import com.ssafy.mafia.Service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

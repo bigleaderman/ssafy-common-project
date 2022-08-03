@@ -1,9 +1,9 @@
 package com.ssafy.mafia.Repository;
 
-import com.ssafy.mafia.Entity.NoticeBoard;
+import com.ssafy.mafia.Repository.Entity.NoticeBoard;
 import com.ssafy.mafia.Model.NoticeListResponseDto;
 import com.ssafy.mafia.Model.NoticeResponseDto;
-import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Repository.Entity.User;
 import com.ssafy.mafia.Model.NoticeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

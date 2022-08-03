@@ -1,8 +1,8 @@
 package com.ssafy.mafia.Repository;
 
-import com.ssafy.mafia.Entity.Friend;
-import com.ssafy.mafia.Entity.RoomInfo;
-import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Repository.Entity.Friend;
+import com.ssafy.mafia.Repository.Entity.RoomInfo;
+import com.ssafy.mafia.Repository.Entity.User;
 import com.ssafy.mafia.Model.FriendDto;
 import com.ssafy.mafia.Model.FriendResponseDto;
 import com.ssafy.mafia.Model.UserDto;

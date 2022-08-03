@@ -1,12 +1,10 @@
 package com.ssafy.mafia.Repository;
 
 
-import com.ssafy.mafia.Entity.GameInfo;
-import com.ssafy.mafia.Entity.RoomInfo;
-import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Repository.Entity.RoomInfo;
+import com.ssafy.mafia.Repository.Entity.User;
 import com.ssafy.mafia.Model.RoomInfoDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 

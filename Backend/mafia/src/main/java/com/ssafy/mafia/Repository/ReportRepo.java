@@ -1,9 +1,9 @@
 package com.ssafy.mafia.Repository;
 
 
-import com.ssafy.mafia.Entity.Report;
-import com.ssafy.mafia.Entity.ReportType;
-import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Repository.Entity.Report;
+import com.ssafy.mafia.Repository.Entity.ReportType;
+import com.ssafy.mafia.Repository.Entity.User;
 import com.ssafy.mafia.Model.ReportDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
