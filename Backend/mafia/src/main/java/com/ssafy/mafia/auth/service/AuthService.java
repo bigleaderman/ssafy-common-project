@@ -53,6 +53,7 @@ public class AuthService {
         //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
+
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);
 
@@ -63,6 +64,10 @@ public class AuthService {
                 .build();
 
         refreshTokenRepository.save(refreshToken);
+
+        User user = em.find(User.class, Integer.parseInt(authentication.getName()));
+
+        user.setLogin(true);
 
         // 5. 토큰 발급
         return tokenDto;
@@ -103,6 +108,8 @@ public class AuthService {
         String key = Integer.toString(SecurityUtil.getCurrentUserId());
         RefreshToken refreshToken = em.find(RefreshToken.class,  key);
         refreshTokenRepository.delete(refreshToken);
+        User user = em.find(User.class, SecurityUtil.getCurrentUserId());
+        user.setLogin(false);
     }
 }
 

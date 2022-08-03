@@ -51,7 +51,7 @@ public class User extends BaseTimeEntity{
     @Enumerated(EnumType.STRING)
     private Authority authority;
 
-
+    private boolean isLogin;
 
     private boolean isRedUser;
 
@@ -64,7 +64,6 @@ public class User extends BaseTimeEntity{
     private int rankPoint;
 
     private int nowRoomSeq;
-
 
     private Timestamp beRedUserAt;
 
