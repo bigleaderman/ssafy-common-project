@@ -4,14 +4,20 @@ import com.ssafy.mafia.Entity.RoomInfo;
 import com.ssafy.mafia.Model.*;
 import com.ssafy.mafia.Service.RoomService;
 import com.ssafy.mafia.auth.util.SecurityUtil;
+import io.openvidu.java.client.OpenVidu;
+import io.openvidu.java.client.Session;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +25,9 @@ import java.util.List;
 @CrossOrigin("*")
 @Api(tags = {"로비/대기방 기능"})
 public class RoomController {
+
+    private static final Logger log = LoggerFactory.getLogger(SessionController.class);
+
     private final RoomService service;
 
     @ApiOperation(value = "방 생성", notes = "방 생성")
