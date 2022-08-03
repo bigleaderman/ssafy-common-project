@@ -4,10 +4,7 @@ package com.ssafy.mafia.auth.service;
 
 import com.ssafy.mafia.Entity.RefreshToken;
 import com.ssafy.mafia.Entity.User;
-import com.ssafy.mafia.auth.controller.dto.TokenDto;
-import com.ssafy.mafia.auth.controller.dto.TokenRequestDto;
-import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
-import com.ssafy.mafia.auth.controller.dto.UserResponseDto;
+import com.ssafy.mafia.auth.controller.dto.*;
 import com.ssafy.mafia.auth.jwt.TokenProvider;
 import com.ssafy.mafia.auth.repository.RefreshTokenRepository;
 import com.ssafy.mafia.auth.repository.UserRepository;
@@ -21,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -34,14 +33,18 @@ public class AuthService {
     private final EntityManager em;
 
     @Transactional
-    public String  signup(UserRequestDto userRequestDto) {
+    public signupDto signup(UserRequestDto userRequestDto) {
         if (userRepository.existsByEmail(userRequestDto.getEmail())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }
 
         User user = userRequestDto.toUser(passwordEncoder);
         UserResponseDto.of(userRepository.save(user));
-        return user.getEmail();
+
+
+        // signupDto로 넘겨주기기
+        signupDto result = signupDto.convert(user);
+        return result;
     }
 
     @Transactional
@@ -52,7 +55,6 @@ public class AuthService {
         // 2. 실제로 검증 (사용자 비밀번호 체크) 이 이루어지는 부분
         //    authenticate 메서드가 실행이 될 때 CustomUserDetailsService 에서 만들었던 loadUserByUsername 메서드가 실행됨
         Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-
 
         // 3. 인증 정보를 기반으로 JWT 토큰 생성
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication);

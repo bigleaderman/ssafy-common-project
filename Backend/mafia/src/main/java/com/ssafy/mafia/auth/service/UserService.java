@@ -49,6 +49,9 @@ public class UserService {
 
     @Transactional(readOnly = false)
     public UserInfoResponseDto enrollNickname(String nickname) {
+        if (userRepository.existsByNickname(nickname)) {
+            throw new RuntimeException("이미 등록된 닉네임입니다");
+        }
         User user = em.find(User.class, SecurityUtil.getCurrentUserId());
         user.setNickname(nickname);
         return UserInfoResponseDto.convert(user);

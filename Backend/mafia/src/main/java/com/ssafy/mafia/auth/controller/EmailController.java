@@ -7,6 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -27,9 +28,16 @@ public class EmailController {
         emailService.sendEmail(email);
     }
 
-    @GetMapping("/validationUser/{userId}/{num}")
-    @ApiOperation(value = "유저 인증하기", notes = "받은 이메일을 통해서 유저 인증하기", response = boolean.class)
-    public void validationUser(@PathVariable("userId") int userId,@PathVariable("num") int num) throws Exception {
-        userService.validationUser(userId, num);
+//    @GetMapping("/validationUser/{userId}/{num}")
+//    @ApiOperation(value = "유저 인증하기", notes = "받은 이메일을 통해서 유저 인증하기", response = boolean.class)
+//    public void validationUser(@PathVariable("userId") int userId,@PathVariable("num") int num) throws Exception {
+//        userService.validationUser(userId, num);
+//    }
+
+    @PutMapping("/emailValidationUser/{userId}")
+    @ApiOperation(value = "유저 인증하기", notes = "받은 이메일 통해서 유저 인증하기", response = boolean.class)
+    public boolean emailValidationUser(@ApiParam(value = "인증번호", example = "ssafy") @RequestBody int num, @PathVariable("userId") int userId) {
+        return emailService.emailValidationUser(num, userId);
     }
+
 }

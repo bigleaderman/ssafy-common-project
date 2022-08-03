@@ -3,7 +3,9 @@ package com.ssafy.mafia.auth.controller;
 
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.auth.controller.dto.UserInfoResponseDto;
+import com.ssafy.mafia.auth.repository.UserRepository;
 import com.ssafy.mafia.auth.service.UserService;
+import com.ssafy.mafia.auth.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    
 
     // 자신의 회원 정보 조회
     @GetMapping("/user/me")

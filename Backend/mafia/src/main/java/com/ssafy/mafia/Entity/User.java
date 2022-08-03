@@ -2,12 +2,15 @@ package com.ssafy.mafia.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +21,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseTimeEntity{
+public class User{
 
     public User(String email, String password, Authority authority){
         this.email = email;
@@ -52,6 +55,13 @@ public class User extends BaseTimeEntity{
 
     @Column(nullable = true)
     private String nickname;
+
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime modifiedDate;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;

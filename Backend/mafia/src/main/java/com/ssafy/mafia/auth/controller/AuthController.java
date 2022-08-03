@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     @ApiOperation(value="회원가입", notes="회원가입한다.", response = UserResponseDto.class)
-    public ResponseEntity<String > signup(@Valid @RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<?> signup(@Valid @RequestBody UserRequestDto userRequestDto) {
         return ResponseEntity.ok(authService.signup(userRequestDto));
     }
 
