@@ -3,32 +3,91 @@ import { Container, styleButton, styleModal, styleTextField } from '../style.js'
 import { Modal, Box, Button, TextField } from '@mui/material';
 import { Link } from  "react-router-dom";
 import styled from 'styled-components';
+import axios from 'axios';
 
 
 const SignUpPage = (props) => {
   const [emailAuthentication, setEmailAuthentication] = useState(false);
   const [resendEmail, setResendEmailOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [value, setValue] = useState('');
-
+  const [emailCode, setEmailCode] = useState('');
+  const [isValidEmail, setIsValidEmail] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordCheck, setPasswordCheck] = useState('');
+  const [modelMessage, setModelMessage] = useState('');
+  
   const handleResendEmailOpen = () => {
     setResendEmailOpen(true);
+    goEmailAuthentication();
   };
   const handleResendEmailClose = () => {
     setResendEmailOpen(false);
   };
 
   const goEmailAuthentication = () => {
-    setEmailAuthentication(true);
+    if ( !isValidEmail) {
+      handleModalOpen('이메일 중복검사를 해주세요.');
+    } else if (!isSamePassword()) {
+      handleModalOpen('비밀번호가 다릅니다.');
+    } else {
+      setEmailAuthentication(true);
+      axios({
+        method: 'post',
+        url: '/api/sendEmail',
+        headers: {
+          'Content-Type': 'text/plain',
+        },
+        data: email,
+      })
+      .then(() => {
+        console.log('이메일 보냄');
+      })
+      .catch(error => {
+        if (error.response.status === 401) {
+          // setWrongInputData(true);
+        }
+      })
+    }
   };
 
-  const handleModalOpen = () => {
+  const handleModalOpen = (message) => {
+    setModelMessage(message);
     setModalOpen(true);
   };
   const handleModalClose = () => {
     setModalOpen(false);
   };
 
+  const isSamePassword = () => {
+    return password === passwordCheck;
+  };
+
+  const checkEmail = () => {
+    axios({
+      method: 'post',
+      url: '/api/checkEmail',
+      headers: {
+        'Content-Type': 'text/plain',
+      },
+      data: email,
+    })
+    .then(response => {
+      if (response.data) {
+        handleModalOpen('이미 사용 중인 아이디입니다.');
+      }
+      else {
+        setIsValidEmail(true);
+        handleModalOpen('사용 가능한 아이디입니다.');
+      }
+    })
+    .catch(error => {
+      if (error.response.status === 401) {
+        // setWrongInputData(true);
+      }
+    })
+  }
+  
   return (
     emailAuthentication ?
       <Container>
@@ -37,9 +96,12 @@ const SignUpPage = (props) => {
             <h4>인증 메일이 발송되었습니다.</h4>
             <span>
             <p>메일함에서 인증 메일을 확인하시기 바랍니다.</p>
-            <p>이메일의 인증 버튼을 누르면 회원가입이 완료됩니다.</p>
+            {/* <p>이메일의 인증 버튼을 누르면 회원가입이 완료됩니다.</p> */}
+            <p>이메일의 코드를 입력하면 회원가입이 완료됩니다.</p>
             </span>
           </div>
+        <TextField style={styleTextField} id="emailCode" name="emailCode" placeholder="이메일 코드" onChange={(e) => {setEmailCode(e.target.value);}}></TextField>
+        <Button style={styleButton} onClick={() => {}}>확인</Button>
         </Content>
         
         <Button style={styleButton} onClick={() => {handleResendEmailOpen()}}>이메일 재전송</Button>
@@ -62,25 +124,27 @@ const SignUpPage = (props) => {
       <h2>회원가입</h2>
       <Content>
         <label htmlFor="email">이메일</label>
-        <TextField style={styleTextField} id="email" name="email" placeholder="이메일" variant="outlined"></TextField>
-        <Button style={styleButton} onClick={() => {setValue('이메일'); handleModalOpen();}}>중복검사</Button>
+        <TextField style={styleTextField} id="email" name="email" placeholder="이메일" onChange={(e) => {setIsValidEmail(false); setEmail(e.target.value);}}></TextField>
+        <Button style={styleButton} onClick={() => {if (email.length) checkEmail(); else handleModalOpen('이메일을 입력해주세요.');}}>중복검사</Button>
       </Content>
       <Content>
         <label htmlFor="password">비밀번호</label>
-        <TextField style={styleTextField} type="password" id="password" name="password" variant="outlined"></TextField>
+        <TextField style={styleTextField} type="password" id="password" name="password" onChange={(e) => {setPassword(e.target.value)}}></TextField>
       </Content>
       <Content>
         <label htmlFor="password-check">비밀번호 확인</label>
-        <TextField style={styleTextField} type="password" id="password-check" name="password-check" variant="outlined"></TextField>
+        <TextField style={styleTextField} type="password" id="password-check" name="password-check" onChange={(e) => {setPasswordCheck(e.target.value)}}></TextField>
       </Content>
-    
+
+      {!isSamePassword() ? <span>비밀번호가 다릅니다.</span> : null}
+
       <Modal
         open={modalOpen}
         onClose={handleModalClose}
         aria-labelledby="modal-title"
       >
         <Box sx={{ ...styleModal, width: 400 }}>
-          <h2 id="modal-title">이미 사용 중인 {value}입니다.</h2>
+          <h2 id="modal-title">{modelMessage}</h2>
           <Button style={styleButton} onClick={handleModalClose}>확인</Button>
         </Box>
       </Modal>
