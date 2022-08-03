@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const GatherMapPosXSlice = createSlice({
     name: "GatherMapPosX",
     initialState: {
-        value: 0,
+        value: 350,
     },
     reducers: {
         SavePosX: (state, action) => {

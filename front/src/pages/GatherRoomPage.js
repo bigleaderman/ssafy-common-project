@@ -36,14 +36,14 @@ export function GatherRoom(props) {
                     </Grid>
                     <Grid>
                         <Paper elevation={3}>
-                            <IsGameStart start={start} />
+                            <PlayMap />
                         </Paper>
                     </Grid>
                 </Grid>
                 <Grid item xs={4}>
                     <Grid>
                         <Paper elevation={3} style={{ height: 50 }}>
-                            <NaviBar crntStart={start} onClick={setStart} />
+                            <NaviBar />
                         </Paper>
                     </Grid>
                     <Grid>
