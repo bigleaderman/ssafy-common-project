@@ -109,7 +109,9 @@ public class NoticeController {
     @ApiOperation(value = "글 제목으로 검색",notes = "요청 검색어가 포함된 모든 공지사항 데이터 목록을 반환한다", response = Map.class)
     @GetMapping("/board/search/{title}")
     public ResponseEntity<List<NoticeListResponseDto>> getNoticeByTitle(@PathVariable("title")@ApiParam(value = "검색어", required = true) String title) {
-
+        if (title == ""){
+            return new ResponseEntity<List<NoticeListResponseDto>>(noticeService.getAllNotice(), HttpStatus.OK);
+        }
         return new ResponseEntity<List<NoticeListResponseDto>>(noticeService.noticeByTitle(title), HttpStatus.OK);
 
     }
