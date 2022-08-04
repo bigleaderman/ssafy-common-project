@@ -90,6 +90,8 @@ public class RoomController {
         // 방 퇴장
         int userSeq = SecurityUtil.getCurrentUserId();
         service.leaveRoom(roomSeq, userSeq);
+        sessionService.leaveSession(roomSeq, userSeq);
+
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
@@ -103,7 +105,7 @@ public class RoomController {
     }
 
     @ApiOperation(value = "오픈비두 토큰 발급", notes = "오픈비두 서버 접속을 위한 토큰 발급")
-    @PostMapping("/{room-seq}/token")
+    @PostMapping("/{room-seq}/video-token")
     public ResponseEntity<String> getToken(@PathVariable("room-seq") int roomSeq){
         int userSeq = SecurityUtil.getCurrentUserId();
         String token = sessionService.joinSession(roomSeq, userSeq);
