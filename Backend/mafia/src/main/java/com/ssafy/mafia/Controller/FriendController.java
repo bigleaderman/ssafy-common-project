@@ -23,7 +23,7 @@ import java.util.Map;
 public class FriendController {
 
     private final FriendService friendService;
-    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
+    private static final Logger log = LoggerFactory.getLogger(FriendController.class);
     //친구 신청
     @ApiOperation(value = "친구신청", notes = "Friend 테이블에 새로운 친구관계 데이터를 생성한다")
     @PostMapping("/request")

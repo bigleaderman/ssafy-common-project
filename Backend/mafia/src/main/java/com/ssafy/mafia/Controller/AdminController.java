@@ -27,7 +27,7 @@ public class AdminController {
 
 
     private final AdminService adminService;
-    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
+    private static final Logger log = LoggerFactory.getLogger(AdminController.class);
 
 
     //유저 전체 리스트 조회
