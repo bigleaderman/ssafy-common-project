@@ -4,41 +4,56 @@ import { useNavigate } from  "react-router-dom";
 import { logout } from "../redux/slice/UserSlice";
 import { Container, styleButton, styleModal } from '../style.js';
 import { Modal, Box, Button } from '@mui/material';
+import axios from 'axios';
+
 
 const SignOutPage = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [isLoggedIn, setIsLoggedIn] = useState(useSelector(state => state.user.accessToken) ? true : false);
+  const token = useSelector(state => state.user.accessToken);
+  const [modalOpened, setModalOpened] = useState(!!token);
 
   const handleLogoutClose = () => {
-    setIsLoggedIn(false);
+    setModalOpened(false);
     navigate("/");
   };
   
   useEffect(() => {
-    if (!isLoggedIn) {
+    if (!modalOpened && !token) {
       navigate("/");
+    } else if (!!token) {
+      axios({
+        method: 'delete',
+        url: '/api/user/logout',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
+      })
+      .then(response => {
+        // console.log(response.status);
+        dispatch(logout());
+      })
+      .catch(error => {
+        console.log(error);
+      })
     }
-    dispatch(logout());
   })
   
   return(
     <Container>
-      { isLoggedIn ?
-        <Modal
-          open={isLoggedIn}
-          onClose={handleLogoutClose}
-          aria-labelledby="modal-title"
-        >
-          <Box sx={{ ...styleModal, width: 400 }}>
-            <h2 id="modal-title">로그아웃되었습니다.</h2>
-            <Button style={styleButton} onClick={handleLogoutClose}>확인</Button>
-          </Box>
-        </Modal>
-      : null }
+      <Modal
+        open={modalOpened}
+        onClose={handleLogoutClose}
+        aria-labelledby="modal-title"
+      >
+        <Box sx={{ ...styleModal, width: 400 }}>
+          <h2 id="modal-title">로그아웃되었습니다.</h2>
+          <Button style={styleButton} onClick={handleLogoutClose}>확인</Button>
+        </Box>
+      </Modal>
     </Container>
-
   );
 };
 
