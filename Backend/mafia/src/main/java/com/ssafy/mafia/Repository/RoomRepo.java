@@ -35,12 +35,11 @@ public class RoomRepo {
 
     // 방 신규 생성
     public RoomInfo createRoom(RoomInfoDto roomInfo){
-        User hostUser = em.find(User.class, roomInfo.getHostUser());
 
         // 집어넣은 데이터 설정
         RoomInfo entity = new RoomInfo();
         entity.setTitle(roomInfo.getTitle());
-        entity.setHostUser(hostUser);
+        entity.setHostUser(roomInfo.getHostUser());
         entity.setCapacity(roomInfo.getCapacity());
 
         // DB insert
@@ -52,7 +51,7 @@ public class RoomRepo {
         // 방 생성
         map.put(entity.getRoomSeq(), new ArrayList<>());
         // 방 입장
-        joinRoom(entity.getRoomSeq(), hostUser.getUserSeq());
+        joinRoom(entity.getRoomSeq(), roomInfo.getHostUser());
         
         // 데이터 리턴
         return entity;
@@ -65,7 +64,7 @@ public class RoomRepo {
 
         // 신규 내용으로 update
         entity.setTitle(roomInfo.getTitle());
-        entity.setHostUser(em.find(User.class, roomInfo.getHostUser()));
+        entity.setHostUser(roomInfo.getHostUser());
         entity.setCapacity(roomInfo.getCapacity());
 
         // DB에 update

@@ -20,7 +20,7 @@ public class EmailService {
     private final JavaMailSender mailSender;
 
     @Transactional
-    public void sendEmail(String email) throws  Exception {
+    public int sendEmail(String email) throws  Exception {
         int num = Integer.parseInt(makeSecretnumberUtil.numberGen(6,1));
         User user = em.createQuery("SELECT u FROM User u WHERE u.email like :email", User.class).setParameter("email", email).getSingleResult();
         User changeUser = em.find(User.class, user.getUserSeq());
@@ -42,7 +42,7 @@ public class EmailService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        return user.getUserSeq();
     }
 
     @Transactional

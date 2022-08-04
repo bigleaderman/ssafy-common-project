@@ -44,7 +44,7 @@ public class RoomService {
         List<RoomInfo> list = roomRepo.getAllRooms();
         List<RoomInfoDto> result = new ArrayList<>();
         for(RoomInfo room : list) {
-            result.add(new RoomInfoDto(room.getRoomSeq(), room.getHostUser().getUserSeq(), room.getTitle(), room.getCapacity()));
+            result.add(new RoomInfoDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(), room.getCapacity()));
         }
         return result;
     }
@@ -58,7 +58,7 @@ public class RoomService {
             if(room.getTitle().equals(filter.getTitle())
                     && room.getCapacity() >= filter.getCapacity()
                     && game.getMafiaNum() == filter.getMafiaNum())
-                result.add(new RoomInfoDto(room.getRoomSeq(), room.getHostUser().getUserSeq(), room.getTitle(), room.getCapacity()));
+                result.add(new RoomInfoDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(), room.getCapacity()));
         }
         return result;
     }
@@ -87,7 +87,7 @@ public class RoomService {
     // 방 상세 정보 조회
     public RoomInfoDto getRoomInfo(int roomSeq){
         RoomInfo room = roomRepo.getRoomInfo(roomSeq);
-        RoomInfoDto dto = new RoomInfoDto(room.getRoomSeq(), room.getHostUser().getUserSeq(), room.getTitle(), room.getCapacity());
+        RoomInfoDto dto = new RoomInfoDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(), room.getCapacity());
         return dto;
     }
 
@@ -95,7 +95,7 @@ public class RoomService {
     public RoomInfoDto modifyRoomInfo(RoomInfoDto roomInfo){
         // Todo : 호스트 유저만 방 정보 수정 가능
         RoomInfo room =  roomRepo.modifyRoomInfo(roomInfo);
-        RoomInfoDto dto = new RoomInfoDto(room.getRoomSeq(), room.getHostUser().getUserSeq(), room.getTitle(), room.getCapacity());
+        RoomInfoDto dto = new RoomInfoDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(), room.getCapacity());
         return dto;
     }
 

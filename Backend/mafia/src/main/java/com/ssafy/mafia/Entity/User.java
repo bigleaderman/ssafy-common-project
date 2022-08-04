@@ -10,6 +10,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User{
+public class User {
 
     public User(String email, String password, Authority authority){
         this.email = email;
@@ -46,6 +47,8 @@ public class User{
 
     private boolean isAuth;
 
+    private LocalDate createdAt;
+
     @JsonIgnore
     @Column(nullable = false, length = 1023)
     @NotBlank(message = "비밀번호를 입력해주세요.")
@@ -55,13 +58,6 @@ public class User{
 
     @Column(nullable = true)
     private String nickname;
-
-    @CreatedDate
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @LastModifiedDate
-    private LocalDateTime modifiedDate;
 
     @Enumerated(EnumType.STRING)
     private Authority authority;
@@ -85,28 +81,20 @@ public class User{
     private int emailCode;
 
 
-
-
-
-    @OneToMany(mappedBy = "reporting")
+    @OneToMany(mappedBy = "reporting", cascade = CascadeType.ALL)
     private List<Report> reporting = new ArrayList<>();
 
 
-    @OneToMany(mappedBy = "reported")
+    @OneToMany(mappedBy = "reported", cascade = CascadeType.ALL)
     private List<Report> reported = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "friendFrom")
+    @OneToMany(mappedBy = "friendFrom", cascade = CascadeType.ALL)
     private List<Friend> friendFrom = new ArrayList<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "friendTo")
+    @OneToMany(mappedBy = "friendTo", cascade = CascadeType.ALL)
     private List<Friend> friendTo = new ArrayList<>();
-
-    @JsonIgnore
-    @OneToOne(mappedBy = "hostUser", fetch = FetchType.LAZY)
-    private RoomInfo hostUser;
-
 
 
 }

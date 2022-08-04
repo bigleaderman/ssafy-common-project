@@ -24,8 +24,8 @@ public class EmailController {
 
     @PostMapping("/sendEmail")
     @ApiOperation(value = "이메일전송", notes="인증 이메일을 네이버에서 전송 한다")
-    public void sendEmail(@ApiParam(value = "회원이메일", example = "ssafy@naver.com") @RequestBody String email) throws Exception {
-        emailService.sendEmail(email);
+    public int sendEmail(@ApiParam(value = "회원이메일", example = "ssafy@naver.com") @RequestBody String email) throws Exception {
+        return emailService.sendEmail(email);
     }
 
 //    @GetMapping("/validationUser/{userId}/{num}")

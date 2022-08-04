@@ -22,10 +22,7 @@ public class RoomInfo {
 
     private int capacity;
 
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "userSeq", name = "hostUser")
-    private User hostUser;
+    private int hostUser;
 
 
     @JsonIgnore
