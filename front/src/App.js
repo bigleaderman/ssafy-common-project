@@ -15,6 +15,7 @@ import UpdateNoticePage from "./pages/UpdateNoticePage";
 import NoticeDetailPage from "./pages/NoticeDetailPage";
 import FindPasswordPage from "./pages/FindPasswordPage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
+import WelcomeMessagePage from "./pages/WelcomeMessagePage";
 import PageNotFoundPage from "./pages/PageNotFoundPage";
 
 // import VideoRoomPage from "./pages/VideoRoomPage";
@@ -46,6 +47,7 @@ function App() {
                     <Route exact path="/board/:noticeId/update" element={<UpdateNoticePage />} />
                     <Route exact path="/findpassword" element={<FindPasswordPage />} />
                     <Route exact path="/changepassword" element={<ChangePasswordPage />} />
+                    <Route exact path="/welcome" element={<WelcomeMessagePage />} />
                     <Route exact path="/users" element={<UserListPage />} />
                     <Route exact path="/users/:userId" element={<UserDetailPage />} />
                     <Route exact path="/*" element={<PageNotFoundPage />} />
