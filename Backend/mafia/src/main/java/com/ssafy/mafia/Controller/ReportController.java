@@ -1,6 +1,7 @@
 package com.ssafy.mafia.Controller;
 
 
+
 import com.ssafy.mafia.Model.ReportDto;
 import com.ssafy.mafia.Service.ReportService;
 import com.ssafy.mafia.auth.util.SecurityUtil;
@@ -9,12 +10,8 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
 
 @Api(value = "ReportController V1",tags = {"신고관련기능"})
 @RestController
@@ -24,6 +21,7 @@ import java.util.Map;
 public class ReportController {
 
     private final ReportService reportService;
+
 
     //신고기능
     @ApiOperation(value = "유저신고", notes = "Report 테이블에 새로운 데이터를 생성한다")
@@ -40,6 +38,7 @@ public class ReportController {
             return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
         }
     }
+
 }
 
 
