@@ -38,6 +38,9 @@ public class RoomService {
 
     // 전체 방 리스트 조회
     public List<RoomInfoDto> getAllRooms(){
+        // Todo :  Response - 현재 방에 들어있는 인원수, 비밀번호 유무. Request - 비밀번호
+        //
+
         List<RoomInfo> list = roomRepo.getAllRooms();
         List<RoomInfoDto> result = new ArrayList<>();
         for(RoomInfo room : list) {

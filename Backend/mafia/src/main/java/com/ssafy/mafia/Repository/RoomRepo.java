@@ -4,22 +4,29 @@ package com.ssafy.mafia.Repository;
 import com.ssafy.mafia.Entity.RoomInfo;
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.RoomInfoDto;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
-@RequiredArgsConstructor
 @Transactional
 public class RoomRepo {
 
-    // 방별 유저를 위한 map
-    private final Map<Integer, List<Integer>> map = new LinkedHashMap<>();
+    // db 접근을 위한 entity manager
+    @Autowired
+    private EntityManager em;
 
-    private final EntityManager em;
+    // 방별 유저를 위한 map
+    private final Map<Integer, List<Integer>> map = new ConcurrentHashMap<>();
+
+    /*
+    *
+    * 대기방 관련 기능 구현
+    *
+    * */
 
     // 전체 방 리스트 조회
     public List<RoomInfo> getAllRooms(){
@@ -93,6 +100,5 @@ public class RoomRepo {
     public List<Integer> getAllUsersOfRoom(int roomSeq){
         return map.get(roomSeq);
     }
-
 
 }

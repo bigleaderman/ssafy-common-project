@@ -17,4 +17,6 @@ public class FriendResponseDto {
     //친구인가?
     @ApiParam(value = "친구수락을 하였는지에 대한 정보", required = true)
     private boolean isAccept;
+    //레드유저인가
+    private boolean isRed;
 }

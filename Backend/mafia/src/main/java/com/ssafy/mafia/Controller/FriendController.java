@@ -3,9 +3,12 @@ package com.ssafy.mafia.Controller;
 import com.ssafy.mafia.Model.FriendDto;
 import com.ssafy.mafia.Model.FriendResponseDto;
 import com.ssafy.mafia.Service.FriendService;
+import com.ssafy.mafia.Service.SessionService;
 import com.ssafy.mafia.auth.util.SecurityUtil;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +23,7 @@ import java.util.Map;
 public class FriendController {
 
     private final FriendService friendService;
+    private static final Logger log = LoggerFactory.getLogger(FriendController.class);
     //친구 신청
     @ApiOperation(value = "친구신청", notes = "Friend 테이블에 새로운 친구관계 데이터를 생성한다")
     @PostMapping("/request")
@@ -33,7 +37,8 @@ public class FriendController {
             if(friendService.friendRequest(friendDto)){
             return new ResponseEntity<Void>(HttpStatus.OK);
                 }
-        }catch (NullPointerException e){
+        }catch (Exception e){
+            log.error("잘못된 요청입니다 : "+ e);
             e.printStackTrace();
             return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);}
 
@@ -41,14 +46,16 @@ public class FriendController {
     }
 
     //친구 신청 목록 조회
-
-
     @ApiOperation(value = "친구신청 목록조회", notes = "요청 회원을 대상으로한 친구신청의 목록을 반환한다")
     @GetMapping("/request-list")
     public ResponseEntity<List<FriendResponseDto>> checkRequest(){
         int userSeq = SecurityUtil.getCurrentUserId();
-
-        return new ResponseEntity<List<FriendResponseDto>>(friendService.findFriendRequest(userSeq),HttpStatus.OK);
+        try {
+            return new ResponseEntity<List<FriendResponseDto>>(friendService.findFriendRequest(userSeq),HttpStatus.OK);
+        }catch (Exception e){
+            log.error("잘못된 요청입니다 : "+ e);
+            return null;
+        }
     }
 
     //친구 목록 조회
@@ -56,7 +63,12 @@ public class FriendController {
     @GetMapping("/friend-list")
     public ResponseEntity<List<FriendResponseDto>> findFriend() {
         int userSeq = SecurityUtil.getCurrentUserId();
-        return new ResponseEntity<List<FriendResponseDto>>(friendService.findFriend(userSeq),HttpStatus.OK);
+        try {
+            return new ResponseEntity<List<FriendResponseDto>>(friendService.findFriend(userSeq),HttpStatus.OK);
+        }catch (Exception e){
+            log.error("잘못된 요청입니다 : "+ e);
+            return null;
+        }
     }
     // 친구신청 수락
     @ApiOperation(value = "친구신청 수락", notes = "Frined 테이블에 해당 데이터에서 is_accept컬럼을 true변환 후 양방향 데이터를 생성한다")
@@ -70,6 +82,7 @@ public class FriendController {
                 return new ResponseEntity<String>("이미 친구입니다.", HttpStatus.BAD_REQUEST);
             }
         }catch (Exception e){
+            log.error("잘못된 요청입니다 : "+ e);
             e.printStackTrace();
             return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
         }
@@ -83,6 +96,7 @@ public class FriendController {
             friendService.refuseFriend(friendSeq);
             return new ResponseEntity<String>("친구신청을 거절하였습니다", HttpStatus.OK);
         }catch (Exception e) {
+            log.error("잘못된 요청입니다 : "+ e);
             e.printStackTrace();
             return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
         }
@@ -96,6 +110,7 @@ public class FriendController {
             friendService.removeFriend(friendSeq);
             return new ResponseEntity<Void>(HttpStatus.OK);
         }catch (Exception e){
+            log.error("잘못된 요청입니다 : "+ e);
             return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
         }
     }
