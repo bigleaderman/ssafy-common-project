@@ -1,20 +1,12 @@
 package com.ssafy.mafia.Repository;
 
 
-import com.ssafy.mafia.Entity.GameInfo;
 import com.ssafy.mafia.Entity.RoomInfo;
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.RoomInfoDto;
-import io.openvidu.java.client.OpenVidu;
-import io.openvidu.java.client.Session;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

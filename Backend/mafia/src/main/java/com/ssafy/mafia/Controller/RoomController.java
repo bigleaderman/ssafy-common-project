@@ -1,11 +1,10 @@
 package com.ssafy.mafia.Controller;
 
-import com.ssafy.mafia.Entity.RoomInfo;
+
 import com.ssafy.mafia.Model.*;
 import com.ssafy.mafia.Service.RoomService;
+import com.ssafy.mafia.Service.SessionService;
 import com.ssafy.mafia.auth.util.SecurityUtil;
-import io.openvidu.java.client.OpenVidu;
-import io.openvidu.java.client.Session;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -14,10 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,9 +22,11 @@ import java.util.concurrent.ConcurrentHashMap;
 @Api(tags = {"로비/대기방 기능"})
 public class RoomController {
 
-    private static final Logger log = LoggerFactory.getLogger(SessionController.class);
+    private static final Logger log = LoggerFactory.getLogger(RoomController.class);
 
     private final RoomService service;
+
+    private final SessionService sessionService;
 
     @ApiOperation(value = "방 생성", notes = "방 생성")
     @PostMapping
@@ -36,6 +34,10 @@ public class RoomController {
         // 유저정보, 방정보 필요
         // 방 생성
         SettingsDto response = service.createRoom(new RoomInfoDto(), new GameInfoDto());
+
+        // 오픈비두 세션 생성
+        sessionService.createSession(response.getRoomInfo().getRoomSeq());
+
         return new ResponseEntity<SettingsDto>(response, HttpStatus.OK);
     }
 
@@ -99,6 +101,18 @@ public class RoomController {
 
         // 호스트 권한 넘겨주기
         return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    @ApiOperation(value = "오픈비두 토큰 발급", notes = "오픈비두 서버 접속을 위한 토큰 발급")
+    @PostMapping("/{room-seq}/token")
+    public ResponseEntity<String> getToken(@PathVariable("room-seq") int roomSeq){
+        int userSeq = SecurityUtil.getCurrentUserId();
+        String token = sessionService.joinSession(roomSeq, userSeq);
+
+        if(token == null){
+            return new ResponseEntity<String>("토큰 발급 실패", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<String>(token, HttpStatus.OK);
     }
 
 }
