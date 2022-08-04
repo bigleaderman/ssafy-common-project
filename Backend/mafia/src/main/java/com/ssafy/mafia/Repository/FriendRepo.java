@@ -5,7 +5,6 @@ import com.ssafy.mafia.Entity.RoomInfo;
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.FriendDto;
 import com.ssafy.mafia.Model.FriendResponseDto;
-import com.ssafy.mafia.Model.UserDto;
 import com.ssafy.mafia.Service.RoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

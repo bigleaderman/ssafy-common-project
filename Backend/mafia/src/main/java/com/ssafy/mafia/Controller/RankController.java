@@ -1,6 +1,5 @@
 package com.ssafy.mafia.Controller;
 
-import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.RankDto;
 import com.ssafy.mafia.Service.RankService;
 import io.swagger.annotations.ApiOperation;
@@ -23,8 +22,8 @@ public class RankController {
     }
 
     @PutMapping("/user/game/rank")
-    @ApiOperation(value = "랭크정보 수정하기", notes = "자신의 승, 패, 점수 변경", response = void.class)
-    public void changeRank(@RequestBody boolean result) {
-        rankService.changeRank(result);
+    @ApiOperation(value = "랭크정보 수정하기", notes = "자신의 승, 패, 점수 변경", response = RankDto.class)
+    public RankDto changeRank(@RequestBody boolean result) {
+        return rankService.changeRank(result);
     }
 }

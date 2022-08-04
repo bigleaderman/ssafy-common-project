@@ -36,6 +36,7 @@ public class NoticeController {
         try {
             return new ResponseEntity<List<NoticeListResponseDto>>(noticeService.getAllNotice(), HttpStatus.OK);
         }catch (Exception e){
+            e.printStackTrace();
 //            return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
             return null;
         }
@@ -51,6 +52,7 @@ public class NoticeController {
 
             return new ResponseEntity<NoticeResponseDto>(noticeBoard ,HttpStatus.OK);
         }catch (Exception e){
+            e.printStackTrace();
 //            return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
             return null;
         }
@@ -64,6 +66,7 @@ public class NoticeController {
             noticeService.deleteNotice(noticeSeq);
             return new ResponseEntity<Void>(HttpStatus.OK);
         }catch (Exception e){
+            e.printStackTrace();
             return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
         }
     }
@@ -80,6 +83,7 @@ public class NoticeController {
             NoticeResponseDto noticeResponseDto = noticeService.writeNotice(request);
             return new ResponseEntity<NoticeResponseDto>(noticeResponseDto, HttpStatus.OK);
         }catch (Exception e){
+            e.printStackTrace();
             return null;
         }
     }
@@ -95,6 +99,7 @@ public class NoticeController {
             NoticeResponseDto noticeResponseDto = noticeService.updateNotice(noticeSeq, request);
             return new ResponseEntity<NoticeResponseDto>(noticeResponseDto, HttpStatus.OK);
         }catch (Exception e){
+            e.printStackTrace();
 //            return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
             return null;
         }
@@ -104,7 +109,9 @@ public class NoticeController {
     @ApiOperation(value = "글 제목으로 검색",notes = "요청 검색어가 포함된 모든 공지사항 데이터 목록을 반환한다", response = Map.class)
     @GetMapping("/board/search/{title}")
     public ResponseEntity<List<NoticeListResponseDto>> getNoticeByTitle(@PathVariable("title")@ApiParam(value = "검색어", required = true) String title) {
-
+        if (title == ""){
+            return new ResponseEntity<List<NoticeListResponseDto>>(noticeService.getAllNotice(), HttpStatus.OK);
+        }
         return new ResponseEntity<List<NoticeListResponseDto>>(noticeService.noticeByTitle(title), HttpStatus.OK);
 
     }

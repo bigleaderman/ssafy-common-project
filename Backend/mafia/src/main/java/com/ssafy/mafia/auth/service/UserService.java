@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
+import java.util.List;
 
 
 @Service
@@ -42,12 +43,15 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Boolean checkNickname(String nickname) {
+    public boolean checkNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
 
     @Transactional(readOnly = false)
     public UserInfoResponseDto enrollNickname(String nickname) {
+        if (userRepository.existsByNickname(nickname)) {
+            throw new RuntimeException("이미 등록된 닉네임입니다");
+        }
         User user = em.find(User.class, SecurityUtil.getCurrentUserId());
         user.setNickname(nickname);
         return UserInfoResponseDto.convert(user);
@@ -67,29 +71,30 @@ public class UserService {
     }
 
     @Transactional
-    public UserInfoResponseDto changePw(String password) {
+    public void changePw(String password) {
         User user = em.find(User.class, SecurityUtil.getCurrentUserId());
         user.setPassword(passwordEncoder.encode(password));
-        return UserInfoResponseDto.convert(user);
         //return user;
 
     }
 
     @Transactional
-    public boolean validationUser(int userId, int num) throws Exception {
+    public void validationUser(int userId, int num) throws Exception {
         User user = em.find(User.class, userId);
         if (user.getEmailCode() == num ) {
             user.setAuth(true);
-            return true;
-        }
-        else{
-            return false;
         }
     }
 
     @Transactional(readOnly = true)
-    public User userInfomation(String nickname) {
+    public User userInformation(String nickname) {
         return userRepository.findByNickname(nickname)
                 .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    public List isLoginUser() {
+        return  em.createQuery("SELECT u.nickname, u.winCount, u.loseCount, u.rankPoint, u.isRedUser, u.nowRoomSeq FROM User u WHERE u.isLogin = true").getResultList();
+
     }
  }

@@ -1,6 +1,5 @@
 package com.ssafy.mafia.Controller;
 
-
 import com.ssafy.mafia.Model.*;
 import com.ssafy.mafia.Service.RoomService;
 import com.ssafy.mafia.Service.SessionService;

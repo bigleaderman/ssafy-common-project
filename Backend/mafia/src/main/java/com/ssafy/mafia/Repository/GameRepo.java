@@ -2,7 +2,6 @@ package com.ssafy.mafia.Repository;
 
 import com.ssafy.mafia.Entity.GameInfo;
 import com.ssafy.mafia.Entity.RoomInfo;
-import com.ssafy.mafia.Model.GameInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
