@@ -70,6 +70,7 @@ public class SessionService {
         try {
             String token = session.createConnection(connectionProperties).getToken();
             repo.joinRoom(roomSeq, userSeq, token);
+            log.info("room [" + roomSeq + "] " + "user " + userSeq + " - token " + token);
             return token;
         }
         catch (Exception e){
