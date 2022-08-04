@@ -4,10 +4,13 @@ package com.ssafy.mafia.Controller;
 
 import com.ssafy.mafia.Model.ReportDto;
 import com.ssafy.mafia.Service.ReportService;
+import com.ssafy.mafia.Service.SessionService;
 import com.ssafy.mafia.auth.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class ReportController {
 
     private final ReportService reportService;
+    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
 
 
     //신고기능
@@ -34,6 +38,7 @@ public class ReportController {
             reportService.report(reportDto);
             return new ResponseEntity<Void>(HttpStatus.OK);
         }catch (Exception e){
+            log.error("잘못된 요청입니다"+ e);
             e.printStackTrace();
             return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
         }

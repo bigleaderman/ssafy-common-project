@@ -6,12 +6,15 @@ import com.ssafy.mafia.Model.NoticeListResponseDto;
 import com.ssafy.mafia.Model.NoticeResponseDto;
 import com.ssafy.mafia.Model.NoticeDto;
 import com.ssafy.mafia.Service.NoticeService;
+import com.ssafy.mafia.Service.SessionService;
 import com.ssafy.mafia.auth.util.SecurityUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +31,7 @@ public class NoticeController {
 
 
     private final NoticeService noticeService;
+    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
 
     //전체 글조회
     @ApiOperation(value = "전체 글조회",notes = "모든 공지사항 목록을 반환한다", response = Map.class)
@@ -36,8 +40,8 @@ public class NoticeController {
         try {
             return new ResponseEntity<List<NoticeListResponseDto>>(noticeService.getAllNotice(), HttpStatus.OK);
         }catch (Exception e){
+            log.error("잘못된 요청입니다 : "+ e);
             e.printStackTrace();
-//            return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
             return null;
         }
 
@@ -52,8 +56,8 @@ public class NoticeController {
 
             return new ResponseEntity<NoticeResponseDto>(noticeBoard ,HttpStatus.OK);
         }catch (Exception e){
+            log.error("잘못된 요청입니다 : "+ e);
             e.printStackTrace();
-//            return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
             return null;
         }
     }
@@ -66,6 +70,7 @@ public class NoticeController {
             noticeService.deleteNotice(noticeSeq);
             return new ResponseEntity<Void>(HttpStatus.OK);
         }catch (Exception e){
+            log.error("잘못된 요청입니다 : "+ e);
             e.printStackTrace();
             return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
         }
@@ -83,6 +88,7 @@ public class NoticeController {
             NoticeResponseDto noticeResponseDto = noticeService.writeNotice(request);
             return new ResponseEntity<NoticeResponseDto>(noticeResponseDto, HttpStatus.OK);
         }catch (Exception e){
+            log.error("잘못된 요청입니다 : "+ e);
             e.printStackTrace();
             return null;
         }
@@ -100,7 +106,7 @@ public class NoticeController {
             return new ResponseEntity<NoticeResponseDto>(noticeResponseDto, HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
-//            return new ResponseEntity<String>("잘못된 요청입니다.",HttpStatus.BAD_REQUEST);
+            log.error("잘못된 요청입니다 : "+ e);
             return null;
         }
     }
@@ -110,9 +116,22 @@ public class NoticeController {
     @GetMapping("/board/search/{title}")
     public ResponseEntity<List<NoticeListResponseDto>> getNoticeByTitle(@PathVariable("title")@ApiParam(value = "검색어", required = true) String title) {
         if (title == ""){
-            return new ResponseEntity<List<NoticeListResponseDto>>(noticeService.getAllNotice(), HttpStatus.OK);
+            try {
+                return new ResponseEntity<List<NoticeListResponseDto>>(noticeService.getAllNotice(), HttpStatus.OK);
+            }catch (Exception e){
+                log.error("잘못된 요청입니다 : "+ e);
+                e.printStackTrace();
+                return null;
+            }
         }
-        return new ResponseEntity<List<NoticeListResponseDto>>(noticeService.noticeByTitle(title), HttpStatus.OK);
+        try {
+            return new ResponseEntity<List<NoticeListResponseDto>>(noticeService.noticeByTitle(title), HttpStatus.OK);
+        }catch (Exception e){
+            log.error("잘못된 요청입니다 : "+ e);
+            e.printStackTrace();
+            return null;
+        }
+
 
     }
 

@@ -21,23 +21,23 @@ public class AdminService {
         return adminRepo.findAll();
     }
 
-    public User getUser(int userSeq){
+    public User getUser(int userSeq) throws Exception{
         return adminRepo.findUser(userSeq);
     }
 
     //레드 관리
     @Transactional
-    public void redControl(int userSeq) {
+    public void redControl(int userSeq) throws Exception{
         adminRepo.redControl(userSeq);
     }
 
     // 유저가 신고한 신고 리스트
-    public List<ReportingListResponseDto> reportingList(int userSeq){
+    public List<ReportingListResponseDto> reportingList(int userSeq) throws Exception{
         return adminRepo.reportingList(userSeq);
     }
 
     // 유저가 신고당한 신고 리스트
-    public List<ReportedListResponseDto> reportedList(int userSeq){
+    public List<ReportedListResponseDto> reportedList(int userSeq) throws Exception{
         return adminRepo.reportedList(userSeq);
     }
 }
