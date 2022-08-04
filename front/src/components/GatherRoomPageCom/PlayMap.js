@@ -9,7 +9,7 @@ import axios from "axios";
 
 export default function PlayMap(props) {
     const dispatch = useDispatch();
-    let seatNum, seatChange;
+    let seatNum, seatChange, seatCnt, seatNothing;
     const mapSize = 700;
     const charSize = 50;
     const chairSize = 20;
@@ -78,6 +78,7 @@ export default function PlayMap(props) {
             if (keyPress[68]) pX.current -= speed;
         }
 
+        seatNum = -1;
         //의자 충돌 감지
         for (let i = 0; i < 8; i++) {
             if (
@@ -87,18 +88,26 @@ export default function PlayMap(props) {
                 chairs[i][0] + chairSize > pY.current
             ) {
                 seatNum = i;
-                //자리와 이전 자리 번호가 다를 시
+                //자리에 앉았을 시 소켓으로 준비 완료 전송
                 if (seatNum != seatChange) {
+                    seatNothing = true;
                     document.getElementById("inputTag").value = "준비 완료";
                     console.log("send ready");
                     seatChange = i;
 
                     //ws 통신으로 준비신호보냄
                 }
-                console.log("SeatNum: s", seatNum);
+                //자리와 이전 자리가 같을 시
+
+                console.log("SeatNum: ", seatNum);
             }
         }
-
+        //자리에서 벗어났을 시 소켓으로 준비 완료 해제 전송
+        if (seatNum == -1 && seatNothing == true) {
+            console.log("send not ready");
+            seatCnt = 0;
+            seatNothing = false;
+        }
         if (pY.current < 0)
             //외부 벽 충돌 감지
             pY.current = 0;
@@ -214,6 +223,7 @@ export default function PlayMap(props) {
                         position: "absolute",
                     }}
                 ></div>
+                {/* 다른 유저의 캐릭터 작성 */}
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 
 //의사, 경찰, 마피아 수 검사
 export const GameSetting = (props) => {
@@ -8,8 +8,6 @@ export const GameSetting = (props) => {
     useEffect(() => {
         inputFocus.current.focus();
     }, []);
-    const changeConfirm = () => {};
-
     return (
         <div>
             <label>인원 수 : </label>
@@ -27,13 +25,7 @@ export const GameSetting = (props) => {
             <input type="text" id="cntCop" />
             <label>마피아 수 : </label>
             <input type="text" id="cntMaf" />
-            <button
-                onClick={() => {
-                    changeConfirm;
-                }}
-            >
-                확인
-            </button>
+            <button>확인</button>
             <button>취소</button>
         </div>
     );
