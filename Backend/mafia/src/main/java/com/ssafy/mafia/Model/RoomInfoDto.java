@@ -6,9 +6,10 @@ import lombok.Data;
 public class RoomInfoDto {
 
     public RoomInfoDto(){
-        hostUser = 1;
-        title = "title";
+        hostUser = 0;
+        title = "";
         capacity = 6;
+        isLocked = false;
     }
 
     public RoomInfoDto(int roomSeq, int hostUser, String title, int capacity) {
@@ -22,4 +23,8 @@ public class RoomInfoDto {
     private int hostUser;
     private String title;
     private int capacity;
+
+    private String password;
+
+    private boolean isLocked;
 }

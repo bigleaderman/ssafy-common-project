@@ -30,7 +30,9 @@ public class RoomController {
     @ApiOperation(value = "방 생성", notes = "방 생성")
     @PostMapping
     public ResponseEntity<SettingsDto> createRoom(@RequestBody SettingsDto requset){
-        // 유저정보, 방정보 필요
+        // Todo : 유저정보, 방정보 필요
+
+
         // 방 생성
         SettingsDto response = service.createRoom(new RoomInfoDto(), new GameInfoDto());
 
