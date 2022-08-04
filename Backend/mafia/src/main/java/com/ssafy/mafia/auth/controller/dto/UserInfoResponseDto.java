@@ -38,8 +38,8 @@ public class UserInfoResponseDto {
     private  int rankPoint;
 
     public static UserInfoResponseDto convert(User user){
-        return new UserInfoResponseDto(user.getUserSeq(),user.getAuthority(), user.getEmail(), user.getNickname(), user.isRedUser(),
-                user.isAuth(), user.getWinCount(), user.getLoseCount(), user.getRankPoint() );
+        return new UserInfoResponseDto(user.getUserSeq(),user.getAuthority(), user.getEmail(), user.getNickname(),
+                user.isAuth(), user.isRedUser(), user.getWinCount(), user.getLoseCount(), user.getRankPoint() );
     }
 
 }
