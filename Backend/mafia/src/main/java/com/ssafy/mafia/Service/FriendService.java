@@ -25,29 +25,29 @@ public class FriendService {
     }
 
     //친구신청 목록조회
-    public List<FriendResponseDto> findFriendRequest(int userSeq){
+    public List<FriendResponseDto> findFriendRequest(int userSeq) throws Exception {
         return friendRepo.getFriendRequest(userSeq);
     }
 
     //친구 목록조회
-    public List<FriendResponseDto> findFriend(int userseq) {
-        return friendRepo.getFriendList(userseq);
+    public List<FriendResponseDto> findFriend(int userSeq) throws Exception {
+        return friendRepo.getFriendList(userSeq);
     }
 
     //친구 수락
     @Transactional
-    public boolean beFriend(int friendSeq){
+    public boolean beFriend(int friendSeq) throws Exception{
         return friendRepo.changeAccept(friendSeq);
     }
 
     //친구신청 거절
     @Transactional
-    public void refuseFriend(int friendSeq){
+    public void refuseFriend(int friendSeq) throws Exception{
         friendRepo.removeAccept(friendSeq);
     }
 
     @Transactional
-    public void removeFriend(int friendSeq) {
+    public void removeFriend(int friendSeq)throws Exception {
         friendRepo.deleteFriend(friendSeq);
     }
 
