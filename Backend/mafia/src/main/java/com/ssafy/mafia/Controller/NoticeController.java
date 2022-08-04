@@ -31,7 +31,7 @@ public class NoticeController {
 
 
     private final NoticeService noticeService;
-    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
+    private static final Logger log = LoggerFactory.getLogger(NoticeController.class);
 
     //전체 글조회
     @ApiOperation(value = "전체 글조회",notes = "모든 공지사항 목록을 반환한다", response = Map.class)

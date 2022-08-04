@@ -20,7 +20,7 @@ import java.util.List;
 public class ReportRepo {
 
     private final EntityManager em;
-    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
+    private static final Logger log = LoggerFactory.getLogger(ReportRepo.class);
 
     //신고하기 기능
     public void createReport(ReportDto reportDto) throws Exception {

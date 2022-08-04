@@ -24,7 +24,7 @@ import java.util.List;
 public class FriendRepo {
     private final EntityManager em;
     private final RoomService roomService;
-    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
+    private static final Logger log = LoggerFactory.getLogger(FriendRepo.class);
 
     //최초 친구신청
     //이미 친구신청을 했었니?그럼 안돼 로직을 작성
@@ -91,6 +91,7 @@ public class FriendRepo {
                 response.setNickname(friend.getFriendFrom().getNickname());
                 response.setAccept(friend.isAccept());
                 response.setFriendSeq(friend.getFriendSeq());
+                response.setRed(friend.getFriendFrom().isRedUser());
                 result.add(response);
             }
         }
@@ -112,6 +113,7 @@ public class FriendRepo {
                 response.setFriendSeq(friend.getFriendSeq());
                 response.setNickname(friend.getFriendTo().getNickname());
                 response.setAccept(friend.isAccept());
+                response.setRed(friend.getFriendTo().isRedUser());
                 result.add(response);
             }
         }

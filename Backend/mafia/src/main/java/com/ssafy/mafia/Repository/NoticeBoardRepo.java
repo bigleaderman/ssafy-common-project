@@ -22,7 +22,7 @@ import java.util.List;
 public class NoticeBoardRepo {
 
     private final EntityManager em;
-    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
+    private static final Logger log = LoggerFactory.getLogger(NoticeBoardRepo.class);
 
     //전체 글 목록 반환
     public List<NoticeListResponseDto> findAll() throws Exception{
