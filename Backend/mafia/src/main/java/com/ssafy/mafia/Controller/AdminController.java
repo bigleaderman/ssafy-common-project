@@ -1,6 +1,9 @@
 package com.ssafy.mafia.Controller;
 
+import com.ssafy.mafia.Entity.Report;
 import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Model.ReportedListResponseDto;
+import com.ssafy.mafia.Model.ReportingListResponseDto;
 import com.ssafy.mafia.Service.AdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +38,13 @@ public class AdminController {
         }
     }
 
+    //유저Seq로 세부조회
+    @ApiOperation(value = "유저조회",notes = "유저 정보를 반환한다.", response = Map.class)
+    @GetMapping("/{userSeq}")
+    public ResponseEntity<User> getUser(@PathVariable("userSeq")@ApiParam(value = "대상유저 pk", readOnly = true) int userSeq){
+        return new ResponseEntity<User>(adminService.getUser(userSeq),HttpStatus.OK);
+    }
+
     // 레드유저 관리
     @ApiOperation(value = "레드유저 해제 및 등록", notes = "해당 유저의 레드유저 상태를 반전한다")
     @PostMapping("/red/{userSeq}")
@@ -48,6 +58,18 @@ public class AdminController {
         }
     }
 
+    //유저가 신고한 리스트
+    @ApiOperation(value = "유저가 신고한 리스트조회",notes = "신고대상유저와 신고내용을 반환.", response = Map.class)
+    @GetMapping("/{userSeq}/reporting-list")
+    public ResponseEntity<?> reportingList(@PathVariable("userSeq")@ApiParam(value = "대상유저 pk", readOnly = true) int userSeq){
+        return new ResponseEntity<List<ReportingListResponseDto>>(adminService.reportingList(userSeq),HttpStatus.OK);
+    }
+    //유저가 신고당한 리스트
+    @ApiOperation(value = "유저를 신고한 리스트조회",notes = "신고한유저와 신고내용을 반환.", response = Map.class)
+    @GetMapping("/{userSeq}/reported-list")
+    public ResponseEntity<?> reportedList(@PathVariable("userSeq")@ApiParam(value = "대상유저 pk", readOnly = true) int userSeq){
+        return new ResponseEntity<List<ReportedListResponseDto>>(adminService.reportedList(userSeq),HttpStatus.OK);
+    }
 
 
 }
