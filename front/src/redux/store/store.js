@@ -2,8 +2,18 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 
 // redux로 관리할 데이터
-import GatherMapPosYSlice from "../slice/GatherMapPosYSlice";
-import GatherMapPosXSlice from "../slice/GatherMapPosXSlice";
+//맵에서 자기 캐릭터 좌표 관리
+import MapPosYSlice from "../slice/MapPosYSlice";
+import MapPosXSlice from "../slice/MapPosXSlice";
+
+//게임 방 정보 관리
+import CntCivilSlice from "../slice/CntCivilSlice";
+import CntConSlice from "../slice/CntConSlice";
+import CntCopSlice from "../slice/CntCopSlice";
+import CntDocSlice from "../slice/CntDocSlice";
+import CntMafSlice from "../slice/CntMafSlice";
+import CntLimitSlice from "../slice/CntLimitSlice";
+import RoomTitleSlice from "../slice/RoomTitleSlice";
 
 //redux-persist 관련 함수
 import { persistReducer, persistStore } from "redux-persist";
@@ -23,8 +33,15 @@ const persistConfig = {
 
 //rootReducer = 조합된 최종 리듀서
 const rootReducer = combineReducers({
-    posY: GatherMapPosYSlice,
-    posX: GatherMapPosXSlice,
+    posY: MapPosYSlice,
+    posX: MapPosXSlice,
+    cntCivil: CntCivilSlice,
+    cntCon: CntConSlice,
+    cntCop: CntCopSlice,
+    cntDoc: CntDocSlice,
+    cntMaf: CntMafSlice,
+    cntLimit: CntLimitSlice,
+    roomTitle: RoomTitleSlice,
 });
 
 //persistReducer(설정, 최종 리듀서)

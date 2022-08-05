@@ -1,13 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-export const GatherMapPosXSlice = createSlice({
-    name: "GatherMapPosX",
+export const MapPosXSlice = createSlice({
+    name: "MapPosX",
     initialState: {
-<<<<<<< HEAD
         value: 350,
-=======
-        value: 0,
->>>>>>> 32528ff (S07P12D106-110/아바타조작 구현 중)
     },
     reducers: {
         SavePosX: (state, action) => {
@@ -16,8 +12,8 @@ export const GatherMapPosXSlice = createSlice({
     },
 });
 
-export const { SavePosX } = GatherMapPosXSlice.actions;
+export const { SavePosX } = MapPosXSlice.actions;
 
 export const selectPosX = (state) => state.posX.value;
 
-export default GatherMapPosXSlice.reducer;
+export default MapPosXSlice.reducer;

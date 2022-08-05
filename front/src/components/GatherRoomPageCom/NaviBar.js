@@ -37,11 +37,11 @@ export default function NaviBar(props) {
 
     const handleClose = () => setOpen(false);
 
-    const SwitchModals = () => {
+    const SwitchModals = (props) => {
         if (SwitchModalValue == 0) {
             return <Helper />;
         } else if (SwitchModalValue == 1) {
-            return <GameSetting />;
+            return <GameSetting setOpen={props.setOpen} />;
         }
     };
     return (
@@ -69,6 +69,19 @@ export default function NaviBar(props) {
                     <Button variant="contained" size="small">
                         환경설정
                     </Button>
+
+                    <Button
+                        id="gameStart"
+                        variant="contained"
+                        size="small"
+                        onClick={() => {
+                            props.setIsGameStart(!props.IsGameStart);
+                            document.getElementById("gameStart").style.display =
+                                "none";
+                        }}
+                    >
+                        게임 시작
+                    </Button>
                     <Button variant="contained" size="small">
                         나가기
                     </Button>
@@ -77,7 +90,7 @@ export default function NaviBar(props) {
 
             <Modal open={open} onClose={handleClose}>
                 <Box sx={style}>
-                    <SwitchModals />
+                    <SwitchModals setOpen={setOpen} />
                 </Box>
             </Modal>
         </div>
