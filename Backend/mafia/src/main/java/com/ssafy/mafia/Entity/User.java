@@ -80,6 +80,9 @@ public class User {
 
     private int emailCode;
 
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
+
 
     @OneToMany(mappedBy = "reporting", cascade = CascadeType.ALL)
     private List<Report> reporting = new ArrayList<>();

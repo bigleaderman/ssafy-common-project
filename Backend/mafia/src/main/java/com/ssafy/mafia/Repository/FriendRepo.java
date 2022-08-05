@@ -92,6 +92,7 @@ public class FriendRepo {
                 response.setAccept(friend.isAccept());
                 response.setFriendSeq(friend.getFriendSeq());
                 response.setRed(friend.getFriendFrom().isRedUser());
+                response.setStatus(friend.getFriendFrom().getUserStatus().toString());
                 result.add(response);
             }
         }

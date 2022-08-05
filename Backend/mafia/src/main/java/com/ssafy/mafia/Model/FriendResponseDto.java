@@ -19,4 +19,6 @@ public class FriendResponseDto {
     private boolean isAccept;
     //레드유저인가
     private boolean isRed;
+
+    private String status;
 }
