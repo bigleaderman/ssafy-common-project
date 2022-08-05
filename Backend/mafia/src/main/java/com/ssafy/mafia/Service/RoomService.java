@@ -69,8 +69,6 @@ public class RoomService {
 
     // 방 생성
     public SettingsDto createRoom(RoomInfoDto roomInfo, GameInfoDto gameInfo){
-
-
         // database에 roomInfo 집어 넣고 roomSeq return 받기
         RoomInfo roomEntity = roomRepo.createRoom(roomInfo);
         roomInfo.setRoomSeq(roomEntity.getRoomSeq());
@@ -85,6 +83,16 @@ public class RoomService {
         response.setGameInfo(gameInfo);
 
         return response;
+    }
+
+    // 호스트 유저 변경
+    public void setHost(int roomSeq, int userSeq){
+        roomRepo.setHostUser(roomSeq, userSeq);
+    }
+
+    // 방 비밀번호 변경
+    public void setRoomPassword(int roomSeq, String password){
+        roomRepo.setRoomPassword(roomSeq, password);
     }
 
     // host 없이 방 생성하기

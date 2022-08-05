@@ -44,6 +44,8 @@ public class RoomController {
 
         // 방 생성
         SettingsDto response = service.createRoom(request.getRoomInfo(), request.getGameInfo());
+        service.setHost(response.getRoomInfo().getRoomSeq(), hostUser);
+        service.setRoomPassword(response.getRoomInfo().getRoomSeq(), request.getRoomInfo().getPassword());
 
         // 오픈비두 세션 생성
         sessionService.createSession(response.getRoomInfo().getRoomSeq());

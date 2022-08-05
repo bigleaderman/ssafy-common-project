@@ -42,7 +42,6 @@ public class RoomRepo {
         // 집어넣은 데이터 설정
         RoomInfo entity = new RoomInfo();
         entity.setTitle(roomInfo.getTitle());
-        entity.setHostUser(roomInfo.getHostUser());
         entity.setCapacity(roomInfo.getCapacity());
 
         // DB insert
@@ -54,11 +53,21 @@ public class RoomRepo {
         // 방 생성
         map.put(entity.getRoomSeq(), new ArrayList<>());
         roomUserMap.put(entity.getRoomSeq(), new JsonArray());
-        // 방 입장
-        joinRoom(entity.getRoomSeq(), roomInfo.getHostUser());
         
         // 데이터 리턴
         return entity;
+    }
+
+    // 방 비밀번호 변경
+    public void setRoomPassword(int roomSeq, String password){
+        RoomInfo entity = em.find(RoomInfo.class, roomSeq);
+        entity.setPassword(password);
+    }
+
+    // 호스트 유저 변경
+    public void setHostUser(int roomSeq, int userSeq){
+        RoomInfo entity = em.find(RoomInfo.class, roomSeq);
+        entity.setHostUser(userSeq);
     }
 
     // 방 정보 수정
