@@ -16,18 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessageController {
     private final SimpMessagingTemplate template;
 
-    @MessageMapping("/lobby")
-    public MessageDto lobbyChat(@Payload MessageDto message){
-        template.convertAndSend("/sub/lobby", message);
-        return message;
-    }
-
-    @MessageMapping("/room/{room-seq}")
-    public MessageDto roomChat(@DestinationVariable("room-seq") int roomSeq, @Payload MessageDto message){
-        template.convertAndSend("/sub/room/" + roomSeq, message);
-        return message;
-    }
-
     @MessageMapping("/invite")
     public void invitingFriend(InviteDto message){
         template.convertAndSend("/sub/invite/" + message.getFriendSeq(), message);
