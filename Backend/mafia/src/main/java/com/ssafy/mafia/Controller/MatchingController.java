@@ -69,6 +69,12 @@ public class MatchingController {
                 // 방생성
                 if (userList.size() == 6 ) {
                     //방 생성 로직
+                    SettingsDto settingsDto = settingService.setting();
+                    settingsDto.getRoomInfo().setHostUser(redUserList.get(0));
+
+                    //방 생성 로직
+                    SettingsDto response = roomService.createRoom(settingsDto.getRoomInfo(), settingsDto.getGameInfo());
+                    //유저정보 반환
 
 
                 }

@@ -2,6 +2,7 @@ package com.ssafy.mafia.auth.service;
 
 
 import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Entity.UserStatus;
 import com.ssafy.mafia.auth.controller.dto.UserInfoResponseDto;
 import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
 import com.ssafy.mafia.auth.repository.UserRepository;
@@ -97,6 +98,11 @@ public class UserService {
     @Transactional(readOnly = true)
     public List isLoginUser() {
         return  em.createQuery("SELECT u.nickname, u.winCount, u.loseCount, u.rankPoint, u.isRedUser, u.nowRoomSeq FROM User u WHERE u.isLogin = true").getResultList();
+    }
 
+    @Transactional
+    public void statusChange(String status) {
+        User user = em.find(User.class, SecurityUtil.getCurrentUserId());
+        user.setUserStatus(UserStatus.valueOf(status));
     }
  }
