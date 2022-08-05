@@ -28,15 +28,21 @@ public class LobbyMessageService {
         JsonObject header = new JsonObject();
         header.addProperty("type", "chat");
 
+        log.info("로비 헤더 빌드 완료");
+
         // data build
         JsonObject data = new JsonObject();
         data.addProperty("nickname", message.getNickname());
         data.addProperty("message", message.getMessage());
 
+        log.info("로비 데이터 빌드 완료");
+
         // response build
         JsonObject response = new JsonObject();
         response.add("header", header);
         response.add("data", data);
+
+        log.info("로비 응답 완료");
 
         return response;
     }
