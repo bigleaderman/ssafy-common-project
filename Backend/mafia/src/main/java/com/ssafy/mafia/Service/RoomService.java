@@ -37,14 +37,16 @@ public class RoomService {
 
 
     // 전체 방 리스트 조회
-    public List<RoomInfoDto> getAllRooms(){
+    public List<RoomInfoResponseDto> getAllRooms(){
         // Todo :  Response - 현재 방에 들어있는 인원수, 비밀번호 유무. Request - 비밀번호
         //
 
         List<RoomInfo> list = roomRepo.getAllRooms();
-        List<RoomInfoDto> result = new ArrayList<>();
+        List<RoomInfoResponseDto> result = new ArrayList<>();
         for(RoomInfo room : list) {
-            result.add(new RoomInfoDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(), room.getCapacity()));
+            RoomInfoResponseDto dto = new RoomInfoResponseDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(),
+                    room.getCapacity(), roomRepo.getAllUsersOfRoom(room.getRoomSeq()).size(), room.getPassword() != null);
+            result.add(dto);
         }
         return result;
     }
@@ -65,8 +67,28 @@ public class RoomService {
 
     // 방 생성
     public SettingsDto createRoom(RoomInfoDto roomInfo, GameInfoDto gameInfo){
-        // Todo : user정보 가져오기
-        User user = null;
+
+
+        // database에 roomInfo 집어 넣고 roomSeq return 받기
+        RoomInfo roomEntity = roomRepo.createRoom(roomInfo);
+        roomInfo.setRoomSeq(roomEntity.getRoomSeq());
+
+        // database에 default gameinfo 생성 후 집어넣기
+        GameInfo gameEntity = gameRepo.createGameInfo(roomEntity);
+
+
+        // room id { room, game } 으로 묶기
+        SettingsDto response = new SettingsDto();
+        response.setRoomInfo(roomInfo);
+        response.setGameInfo(gameInfo);
+
+        return response;
+    }
+
+    public SettingsDto createRoom(){
+        // Todo : roominfo dto response로 변경
+        RoomInfoDto roomInfo = new RoomInfoDto();
+        GameInfoDto gameInfo = new GameInfoDto();
 
         // database에 roomInfo 집어 넣고 roomSeq return 받기
         RoomInfo roomEntity = roomRepo.createRoom(roomInfo);
@@ -85,17 +107,18 @@ public class RoomService {
     }
 
     // 방 상세 정보 조회
-    public RoomInfoDto getRoomInfo(int roomSeq){
+    public RoomInfoResponseDto getRoomInfo(int roomSeq){
         RoomInfo room = roomRepo.getRoomInfo(roomSeq);
-        RoomInfoDto dto = new RoomInfoDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(), room.getCapacity());
+        RoomInfoResponseDto dto = new RoomInfoResponseDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(),
+                room.getCapacity(), roomRepo.getAllUsersOfRoom(room.getRoomSeq()).size(), room.getPassword() != null);
         return dto;
     }
 
     // 방 정보 수정
-    public RoomInfoDto modifyRoomInfo(RoomInfoDto roomInfo){
-        // Todo : 호스트 유저만 방 정보 수정 가능
+    public RoomInfoResponseDto modifyRoomInfo(RoomInfoDto roomInfo){
         RoomInfo room =  roomRepo.modifyRoomInfo(roomInfo);
-        RoomInfoDto dto = new RoomInfoDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(), room.getCapacity());
+        RoomInfoResponseDto dto = new RoomInfoResponseDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(),
+                room.getCapacity(), roomRepo.getAllUsersOfRoom(roomInfo.getRoomSeq()).size(), room.getPassword() != null);
         return dto;
     }
 

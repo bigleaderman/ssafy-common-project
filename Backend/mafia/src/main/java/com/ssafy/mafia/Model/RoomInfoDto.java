@@ -12,6 +12,13 @@ public class RoomInfoDto {
         isLocked = false;
     }
 
+    public RoomInfoDto(int hostUser){
+        this.hostUser = hostUser;
+        title = "";
+        capacity = 6;
+        isLocked = false;
+    }
+
     public RoomInfoDto(int roomSeq, int hostUser, String title, int capacity) {
         this.roomSeq = roomSeq;
         this.hostUser = hostUser;
@@ -25,6 +32,5 @@ public class RoomInfoDto {
     private int capacity;
 
     private String password;
-
     private boolean isLocked;
 }

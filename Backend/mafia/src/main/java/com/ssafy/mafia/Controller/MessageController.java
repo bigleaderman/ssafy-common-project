@@ -3,6 +3,7 @@ package com.ssafy.mafia.Controller;
 import com.ssafy.mafia.Model.InviteDto;
 import com.ssafy.mafia.Model.MessageDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -15,15 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class MessageController {
     private final SimpMessagingTemplate template;
 
-    @MessageMapping("/lobby-chat")
+    @MessageMapping("/lobby")
     public MessageDto lobbyChat(@Payload MessageDto message){
-        template.convertAndSend("/sub/lobby-chat", message);
+        template.convertAndSend("/sub/lobby", message);
         return message;
     }
 
-    @MessageMapping("/room-chat")
-    public MessageDto roomChat(@Payload MessageDto message){
-        template.convertAndSend("/sub/room-chat/" + message.getRoomSeq(), message);
+    @MessageMapping("/room/{room-seq}")
+    public MessageDto roomChat(@DestinationVariable("room-seq") int roomSeq, @Payload MessageDto message){
+        template.convertAndSend("/sub/room/" + roomSeq, message);
         return message;
     }
 

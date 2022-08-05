@@ -29,12 +29,12 @@ public class RoomController {
 
     @ApiOperation(value = "방 생성", notes = "방 생성")
     @PostMapping
-    public ResponseEntity<SettingsDto> createRoom(@RequestBody SettingsDto requset){
-        // Todo : 유저정보, 방정보 필요
-
+    public ResponseEntity<SettingsDto> createRoom(@RequestBody SettingsDto request){
+        int hostUser = SecurityUtil.getCurrentUserId();
+        request.getRoomInfo().setHostUser(hostUser);
 
         // 방 생성
-        SettingsDto response = service.createRoom(new RoomInfoDto(), new GameInfoDto());
+        SettingsDto response = service.createRoom(request.getRoomInfo(), request.getGameInfo());
 
         // 오픈비두 세션 생성
         sessionService.createSession(response.getRoomInfo().getRoomSeq());
@@ -44,9 +44,9 @@ public class RoomController {
 
     @ApiOperation(value = "방 전체 목록 조회", notes = "방 전체 목록 조회")
     @GetMapping("/list")
-    public ResponseEntity<List<RoomInfoDto>> getRoomList(){
+    public ResponseEntity<List<RoomInfoResponseDto>> getRoomList(){
         // 방 목록 조회
-        return new ResponseEntity<List<RoomInfoDto>>(service.getAllRooms(), HttpStatus.OK);
+        return new ResponseEntity<List<RoomInfoResponseDto>>(service.getAllRooms(), HttpStatus.OK);
     }
 
     @ApiOperation(value = "필터를 이용한 방 목록 조회", notes = "필터를 이용한 방 목록 조회")
@@ -58,16 +58,26 @@ public class RoomController {
 
     @ApiOperation(value = "방 상세 정보 조회", notes = "방 상세 정보 조회")
     @GetMapping("/{room-seq}/info")
-    public ResponseEntity<RoomInfoDto> roomDetailInfo(@PathVariable("room-seq") int roomSeq){
+    public ResponseEntity<RoomInfoResponseDto> roomDetailInfo(@PathVariable("room-seq") int roomSeq){
         // 방 상세 정보 조회
-        return new ResponseEntity<RoomInfoDto>(service.getRoomInfo(roomSeq), HttpStatus.OK);
+        return new ResponseEntity<RoomInfoResponseDto>(service.getRoomInfo(roomSeq), HttpStatus.OK);
     }
 
     @ApiOperation(value = "방 상세 정보 수정", notes = "방 상세 정보 수정")
     @PutMapping
-    public ResponseEntity<RoomInfoDto> modifyRoomInfo(@RequestBody RoomInfoDto roomInfo){
+    public ResponseEntity<RoomInfoResponseDto> modifyRoomInfo(@RequestBody RoomInfoDto roomInfo){
+        // Todo : 호스트 유저만 방 정보 수정 가능
+        int currentUser = SecurityUtil.getCurrentUserId();
+        int hostUser = service.getRoomInfo(roomInfo.getRoomSeq()).getHostUser();
+
+        if(currentUser != hostUser){
+            log.error("방 정보 수정에 실패했습니다.");
+            log.error("호스트가 아닙니다.");
+            return new ResponseEntity<RoomInfoResponseDto>(new RoomInfoResponseDto(), HttpStatus.BAD_REQUEST);
+        }
+
         // 방 상세 정보 수정
-        return new ResponseEntity<RoomInfoDto>(service.modifyRoomInfo(roomInfo), HttpStatus.OK);
+        return new ResponseEntity<RoomInfoResponseDto>(service.modifyRoomInfo(roomInfo), HttpStatus.OK);
     }
 
     // 방 삭제
