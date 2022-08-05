@@ -335,7 +335,6 @@ export default function PlayMap() {
     useBeforeunload((e) => {
         if (Value !== "") e.preventDefault();
     });
-
     return (
         <div
             style={{
@@ -349,6 +348,7 @@ export default function PlayMap() {
                 id="inputTag"
                 onChange={(e) => setValue(e.target.value)}
                 value="준비 중"
+
                 type="text"
                 ref={mapFocus}
                 onKeyDown={handleKeyDown}
@@ -414,6 +414,7 @@ export default function PlayMap() {
                     }}
                 ></div>
                 {/* 다른 유저의 캐릭터 작성 */}
+
                 <div
                     id="char1"
                     style={{
