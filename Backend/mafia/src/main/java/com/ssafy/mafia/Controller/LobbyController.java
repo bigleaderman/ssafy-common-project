@@ -23,7 +23,7 @@ public class LobbyController {
         String type = message.getHeader().getType();
 
         if(type.equals("chat")){
-            template.convertAndSend("/sub/lobby", messageService.chat(message.getData()));
+            template.convertAndSend("/sub/lobby", messageService.chat(message.getData()).toString());
             return;
         }
 

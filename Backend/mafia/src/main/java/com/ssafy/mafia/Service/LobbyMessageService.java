@@ -42,7 +42,7 @@ public class LobbyMessageService {
         response.add("header", header);
         response.add("data", data);
 
-        log.info("로비 응답 완료");
+        log.info("로비 응답 완료" + response.toString());
 
         return response;
     }
