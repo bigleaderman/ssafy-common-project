@@ -1,6 +1,7 @@
 package com.ssafy.mafia.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+
 public class RoomInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +25,8 @@ public class RoomInfo {
     private int capacity;
 
     private int hostUser;
+
+    private boolean isRandomMatching;
 
 
     @JsonIgnore

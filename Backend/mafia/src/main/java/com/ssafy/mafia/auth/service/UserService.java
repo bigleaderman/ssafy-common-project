@@ -95,6 +95,10 @@ public class UserService {
     @Transactional(readOnly = true)
     public List isLoginUser() {
         return  em.createQuery("SELECT u.nickname, u.winCount, u.loseCount, u.rankPoint, u.isRedUser, u.nowRoomSeq FROM User u WHERE u.isLogin = true").getResultList();
+    }
+
+    @Transactional
+    public User UserInfoByUserSeq(int userId) {
 
     }
  }
