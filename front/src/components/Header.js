@@ -1,12 +1,12 @@
-import React from 'react';
-import styled from 'styled-components';
-import '../style.js';
-import { useNavigate } from 'react-router-dom';
-import { styleButton } from '../style.js';
-import { Button } from '@mui/material';
+import React from "react";
+import styled from "styled-components";
+import "../style.js";
+import { useNavigate } from "react-router-dom";
+import { styleButton } from "../style.js";
+import { Button } from "@mui/material";
 
-const Header = (props) => {
-  const navigate = useNavigate();
+const Header = () => {
+    const navigate = useNavigate();
 
     const goMainPage = () => {
         navigate("/");
@@ -26,22 +26,44 @@ const Header = (props) => {
     const goUserListPage = () => {
         navigate("/userlist");
     };
+    const goGatherRoomPage = () => {
+        navigate("/gatherroom");
+    };
+    const NoticeListPage = () => {
+        navigate("/board");
+    };
 
-  return (
-    <HeaderContainer>
-      <Logo onClick={goMainPage}>
-        <img src="logo.svg" alt="logo" />
-        <p>모두의 마피아</p>
-      </Logo>
-      <Menu>
-        <Button style={styleButton} onClick={goSignUpPage}>회원가입</Button>
-        <Button style={styleButton} onClick={goSignInPage}>로그인</Button>
-        <Button style={styleButton} onClick={goSignOutPage}>로그아웃</Button>
-        <Button style={styleButton} onClick={goMyPage}>마이페이지</Button>
-        <Button style={styleButton} onClick={goUserListPage}>유저 관리</Button>
-      </Menu>
-    </HeaderContainer>
-  );
+    return (
+        <HeaderContainer>
+            <Logo onClick={goMainPage}>
+                <img src="logo.svg" alt="logo" />
+                <p>모두의 마피아</p>
+            </Logo>
+            <Menu>
+                <Button style={styleButton} onClick={NoticeListPage}>
+                    공지사항
+                </Button>
+                <Button style={styleButton} onClick={goSignUpPage}>
+                    회원가입
+                </Button>
+                <Button style={styleButton} onClick={goSignInPage}>
+                    로그인
+                </Button>
+                <Button style={styleButton} onClick={goSignOutPage}>
+                    로그아웃
+                </Button>
+                <Button style={styleButton} onClick={goMyPage}>
+                    마이페이지
+                </Button>
+                <Button style={styleButton} onClick={goUserListPage}>
+                    유저 관리
+                </Button>
+                <Button style={styleButton} onClick={goGatherRoomPage}>
+                    대기방(임시 바로가기)
+                </Button>
+            </Menu>
+        </HeaderContainer>
+    );
 };
 
 const HeaderContainer = styled.header`
@@ -56,7 +78,7 @@ const HeaderContainer = styled.header`
     height: 60px;
     background-color: var(--color-5);
     justify-content: space-between;
-`
+`;
 
 const Logo = styled.a`
     display: flex;
