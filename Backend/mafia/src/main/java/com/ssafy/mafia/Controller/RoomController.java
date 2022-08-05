@@ -31,8 +31,7 @@ public class RoomController {
 
     private final RoomService service;
 
-    private final SimpMessagingTemplate template;
-    private final RoomMessageService messageService;
+
 
     private final SessionService sessionService;
 
@@ -137,50 +136,6 @@ public class RoomController {
             return new ResponseEntity<String>("토큰 발급 실패", HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<String>(token, HttpStatus.OK);
-    }
-
-    /*
-    *
-    * ********************************************** *
-    *    여기서 부터는 socket 통신을 위한 api 입니다.
-    * ********************************************** *
-    *
-    * */
-
-    @MessageMapping("/room/{room-seq}")
-    public void messageControll(@DestinationVariable("room-seq") int roomSeq, @Payload RoomMessageDto message){
-        String type = message.getHeader().getType();
-
-        if(type.equals("join")){
-            template.convertAndSend("/sub/room/" + roomSeq, messageService.joinRoom(message.getData()).toString());
-            return;
-        }
-
-        if(type.equals("leave")){
-            template.convertAndSend("/sub/room/" + roomSeq, messageService.leaveRoom(message.getData()).toString());
-            return;
-        }
-
-        if(type.equals("chat")){
-            template.convertAndSend("/sub/room/" + roomSeq, messageService.chat(message.getData()).toString());
-            return;
-        }
-
-        if(type.equals("interact")){
-            template.convertAndSend("/sub/room/" + roomSeq, messageService.interact(roomSeq, message.getData()).toString());
-            return;
-        }
-
-        if(type.equals("start")){
-//            template.convertAndSend("/sub/room/" + roomSeq, messageService.(message.getData()));
-            return;
-        }
-
-        if(type.equals("settings")){
-            template.convertAndSend("/sub/room/" + roomSeq, messageService.setting(roomSeq, message.getData()).toString());
-            return;
-        }
-
     }
 
 }
