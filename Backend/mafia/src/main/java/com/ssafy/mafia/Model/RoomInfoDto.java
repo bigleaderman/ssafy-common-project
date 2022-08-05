@@ -10,6 +10,7 @@ public class RoomInfoDto {
         title = "";
         capacity = 6;
         isLocked = false;
+        isMatching = false;
     }
 
     public RoomInfoDto(int hostUser){
@@ -33,4 +34,6 @@ public class RoomInfoDto {
 
     private String password;
     private boolean isLocked;
+
+    private boolean isMatching;
 }
