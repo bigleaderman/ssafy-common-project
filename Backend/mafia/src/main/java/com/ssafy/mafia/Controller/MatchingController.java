@@ -1,7 +1,14 @@
 package com.ssafy.mafia.Controller;
 
 
+import com.ssafy.mafia.Model.RoomInfoDto;
+import com.ssafy.mafia.Model.SettingsDto;
 import com.ssafy.mafia.Model.matching_connection.MatchingRequset;
+import com.ssafy.mafia.Model.matching_connection.MatchingResponse;
+import com.ssafy.mafia.Model.matching_connection.MatchingResponseData;
+import com.ssafy.mafia.Service.RoomService;
+import com.ssafy.mafia.Service.SessionService;
+import com.ssafy.mafia.Service.SettingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -21,40 +28,57 @@ public class MatchingController {
     private List<Integer> redUserList = new ArrayList<Integer>();
     private List<Integer> userList = new ArrayList<Integer>();
 
+    private final RoomService roomService;
+
+    private final SessionService sessionService;
+
+    private final SettingService settingService;
+
 
 
     @MessageMapping("/game-matching")
     public void matching(@Payload MatchingRequset matchingRequset) {
 
         // red 유저
-        if (matchingRequset.getMatchingBody().getIsRedUser() == 1){
+        if (matchingRequset.getData().getIsRedUser() == 1){
 
             // connection 요청
-            if (matchingRequset.getMatchingHeader().getType() == "connection") {
+            if (matchingRequset.getHeader().getType() == "connection") {
 
 
                 // 대기 queue에 userSeq 넣기
-                redUserList.add(matchingRequset.getMatchingBody().getUserSeq());
+                redUserList.add(matchingRequset.getData().getUserSeq());
 
                 // 방생성
                 if (redUserList.size() == 6 ) {
+                    SettingsDto settingsDto = settingService.setting();
+                    settingsDto.getRoomInfo().setHostUser(redUserList.get(0));
+
                     //방 생성 로직
+                     SettingsDto response = roomService.createRoom(settingsDto.getRoomInfo(), settingsDto.getGameInfo());
+                    //유저정보 반환
 
                 }
                 // 현재 redUserListSize 반환
                 else {
-                    template.convertAndSend("/sub/game-matching", redUserList.size());
+                    MatchingResponse matchingResponse = new MatchingResponse();
+                    matchingResponse.getData().setUserNum(redUserList.size());
+                    matchingResponse.getHeader().setType("RedUserNotCompleted");
+                    template.convertAndSend("/sub/game-matching", matchingResponse);
                 }
             }
             // disconnection 요청
             else {
-                redUserList.remove(matchingRequset.getMatchingBody().getUserSeq());
-                template.convertAndSend("/sub/game-matching", redUserList.size());
+                redUserList.remove(matchingRequset.getData().getUserSeq());
+                MatchingResponse matchingResponse = new MatchingResponse();
+                matchingResponse.getData().setUserNum(redUserList.size());
+                matchingResponse.getHeader().setType("RedUserNotCompleted");
+                template.convertAndSend("/sub/game-matching", matchingResponse);
             }
         }
         // 일반 유저
         else {
-            if (matchingRequset.getMatchingHeader().getType() == "connection") {
+            if (matchingRequset.getHeader().getType() == "connection") {
 
                 // 어떤 큐쓸지 판단하기
                 int listSeq = 0;
@@ -65,7 +89,7 @@ public class MatchingController {
                     listSeq++;
                 }
 
-                userList.add(matchingRequset.getMatchingBody().getUserSeq());
+                userList.add(matchingRequset.getData().getUserSeq());
                 // 방생성
                 if (userList.size() == 6 ) {
                     //방 생성 로직
@@ -74,13 +98,19 @@ public class MatchingController {
                 }
                 // 현재 UserListSize 반환
                 else {
-                    template.convertAndSend("/sub/game-matching", userList.size());
+                    MatchingResponse matchingResponse = new MatchingResponse();
+                    matchingResponse.getData().setUserNum(redUserList.size());
+                    matchingResponse.getHeader().setType("GeneralUserNotCompleted");
+                    template.convertAndSend("/sub/game-matching", matchingResponse);
                 }
             }
             // disconnection 요청
             else {
-                redUserList.remove(matchingRequset.getMatchingBody().getUserSeq());
-                template.convertAndSend("/sub/game-matching", userList.size());
+                redUserList.remove(matchingRequset.getData().getUserSeq());
+                MatchingResponse matchingResponse = new MatchingResponse();
+                matchingResponse.getData().setUserNum(redUserList.size());
+                matchingResponse.getHeader().setType("GeneralUserNotCompleted");
+                template.convertAndSend("/sub/game-matching", matchingResponse);
             }
         }
     }

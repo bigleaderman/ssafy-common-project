@@ -33,4 +33,6 @@ public class RoomInfoDto {
 
     private String password;
     private boolean isLocked;
+
+    private boolean isMatch;
 }
