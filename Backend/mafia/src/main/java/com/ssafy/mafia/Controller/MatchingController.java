@@ -2,7 +2,7 @@ package com.ssafy.mafia.Controller;
 
 
 import com.ssafy.mafia.Model.SettingsDto;
-import com.ssafy.mafia.Model.matching_connection_request.ConnectionRequestDto;
+import com.ssafy.mafia.Model.matching_connection_response.matching_connection_request.ConnectionRequestDto;
 import com.ssafy.mafia.Service.MatchingSevice;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;

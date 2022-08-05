@@ -3,6 +3,7 @@ package com.ssafy.mafia.auth.controller;
 
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.auth.controller.dto.UserInfoResponseDto;
+import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
 import com.ssafy.mafia.auth.repository.UserRepository;
 import com.ssafy.mafia.auth.service.UserService;
 import com.ssafy.mafia.auth.util.SecurityUtil;
@@ -68,10 +69,10 @@ public class UserController {
          return userService.checkPw(password);
     }
 
-    @PostMapping("/user/changePw")
+    @PostMapping("/changePw")
     @ApiOperation(value = "비밀번호변경", notes = "입력받은 비밀번호로 변경하기", response = void.class)
-    public void changePw(@ApiParam(value = "새비밀번호", example = "ssafy1!") @RequestBody String password) {
-        userService.changePw(password);
+    public void changePw(@ApiParam(value = "새비밀번호", example = "ssafy1!") @RequestBody UserRequestDto userRequestDto) {
+        userService.changePw(userRequestDto);
     }
 
 

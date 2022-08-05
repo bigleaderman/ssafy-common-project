@@ -3,6 +3,7 @@ package com.ssafy.mafia.auth.service;
 
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.auth.controller.dto.UserInfoResponseDto;
+import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
 import com.ssafy.mafia.auth.repository.UserRepository;
 import com.ssafy.mafia.auth.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -71,9 +73,10 @@ public class UserService {
     }
 
     @Transactional
-    public void changePw(String password) {
-        User user = em.find(User.class, SecurityUtil.getCurrentUserId());
-        user.setPassword(passwordEncoder.encode(password));
+    public void changePw(UserRequestDto userRequestDto) {
+        User user = em.createQuery("SELECT u FROM User u WHERE u.email like :email", User.class).setParameter("email", userRequestDto.getEmail()).getSingleResult();
+        User changeUser = em.find(User.class, user.getUserSeq());
+        changeUser.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
         //return user;
 
     }
@@ -99,6 +102,7 @@ public class UserService {
 
     @Transactional
     public User UserInfoByUserSeq(int userId) {
-
+        User user = em.find(User.class, userId);
+        return user;
     }
  }

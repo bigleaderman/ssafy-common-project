@@ -26,7 +26,6 @@ public class RoomInfo {
 
     private int hostUser;
 
-    private boolean isRandomMatching;
 
 
     @JsonIgnore
