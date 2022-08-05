@@ -1,6 +1,8 @@
 package com.ssafy.mafia.Repository;
 
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.ssafy.mafia.Entity.RoomInfo;
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.RoomInfoDto;
@@ -21,6 +23,7 @@ public class RoomRepo {
 
     // 방별 유저를 위한 map
     private final Map<Integer, List<Integer>> map = new ConcurrentHashMap<>();
+    private final Map<Integer, JsonArray> roomUserMap = new ConcurrentHashMap<>();
 
     /*
     *
@@ -50,6 +53,7 @@ public class RoomRepo {
 
         // 방 생성
         map.put(entity.getRoomSeq(), new ArrayList<>());
+        roomUserMap.put(entity.getRoomSeq(), new JsonArray());
         // 방 입장
         joinRoom(entity.getRoomSeq(), roomInfo.getHostUser());
         
@@ -77,6 +81,7 @@ public class RoomRepo {
     // 방 삭제
     public void deleteRoom(int roomSeq){
         map.remove(roomSeq);
+        roomUserMap.remove(roomSeq);
         em.remove(em.find(RoomInfo.class, roomSeq));
     }
 
@@ -90,6 +95,7 @@ public class RoomRepo {
         map.get(roomSeq).add(userSeq);
     }
 
+
     // 방 퇴장
     public void leavRoom(int roomSeq, int userSeq){
         int idx = map.get(roomSeq).indexOf(userSeq);
@@ -99,6 +105,26 @@ public class RoomRepo {
     // 방 전체 인원 조회
     public List<Integer> getAllUsersOfRoom(int roomSeq){
         return map.get(roomSeq);
+    }
+
+
+
+    /*
+    *
+    * ******************************* *
+    * 소켓 통신용
+    * ******************************* *
+    *
+    * */
+
+
+    // 방 정보 업데이트
+    public void updateRoom(int roomSeq, JsonArray list){
+        this.roomUserMap.put(roomSeq, list);
+    }
+
+    public JsonArray getAllUsersOfRoomSock(int roomSeq){
+        return this.roomUserMap.get(roomSeq);
     }
 
 }

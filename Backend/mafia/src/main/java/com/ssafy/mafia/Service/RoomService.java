@@ -38,11 +38,13 @@ public class RoomService {
 
     // 전체 방 리스트 조회
     public List<RoomInfoResponseDto> getAllRooms(){
-        // Todo :  Response - 현재 방에 들어있는 인원수, 비밀번호 유무. Request - 비밀번호
-        //
-
+        // db에서 모든 방 리스트 조회
         List<RoomInfo> list = roomRepo.getAllRooms();
+        
+        // response data
         List<RoomInfoResponseDto> result = new ArrayList<>();
+        
+        // 필요한 정보만 build 후 리턴
         for(RoomInfo room : list) {
             RoomInfoResponseDto dto = new RoomInfoResponseDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(),
                     room.getCapacity(), roomRepo.getAllUsersOfRoom(room.getRoomSeq()).size(), room.getPassword() != null);
@@ -85,8 +87,9 @@ public class RoomService {
         return response;
     }
 
+    // host 없이 방 생성하기
     public SettingsDto createRoom(){
-        // Todo : roominfo dto response로 변경
+        // Todo : roominfodto response로 변경
         RoomInfoDto roomInfo = new RoomInfoDto();
         GameInfoDto gameInfo = new GameInfoDto();
 
@@ -104,6 +107,11 @@ public class RoomService {
         response.setGameInfo(gameInfo);
 
         return response;
+    }
+
+    // 방에 있는 모든 유저 정보 조회
+    public List<Integer> getUsersByRoomSeq(int roomSeq){
+        return roomRepo.getAllUsersOfRoom(roomSeq);
     }
 
     // 방 상세 정보 조회
