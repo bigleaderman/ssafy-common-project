@@ -150,22 +150,22 @@ public class RoomController {
         String type = message.getHeader().getType();
 
         if(type.equals("join")){
-            template.convertAndSend("/sub/room/" + roomSeq, messageService.joinRoom(message.getData()));
+            template.convertAndSend("/sub/room/" + roomSeq, messageService.joinRoom(message.getData()).toString());
             return;
         }
 
         if(type.equals("leave")){
-            template.convertAndSend("/sub/room/" + roomSeq, messageService.leaveRoom(message.getData()));
+            template.convertAndSend("/sub/room/" + roomSeq, messageService.leaveRoom(message.getData()).toString());
             return;
         }
 
         if(type.equals("chat")){
-            template.convertAndSend("/sub/room/" + roomSeq, messageService.chat(message.getData()));
+            template.convertAndSend("/sub/room/" + roomSeq, messageService.chat(message.getData()).toString());
             return;
         }
 
         if(type.equals("interact")){
-            template.convertAndSend("/sub/room/" + roomSeq, messageService.interact(roomSeq, message.getData()));
+            template.convertAndSend("/sub/room/" + roomSeq, messageService.interact(roomSeq, message.getData()).toString());
             return;
         }
 
@@ -175,7 +175,7 @@ public class RoomController {
         }
 
         if(type.equals("settings")){
-            template.convertAndSend("/sub/room/" + roomSeq, messageService.setting(roomSeq, message.getData()));
+            template.convertAndSend("/sub/room/" + roomSeq, messageService.setting(roomSeq, message.getData()).toString());
             return;
         }
 

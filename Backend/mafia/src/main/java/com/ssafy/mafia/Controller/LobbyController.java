@@ -28,7 +28,7 @@ public class LobbyController {
         }
 
         if(type.equals("join")){
-            template.convertAndSend("/sub/lobby", messageService.join(message.getData()));
+            template.convertAndSend("/sub/lobby", messageService.join(message.getData()).toString());
             return;
         }
     }
