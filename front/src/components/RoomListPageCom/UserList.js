@@ -35,7 +35,7 @@ function a11yProps(index) {
       'aria-controls': `simple-tabpanel-${index}`,
     };
   }
-function SideBar() {
+function UserList() {
   const [value, setValue] = useState(0);
 
   const handleChange = (event, newValue) => {
@@ -43,8 +43,8 @@ function SideBar() {
   };
 
   return (
-    <Paper sx={{width:'100%',height:'250px'}}>
-        <Box>
+    <Paper>
+        <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                 <Tab label="All" {...a11yProps(0)} />
@@ -62,4 +62,4 @@ function SideBar() {
   );
 }
 
-export default SideBar;
+export default UserList;

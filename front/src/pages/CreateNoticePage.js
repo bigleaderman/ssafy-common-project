@@ -2,12 +2,9 @@ import React, { useState } from "react";
 import { Container, styleTextField, styleButton } from "../style.js";
 import { TextField, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import {useSelector} from "react-redux"
-import axios from 'axios';
 
 const CreateNoticePage = (props) => {
     const navigate = useNavigate();
-    const token = useSelector(state=>state.user.accessToken)
 
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
@@ -20,20 +17,6 @@ const CreateNoticePage = (props) => {
     const goNoticeListPage = () => {
         navigate("/board");
     };
-
-    const createNotice =()=>{
-        axios.post('/api/admin/board',{
-            content,
-            title
-        },{
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`
-            }
-          }).then(response => {
-            navigate(`/board/${response.data.noticeSeq}`);
-          })
-    }
 
     return (
         <Container>
@@ -66,7 +49,7 @@ const CreateNoticePage = (props) => {
                 <Button style={styleButton} onClick={resetForm}>
                     초기화
                 </Button>
-                <Button style={styleButton} onClick={createNotice}>
+                <Button style={styleButton} onClick={goNoticeListPage}>
                     작성 완료
                 </Button>
                 <Button style={styleButton} onClick={goNoticeListPage}>

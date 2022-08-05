@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchCount } from "./counterAPI";
 
-// const initialState = {
-//     value: 0,
-//     status: "idle",
-// };
+const initialState = {
+    value: 0,
+    status: "idle",
+};
 
 // The function below is called a thunk and allows us to perform async logic. It
 // can be dispatched like a regular action: `dispatch(incrementAsync(10))`. This
@@ -22,9 +22,7 @@ export const incrementAsync = createAsyncThunk(
 
 export const counterSlice = createSlice({
     name: "counter",
-    initialState: {
-        value: 0,
-    },
+    initialState,
     // The `reducers` field lets us define reducers and generate associated actions
     reducers: {
         increment: (state) => {
@@ -63,30 +61,9 @@ export const { increment, decrement, incrementByAmount } = counterSlice.actions;
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
 export const selectCount = (state) => state.counter.value;
 
-// export const selectCount = function (state) {
-//     return state.counter.value;
-// };
-
 // We can also write thunks by hand, which may contain both sync and async logic.
 // Here's an example of conditionally dispatching actions based on current state.
-
-// export const incrementIfOdd = (amount) => (dispatch, getState) => {
-//     const currentValue = selectCount(getState());
-//     if (currentValue % 2 === 1) {
-//         dispatch(incrementByAmount(amount));
-//     }
-// };
-
-export const incrementIfOdd = function (amount) {
-    return function (dispatch, getState) {
-        const currentValue = selectCount(getState());
-        if (currentValue % 2 === 1) {
-            dispatch(incrementByAmount(amount));
-        }
-    };
-};
-
-export const incrementIfOdd2 = (amount) => (dispatch, getState) => {
+export const incrementIfOdd = (amount) => (dispatch, getState) => {
     const currentValue = selectCount(getState());
     if (currentValue % 2 === 1) {
         dispatch(incrementByAmount(amount));

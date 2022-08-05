@@ -1,22 +1,15 @@
 import React, { useState } from "react";
 import { Container, styleTextField, styleButton } from '../style.js';
 import { TextField, Button } from '@mui/material';
-import { useNavigate, useParams, useLocation } from  "react-router-dom";
-import {useSelector} from "react-redux"
-import axios from "axios";
+import { useNavigate, useParams } from  "react-router-dom";
 
 
 const UpdateNoticePage = (props) => {
-
-  const {state} = useLocation();
-
-  const token = useSelector(state=>state.user.accessToken)
-
   const { noticeId } = useParams();
   const navigate = useNavigate();
 
-  const [title, setTitle] = useState(state.title);
-  const [content, setContent] = useState(state.content);
+  const [title, setTitle] = useState('제목');
+  const [content, setContent] = useState('내용');
 
   const goNoticeListPage = () => {
     navigate("/board");
@@ -24,25 +17,6 @@ const UpdateNoticePage = (props) => {
   const goNoticeDetailPage = () => {
     navigate(`/board/${noticeId}`);
   };
-
-  const reset = () => {
-      setTitle(state.title);
-      setContent(state.content);
-  }
-
-  const updateNotice = () => {
-    axios.put(`/api/admin/board/${noticeId}`,{
-      content,
-      title
-  },{
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-      }
-    }).then(goNoticeDetailPage)
-  }
-
-
 
   return (
     <Container>
@@ -54,8 +28,8 @@ const UpdateNoticePage = (props) => {
       <TextField style={styleTextField} id="content" name="content" placeholder="내용" value={content} onChange={(e) => {setContent(e.target.value)}}></TextField>
       
       <span>
-        <Button style={styleButton} onClick={reset}>수정 취소</Button>
-        <Button style={styleButton} onClick={updateNotice}>수정 완료</Button>
+        <Button style={styleButton} onClick={goNoticeListPage}>수정 취소</Button>
+        <Button style={styleButton} onClick={goNoticeDetailPage}>수정 완료</Button>
         <Button style={styleButton} onClick={goNoticeListPage}>목록으로</Button>
       </span>
     </Container>

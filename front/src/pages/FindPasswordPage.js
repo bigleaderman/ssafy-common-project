@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Container, styleButton, styleModal, styleTextField } from '../style.js';
 import { Modal, Box, Button, TextField } from '@mui/material';
-import { Link } from  "react-router-dom";
+import { Link, useNavigate } from  "react-router-dom";
 import styled from 'styled-components';
 
 
@@ -9,6 +9,8 @@ const FindPasswordPage = (props) => {
 
   const [emailAuthentication, setEmailAuthentication] = useState(false);
   const [resendEmail, setResendEmailOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [value, setValue] = useState('');
 
 
   const handleResendEmailOpen = () => {
@@ -20,6 +22,13 @@ const FindPasswordPage = (props) => {
 
   const goEmailAuthentication = () => {
     setEmailAuthentication(true);
+  };
+
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+  const handleModalClose = () => {
+    setModalOpen(false);
   };
 
   return (
@@ -40,7 +49,7 @@ const FindPasswordPage = (props) => {
         
         <Modal
           open={resendEmail}
-          onClose={handleResendEmailClose}
+          onClose={handleModalClose}
           aria-labelledby="modal-title"
         >
           <Box sx={{ ...styleModal, width: 400 }}>

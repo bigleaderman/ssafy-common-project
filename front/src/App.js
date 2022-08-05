@@ -3,10 +3,9 @@ import MainPage from "./pages/MainPage";
 import SignUpPage from "./pages/SignUpPage";
 import SignInPage from "./pages/SignInPage";
 import SignOutPage from "./pages/SignOutPage";
-import GatherRoomPage from "./pages/GatherRoomPage";
+import RoomPage from "./pages/GatherRoomPage";
 import MyPage from "./pages/MyPage";
 import UserListPage from "./pages/UserListPage";
-import UserDetailPage from "./pages/UserDetailPage";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import NoticeListPage from "./pages/NoticeListPage";
@@ -15,7 +14,6 @@ import UpdateNoticePage from "./pages/UpdateNoticePage";
 import NoticeDetailPage from "./pages/NoticeDetailPage";
 import FindPasswordPage from "./pages/FindPasswordPage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
-import WelcomeMessagePage from "./pages/WelcomeMessagePage";
 import PageNotFoundPage from "./pages/PageNotFoundPage";
 
 // import VideoRoomPage from "./pages/VideoRoomPage";
@@ -43,11 +41,6 @@ function App() {
                     <Route exact path="/board" element={<NoticeListPage />} />
                     <Route
                         exact
-                        path="/gatherroom"
-                        element={<GatherRoomPage />}
-                    />
-                    <Route
-                        exact
                         path="/board/create"
                         element={<CreateNoticePage />}
                     />
@@ -71,21 +64,11 @@ function App() {
                         path="/changepassword"
                         element={<ChangePasswordPage />}
                     />
-                    <Route
-                        exact
-                        path="/welcome"
-                        element={<WelcomeMessagePage />}
-                    />
-                    <Route exact path="/users" element={<UserListPage />} />
-                    <Route
-                        exact
-                        path="/users/:userId"
-                        element={<UserDetailPage />}
-                    />
                     <Route exact path="/*" element={<PageNotFoundPage />} />
                 </Routes>
                 <Footer />
             </Router>
+            <RoomListPage />
         </div>
     );
 }
