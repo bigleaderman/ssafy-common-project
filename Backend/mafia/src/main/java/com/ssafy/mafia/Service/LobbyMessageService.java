@@ -57,7 +57,7 @@ public class LobbyMessageService {
 
         // repo에 유저 추가
         JsonObject user = new JsonObject();
-        user.addProperty("nickname", message.getMessage());
+        user.addProperty("nickname", message.getNickname());
         user.addProperty("status", "lobby");
 
         repo.put(message.getNickname(), user);
