@@ -92,7 +92,11 @@ public class FriendRepo {
                 response.setAccept(friend.isAccept());
                 response.setFriendSeq(friend.getFriendSeq());
                 response.setRed(friend.getFriendFrom().isRedUser());
-                response.setStatus(friend.getFriendFrom().getUserStatus().toString());
+                if(friend.getFriendFrom().getUserStatus() == null){
+                    response.setStatus("offline");
+                }else {
+                    response.setStatus(friend.getFriendFrom().getUserStatus().toString());
+                }
                 result.add(response);
             }
         }
@@ -115,6 +119,11 @@ public class FriendRepo {
                 response.setNickname(friend.getFriendTo().getNickname());
                 response.setAccept(friend.isAccept());
                 response.setRed(friend.getFriendTo().isRedUser());
+                if(friend.getFriendTo().getUserStatus() == null){
+                    response.setStatus("offline");
+                }else {
+                    response.setStatus(friend.getFriendTo().getUserStatus().toString());
+                }
                 result.add(response);
             }
         }

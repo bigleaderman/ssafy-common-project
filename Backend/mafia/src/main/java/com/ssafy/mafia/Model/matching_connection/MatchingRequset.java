@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class MatchingRequset {
-    private MatchingHeader header;
-    private MatchingRequestData data;
+    private MatchingHeader matchingHeader;
+    private MatchingBody matchingBody;
 }
