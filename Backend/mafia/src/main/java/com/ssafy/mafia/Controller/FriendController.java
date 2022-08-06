@@ -162,15 +162,19 @@ public class FriendController {
             int to = userService.userInformation(message.getData().getTo()).getUserSeq();
             // 친구의 친구목록 가져오기
             List<FriendResponseDto> friendResult = friendService.findFriend(to);
+            System.out.println("친구의 친구목록: " + friendResult.toString());
             // 나의 친구목록 가져오기
             List<FriendResponseDto> meResult = friendService.findFriend(from);
+            System.out.println("나의 친구목록" + meResult.toString());
 
             // 친구에게 반환할 친구목록 만들기
             FriendResponseBodyDto toList = new FriendResponseBodyDto();
             toList.getFriendResponseDataDto().setUsers(friendResult);
+            System.out.println("친구에게 반환할 친구목록 " + toList.getFriendResponseDataDto().getUsers().toString());
             toList.getHeader().setType("list");
             // 친구에게 반환
             template.convertAndSend("/sub/friend/" + message.getData().getTo(), toList);
+            System.out.println("이게 찍힌다면 친구에게 친구목록을 전달한겁니다.");
 
             // 나에게 반환할 친구목록 만들기
             FriendResponseBodyDto fromList = new FriendResponseBodyDto();
