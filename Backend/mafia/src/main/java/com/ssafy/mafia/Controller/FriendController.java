@@ -139,7 +139,7 @@ public class FriendController {
     @MessageMapping("/friend/{nickname}")
     public void friendFunction(@DestinationVariable("nickname") String nickname, @Payload FriendRequestBodyDto message) throws Exception {
         // 친구 신청 요청이면
-        if (message.getHeader().getType() == "offer") {
+        if (message.getHeader().getType().equals("offer")) {
             int from = userService.userInformation(message.getData().getFrom()).getUserSeq();
             int to = userService.userInformation(message.getData().getTo()).getUserSeq();
             FriendDto friendDto = new FriendDto();
@@ -155,7 +155,7 @@ public class FriendController {
             template.convertAndSend("/sub/friend/" + message.getData().getTo(), responseBodyDto);
         }
         //친구 신청 수락이면
-        else if (message.getHeader().getType() == "offer-accept") {
+        else if (message.getHeader().getType().equals("offer-accept")) {
             // 친구신청 수락 로직 실행
             friendService.beFriend(message.getData().getFriendSeq());
             int from = userService.userInformation(message.getData().getFrom()).getUserSeq();
@@ -187,7 +187,7 @@ public class FriendController {
             template.convertAndSend("/sub/friend/" + message.getData().getFrom(), responseBodyDto);
         }
         //친구 신청 거절이면
-        else if (message.getHeader().getType() == "offer-deny") {
+        else if (message.getHeader().getType().equals("offer-deny") ) {
             // 친구 신청 거절 로직 실행
             friendService.refuseFriend(message.getData().getFriendSeq());
             // 나에게 반환할 친구 신청 목록
@@ -199,7 +199,7 @@ public class FriendController {
             template.convertAndSend("/sub/friend/" + message.getData().getFrom(), responseBodyDto);
         }
         //친구 삭제면
-        else if(message.getHeader().getType() == "delete") {
+        else if(message.getHeader().getType().equals("delete")) {
             // 친구 삭제 로직 실행
             friendService.removeFriend(message.getData().getFriendSeq());
 
