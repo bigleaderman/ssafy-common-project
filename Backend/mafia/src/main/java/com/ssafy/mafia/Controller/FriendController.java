@@ -1,8 +1,10 @@
 package com.ssafy.mafia.Controller;
 
 import com.ssafy.mafia.Model.FriendDto;
+import com.ssafy.mafia.Model.FriendProtocol.FriendHeaderDto;
 import com.ssafy.mafia.Model.FriendProtocol.FriendRequestBodyDto;
 import com.ssafy.mafia.Model.FriendProtocol.FriendResponseBodyDto;
+import com.ssafy.mafia.Model.FriendProtocol.FriendResponseDataDto;
 import com.ssafy.mafia.Model.FriendResponseDto;
 import com.ssafy.mafia.Service.FriendService;
 import com.ssafy.mafia.auth.service.UserService;
@@ -150,6 +152,8 @@ public class FriendController {
             // 친구신청목록 가져오기
             List<FriendResponseDto> result = friendService.findFriendRequest(to);
             FriendResponseBodyDto responseBodyDto = new FriendResponseBodyDto();
+            responseBodyDto.setHeader(new FriendHeaderDto());
+            responseBodyDto.setFriendResponseDataDto(new FriendResponseDataDto());
             responseBodyDto.getFriendResponseDataDto().setUsers(result);
             responseBodyDto.getHeader().setType("offer-list");
             template.convertAndSend("/sub/friend/" + message.getData().getTo(), responseBodyDto);
@@ -169,7 +173,9 @@ public class FriendController {
 
             // 친구에게 반환할 친구목록 만들기
             FriendResponseBodyDto toList = new FriendResponseBodyDto();
+            toList.setFriendResponseDataDto(new FriendResponseDataDto());
             toList.getFriendResponseDataDto().setUsers(friendResult);
+            toList.setHeader(new FriendHeaderDto());
             System.out.println("친구에게 반환할 친구목록 " + toList.getFriendResponseDataDto().getUsers().toString());
             toList.getHeader().setType("list");
             // 친구에게 반환
@@ -178,6 +184,8 @@ public class FriendController {
 
             // 나에게 반환할 친구목록 만들기
             FriendResponseBodyDto fromList = new FriendResponseBodyDto();
+            fromList.setHeader(new FriendHeaderDto());
+            fromList.setFriendResponseDataDto(new FriendResponseDataDto());
             fromList.getFriendResponseDataDto().setUsers(meResult);
             fromList.getHeader().setType("list");
             //나에게 친구목록 반환
@@ -185,6 +193,8 @@ public class FriendController {
 
             // 나에게 반환할 친구신청목록 가져오기
             FriendResponseBodyDto responseBodyDto = new FriendResponseBodyDto();
+            responseBodyDto.setHeader(new FriendHeaderDto());
+            responseBodyDto.setFriendResponseDataDto(new FriendResponseDataDto());
             responseBodyDto.getFriendResponseDataDto().setUsers(friendService.findFriendRequest(from));
             responseBodyDto.getHeader().setType("offer-list");
             // 나에게 친구신청목록반환
@@ -197,6 +207,8 @@ public class FriendController {
             // 나에게 반환할 친구 신청 목록
             int from = userService.userInformation(message.getData().getFrom()).getUserSeq();
             FriendResponseBodyDto responseBodyDto = new FriendResponseBodyDto();
+            responseBodyDto.setHeader(new FriendHeaderDto());
+            responseBodyDto.setFriendResponseDataDto(new FriendResponseDataDto());
             responseBodyDto.getFriendResponseDataDto().setUsers(friendService.findFriendRequest(from));
             responseBodyDto.getHeader().setType("offer-list");
             // 나에게 친구신청목록반환
@@ -217,6 +229,8 @@ public class FriendController {
 
             // 친구에게 반환할 친구목록 만들기
             FriendResponseBodyDto toList = new FriendResponseBodyDto();
+            toList.setHeader(new FriendHeaderDto());
+            toList.setFriendResponseDataDto(new FriendResponseDataDto());
             toList.getFriendResponseDataDto().setUsers(friendResult);
             toList.getHeader().setType("list");
             // 친구에게 반환
@@ -224,6 +238,8 @@ public class FriendController {
 
             // 나에게 반환할 친구목록 만들기
             FriendResponseBodyDto fromList = new FriendResponseBodyDto();
+            fromList.setHeader(new FriendHeaderDto());
+            fromList.setFriendResponseDataDto(new FriendResponseDataDto());
             fromList.getFriendResponseDataDto().setUsers(meResult);
             fromList.getHeader().setType("list");
             //나에게 친구목록 반환
