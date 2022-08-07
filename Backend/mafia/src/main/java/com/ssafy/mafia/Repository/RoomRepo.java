@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.ssafy.mafia.Entity.RoomInfo;
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.RoomInfoDto;
+import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -130,6 +131,32 @@ public class RoomRepo {
     // 방 정보 업데이트
     public void updateRoom(int roomSeq, JsonArray list){
         this.roomUserMap.put(roomSeq, list);
+    }
+
+    // 방에서 유저 삭제
+    public void deleteUserSock(int roomSeq, RoomDataDto message){
+        JsonArray users = this.roomUserMap.get(roomSeq);
+
+        for(int i = 0; i < users.size(); i++){
+            JsonObject o = users.get(i).getAsJsonObject();
+            if(o.get("nickname").equals(message.getNickname())){
+                users.remove(i);
+                break;
+            }
+        }
+
+        this.roomUserMap.put(roomSeq, users);
+    }
+
+    public void addUserSock(int roomSeq, RoomDataDto message){
+        JsonObject user = new JsonObject();
+        user.addProperty("nickname", message.getNickname());
+        user.addProperty("status", "move");
+        user.addProperty("color", message.getColor());
+        user.addProperty("x", 0.0);
+        user.addProperty("y", 0.0);
+
+        this.roomUserMap.get(roomSeq).add(user);
     }
 
     public JsonArray getAllUsersOfRoomSock(int roomSeq){

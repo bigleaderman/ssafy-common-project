@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import springfox.documentation.spring.web.json.Json;
 
 @Service
 public class RoomMessageService {
@@ -20,8 +21,12 @@ public class RoomMessageService {
     private static final Logger log = LoggerFactory.getLogger(RoomMessageService.class);
 
     // 방 입장 메시지 처리
-    public JsonObject joinRoom(RoomDataDto message){
+    public JsonObject joinRoom(int roomSeq, RoomDataDto message){
         log.info("방 입장 유저 데이터 " + message.toString());
+
+        // 유저 방에다 추가
+        roomRepo.addUserSock(roomSeq, message);
+
 
         // header객체, data 객체 생성
         JsonObject header = new JsonObject();
@@ -44,8 +49,11 @@ public class RoomMessageService {
     }
 
     // 방 퇴장 메시지 처리
-    public JsonObject leaveRoom(RoomDataDto message){
+    public JsonObject leaveRoom(int roomSeq, RoomDataDto message){
         log.info("방 퇴장 유저 데이터 " + message.toString());
+
+        // 유저 삭제
+        roomRepo.deleteUserSock(roomSeq, message);
 
         // header객체, data 객체 생성
         JsonObject header = new JsonObject();
@@ -91,6 +99,27 @@ public class RoomMessageService {
 
         return response;
     }
+
+    // 방에 있는 모든 유저 리스트 반환
+    public JsonObject getUserlist(int roomSeq){
+        // header build
+        JsonObject header = new JsonObject();
+        header.addProperty("type", "list");
+
+        // user list 불러오기
+        JsonArray users = roomRepo.getAllUsersOfRoomSock(roomSeq);
+
+        // data build
+        JsonObject data = new JsonObject();
+        data.add("users", users);
+
+        // response build
+        JsonObject response = new JsonObject();
+        response.add("header", header);
+        response.add("data", data);
+
+        return response;
+    }
     
     // 캐릭터 상호작용 처리
     public JsonObject interact(int roomSeq, RoomDataDto message){
@@ -115,6 +144,7 @@ public class RoomMessageService {
                 JsonObject user = new JsonObject();
                 user.addProperty("nickname", message.getNickname());
                 user.addProperty("status", message.getStatus());
+                user.addProperty("color", message.getColor());
                 user.addProperty("x", message.getX());
                 user.addProperty("y", message.getY());
 
@@ -123,6 +153,7 @@ public class RoomMessageService {
                 break;
             }
         }
+        roomRepo.updateRoom(roomSeq, users);
         data.add("users", users);
 
 
