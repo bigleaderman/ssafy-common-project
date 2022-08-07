@@ -69,7 +69,7 @@ public class UserController {
          return userService.checkPw(password);
     }
 
-    @PostMapping("/user/changePw")
+    @PostMapping("/changePw")
     @ApiOperation(value = "비밀번호변경", notes = "입력받은 비밀번호로 변경하기", response = void.class)
     public void changePw(@ApiParam(value = "새비밀번호", example = "ssafy1!") @RequestBody UserRequestDto userRequestDto) {
         userService.changePw(userRequestDto);

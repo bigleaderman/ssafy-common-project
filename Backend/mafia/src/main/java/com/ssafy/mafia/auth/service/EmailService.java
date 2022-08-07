@@ -1,16 +1,33 @@
 package com.ssafy.mafia.auth.service;
 
 
+import com.ssafy.mafia.Entity.RefreshToken;
 import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.auth.controller.dto.TokenDto;
+import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
+import com.ssafy.mafia.auth.jwt.TokenProvider;
+import com.ssafy.mafia.auth.repository.RefreshTokenRepository;
+import com.ssafy.mafia.auth.repository.UserRepository;
 import com.ssafy.mafia.auth.util.makeSecretnumberUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.internet.MimeMessage;
 import javax.persistence.EntityManager;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Service
 @RequiredArgsConstructor
