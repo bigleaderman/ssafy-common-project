@@ -29,12 +29,14 @@ public class RoomMessageController {
         String type = message.getHeader().getType();
 
         if(type.equals("join")){
-            template.convertAndSend("/sub/room/" + roomSeq, messageService.joinRoom(message.getData()).toString());
+            template.convertAndSend("/sub/room/" + roomSeq, messageService.joinRoom(roomSeq, message.getData()).toString());
+            template.convertAndSend("/sub/room/" + roomSeq, messageService.getUserlist(roomSeq).toString());
             return;
         }
 
         if(type.equals("leave")){
-            template.convertAndSend("/sub/room/" + roomSeq, messageService.leaveRoom(message.getData()).toString());
+            template.convertAndSend("/sub/room/" + roomSeq, messageService.leaveRoom(roomSeq, message.getData()).toString());
+            template.convertAndSend("/sub/room/" + roomSeq, messageService.getUserlist(roomSeq).toString());
             return;
         }
 
