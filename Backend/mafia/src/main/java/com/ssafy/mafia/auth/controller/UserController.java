@@ -88,4 +88,11 @@ public class UserController {
     public ResponseEntity<?> isLoginUser() {
         return ResponseEntity.ok(userService.isLoginUser());
     }
+
+    @PostMapping("/user/findUserByNicknameElement")
+    @ApiOperation(value = "닉네임을 글자를 통해서 유저 정보 제공", notes = "유저 정보 제공하기", response = UserInfoResponseDto.class)
+    public ResponseEntity<?> findBynickname(@ApiParam(value = "String", example = "이") @RequestBody String nickname) {
+        return ResponseEntity.ok(userService.findByNickname(nickname));
+    }
+
 }
