@@ -24,12 +24,10 @@ public class SocialService {
         try {
             JsonNode jsonNode = objectMapper.readTree(userInfo);
             String email = String.valueOf(jsonNode.get("kakao_account").get("email"));
-            System.out.println(email);
             userRequestDto.setEmail(email.substring(1, email.length() - 1));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
         return userRequestDto;
     }
 }

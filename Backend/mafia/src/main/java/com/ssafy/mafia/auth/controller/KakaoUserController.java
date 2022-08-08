@@ -31,7 +31,6 @@ public class KakaoUserController {
     private final SocialService socialService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final Environment env;
     private final EntityManager em;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
@@ -49,21 +48,23 @@ public class KakaoUserController {
 
         }
         String email = userRequestDto.getEmail();
-        Optional<User> user = userRepository.findByEmail(userRequestDto.getEmail());
+        Optional<User> user = userRepository.findByEmail(email);
 
-        if (user == null){
-            userRequestDto.setPassword(makeSecretnumberUtil.numberGen(6,1));
+        if (!userRepository.existsByEmail(userRequestDto.getEmail())){
+            userRequestDto.setPassword(email);
             User users = userRequestDto.toOauthUser(passwordEncoder);
             userRepository.save(users);
         }
         UserRequestDto userRequestDto2 = new UserRequestDto();
         String password = em.createQuery("SELECT u FROM User u WHERE u.email like :email", User.class).setParameter("email", email).getSingleResult().getPassword();
+        userRequestDto2.setEmail(email);
         userRequestDto2.setPassword(email);
-        userRequestDto2.setPassword(password);
-        UsernamePasswordAuthenticationToken authenticationToken = userRequestDto.toAuthentication();
+        UsernamePasswordAuthenticationToken authenticationToken = userRequestDto2.toAuthentication();
         Authentication authentication_user = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+        System.out.println(authentication_user);
 
         TokenDto tokenDto = tokenProvider.generateTokenDto(authentication_user);
+        System.out.println(tokenDto);
 
         return ResponseEntity.ok(tokenDto);
 
