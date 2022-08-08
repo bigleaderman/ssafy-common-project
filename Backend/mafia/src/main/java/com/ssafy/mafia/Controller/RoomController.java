@@ -1,8 +1,6 @@
 package com.ssafy.mafia.Controller;
 
 import com.ssafy.mafia.Model.*;
-import com.ssafy.mafia.Model.RoomProtocol.RoomMessageDto;
-import com.ssafy.mafia.Service.RoomMessageService;
 import com.ssafy.mafia.Service.RoomService;
 import com.ssafy.mafia.Service.SessionService;
 import com.ssafy.mafia.auth.util.SecurityUtil;
@@ -13,10 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -30,8 +24,6 @@ public class RoomController {
     private static final Logger log = LoggerFactory.getLogger(RoomController.class);
 
     private final RoomService service;
-
-
 
     private final SessionService sessionService;
 
@@ -127,7 +119,7 @@ public class RoomController {
     }
 
     @ApiOperation(value = "오픈비두 토큰 발급", notes = "오픈비두 서버 접속을 위한 토큰 발급")
-    @PostMapping("/{room-seq}/video-token")
+    @GetMapping("/{room-seq}/video-token")
     public ResponseEntity<String> getToken(@PathVariable("room-seq") int roomSeq){
         int userSeq = SecurityUtil.getCurrentUserId();
         String token = sessionService.joinSession(roomSeq, userSeq);

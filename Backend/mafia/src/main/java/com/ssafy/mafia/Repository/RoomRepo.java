@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.ssafy.mafia.Entity.RoomInfo;
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.RoomInfoDto;
+import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +25,10 @@ public class RoomRepo {
     // 방별 유저를 위한 map
     private final Map<Integer, List<Integer>> map = new ConcurrentHashMap<>();
     private final Map<Integer, JsonArray> roomUserMap = new ConcurrentHashMap<>();
+    
+    // 앉을 수 있는 좌석
+    private final Map<Integer, List<Integer>> seat = new ConcurrentHashMap<>();
+
 
     /*
     *
@@ -53,6 +58,7 @@ public class RoomRepo {
         // 방 생성
         map.put(entity.getRoomSeq(), new ArrayList<>());
         roomUserMap.put(entity.getRoomSeq(), new JsonArray());
+        seat.put(entity.getRoomSeq(), new ArrayList<>());
         
         // 데이터 리턴
         return entity;
@@ -70,6 +76,11 @@ public class RoomRepo {
         entity.setHostUser(userSeq);
     }
 
+    public int getHostUser(int roomSeq){
+        RoomInfo entity = em.find(RoomInfo.class, roomSeq);
+        return entity.getHostUser();
+    }
+
     // 방 정보 수정
     public RoomInfo modifyRoomInfo(RoomInfoDto roomInfo){
         // 기존의 방 entity 불러오기
@@ -79,9 +90,6 @@ public class RoomRepo {
         entity.setTitle(roomInfo.getTitle());
         entity.setHostUser(roomInfo.getHostUser());
         entity.setCapacity(roomInfo.getCapacity());
-
-        // DB에 update
-        em.merge(entity);
 
         // update 된 정보 return
         return entity;
@@ -132,8 +140,49 @@ public class RoomRepo {
         this.roomUserMap.put(roomSeq, list);
     }
 
+    // 방에서 유저 삭제
+    public void deleteUserSock(int roomSeq, RoomDataDto message){
+        JsonArray users = this.roomUserMap.get(roomSeq);
+
+        for(int i = 0; i < users.size(); i++){
+            JsonObject o = users.get(i).getAsJsonObject();
+            if(o.get("nickname").equals(message.getNickname())){
+                users.remove(i);
+                break;
+            }
+        }
+
+        this.roomUserMap.put(roomSeq, users);
+    }
+
+    public void addUserSock(int roomSeq, RoomDataDto message){
+        JsonObject user = new JsonObject();
+        user.addProperty("nickname", message.getNickname());
+        user.addProperty("status", "move");
+        user.addProperty("color", message.getColor());
+        user.addProperty("x", 0.0);
+        user.addProperty("y", 0.0);
+
+        this.roomUserMap.get(roomSeq).add(user);
+    }
+
     public JsonArray getAllUsersOfRoomSock(int roomSeq){
         return this.roomUserMap.get(roomSeq);
+    }
+
+    // 유저 ready
+    public void userSeat(int roomSeq, int seatNum, int userSeq){
+        seat.get(roomSeq).set(seatNum, userSeq);
+    }
+
+    // 유저 레디 해제
+    public void userStand(int roomSeq, int seatNum, int userSeq){
+        seat.get(roomSeq).set(seatNum, 0);
+    }
+
+    // 남은 좌석 정보 확인
+    public List<Integer> getSeatInfo(int roomSeq){
+        return seat.get(roomSeq);
     }
 
 }

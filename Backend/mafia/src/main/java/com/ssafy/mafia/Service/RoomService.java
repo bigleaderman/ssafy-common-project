@@ -43,11 +43,17 @@ public class RoomService {
         
         // response data
         List<RoomInfoResponseDto> result = new ArrayList<>();
-        
+
+
+        if(list == null) return null;
         // 필요한 정보만 build 후 리턴
         for(RoomInfo room : list) {
-            RoomInfoResponseDto dto = new RoomInfoResponseDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(),
-                    room.getCapacity(), roomRepo.getAllUsersOfRoom(room.getRoomSeq()).size(), room.getPassword() != null);
+            RoomInfoResponseDto dto = new RoomInfoResponseDto(room);
+
+            if(roomRepo.getAllUsersOfRoom(room.getRoomSeq()) == null)
+                dto.setParticipants(0);
+            else
+                dto.setParticipants(roomRepo.getAllUsersOfRoom(room.getRoomSeq()).size());
             result.add(dto);
         }
         return result;
@@ -90,6 +96,11 @@ public class RoomService {
         roomRepo.setHostUser(roomSeq, userSeq);
     }
 
+    // 호스트 조회
+    public int getHost(int roomSeq){
+        return roomRepo.getHostUser(roomSeq);
+    }
+
     // 방 비밀번호 변경
     public void setRoomPassword(int roomSeq, String password){
         roomRepo.setRoomPassword(roomSeq, password);
@@ -97,7 +108,7 @@ public class RoomService {
 
     // host 없이 방 생성하기
     public SettingsDto createRoom(){
-        // Todo : roominfodto response로 변경
+        // Todo : roominfo dto response로 변경
         RoomInfoDto roomInfo = new RoomInfoDto();
         GameInfoDto gameInfo = new GameInfoDto();
 
@@ -133,8 +144,8 @@ public class RoomService {
     // 방 정보 수정
     public RoomInfoResponseDto modifyRoomInfo(RoomInfoDto roomInfo){
         RoomInfo room =  roomRepo.modifyRoomInfo(roomInfo);
-        RoomInfoResponseDto dto = new RoomInfoResponseDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(),
-                room.getCapacity(), roomRepo.getAllUsersOfRoom(roomInfo.getRoomSeq()).size(), room.getPassword() != null);
+        RoomInfoResponseDto dto = new RoomInfoResponseDto(room);
+        dto.setParticipants(roomRepo.getAllUsersOfRoom(roomInfo.getRoomSeq()).size());
         return dto;
     }
 
@@ -148,9 +159,18 @@ public class RoomService {
     public SettingsDto joinRoom(int roomSeq, int userSeq){
         // 방에 유저 추가
         roomRepo.joinRoom(roomSeq, userSeq);
+
+        // 내부 객체 생성
+        RoomInfoResponseDto roomInfo = new RoomInfoResponseDto(roomRepo.getRoomInfo(roomSeq));
+        roomInfo.setParticipants(roomRepo.getAllUsersOfRoom(roomSeq).size());
+        GameInfoDto gameInfo = new GameInfoDto(gameRepo.getGameInfo(roomSeq));
+
         
         // { roominfo, gameinfo } 데이터 리턴
-        return new SettingsDto();
+        return new SettingsDto(
+                null,
+                gameInfo,
+                roomInfo);
     }
 
     // 방 퇴장

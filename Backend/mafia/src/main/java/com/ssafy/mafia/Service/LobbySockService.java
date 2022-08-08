@@ -6,7 +6,6 @@ import com.ssafy.mafia.Model.LobbyProtocol.LobbyData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import springfox.documentation.spring.web.json.Json;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +13,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
-public class LobbyMessageService {
+public class LobbySockService {
 
-    private static final Logger log = LoggerFactory.getLogger(LobbyMessageService.class);
+    private static final Logger log = LoggerFactory.getLogger(LobbySockService.class);
 
     private Map<String, JsonObject> repo = new ConcurrentHashMap<>();
 
@@ -57,7 +56,7 @@ public class LobbyMessageService {
 
         // repo에 유저 추가
         JsonObject user = new JsonObject();
-        user.addProperty("nickname", message.getMessage());
+        user.addProperty("nickname", message.getNickname());
         user.addProperty("status", "lobby");
 
         repo.put(message.getNickname(), user);

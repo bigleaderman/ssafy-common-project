@@ -2,9 +2,11 @@ package com.ssafy.mafia.Service;
 
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.ssafy.mafia.Model.GameInfoDto;
+import com.ssafy.mafia.Model.RoomInfoDto;
 import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
+import com.ssafy.mafia.Repository.GameRepo;
 import com.ssafy.mafia.Repository.RoomRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,16 +14,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RoomMessageService {
+public class RoomSockService {
 
     @Autowired
     private RoomRepo roomRepo;
 
-    private static final Logger log = LoggerFactory.getLogger(RoomMessageService.class);
+    @Autowired
+    private GameRepo gameRepo;
+
+    private static final Logger log = LoggerFactory.getLogger(RoomSockService.class);
 
     // 방 입장 메시지 처리
-    public JsonObject joinRoom(RoomDataDto message){
+    public JsonObject joinRoom(int roomSeq, RoomDataDto message){
         log.info("방 입장 유저 데이터 " + message.toString());
+
+        // 유저 방에다 추가
+        roomRepo.addUserSock(roomSeq, message);
+
 
         // header객체, data 객체 생성
         JsonObject header = new JsonObject();
@@ -44,8 +53,11 @@ public class RoomMessageService {
     }
 
     // 방 퇴장 메시지 처리
-    public JsonObject leaveRoom(RoomDataDto message){
+    public JsonObject leaveRoom(int roomSeq, RoomDataDto message){
         log.info("방 퇴장 유저 데이터 " + message.toString());
+
+        // 유저 삭제
+        roomRepo.deleteUserSock(roomSeq, message);
 
         // header객체, data 객체 생성
         JsonObject header = new JsonObject();
@@ -91,6 +103,31 @@ public class RoomMessageService {
 
         return response;
     }
+
+    // 방에 있는 모든 유저 리스트 반환
+    public JsonObject getUserlist(int roomSeq){
+        log.info("유저목록 불러오기 요청 " + roomSeq + " 번방");
+
+        // header build
+        JsonObject header = new JsonObject();
+        header.addProperty("type", "list");
+
+        // user list 불러오기
+        JsonArray users = roomRepo.getAllUsersOfRoomSock(roomSeq);
+
+        // data build
+        JsonObject data = new JsonObject();
+        data.add("users", users);
+
+        // response build
+        JsonObject response = new JsonObject();
+        response.add("header", header);
+        response.add("data", data);
+
+        log.info("유저 목록 불러오기 응답 " + response.toString());
+
+        return response;
+    }
     
     // 캐릭터 상호작용 처리
     public JsonObject interact(int roomSeq, RoomDataDto message){
@@ -115,6 +152,7 @@ public class RoomMessageService {
                 JsonObject user = new JsonObject();
                 user.addProperty("nickname", message.getNickname());
                 user.addProperty("status", message.getStatus());
+                user.addProperty("color", message.getColor());
                 user.addProperty("x", message.getX());
                 user.addProperty("y", message.getY());
 
@@ -123,6 +161,7 @@ public class RoomMessageService {
                 break;
             }
         }
+        roomRepo.updateRoom(roomSeq, users);
         data.add("users", users);
 
 
@@ -133,7 +172,7 @@ public class RoomMessageService {
         return response;
     }
 
-    // Todo : 게임 설정 변경 처리
+    // 게임 설정 변경 처리
     public JsonObject setting(int roomSeq, RoomDataDto message){
         log.info("게임 설정 변경 " + message.toString());
 
@@ -147,6 +186,7 @@ public class RoomMessageService {
         header.addProperty("type", "setting");
 
         // Data json build
+        data.addProperty("title", message.getTitle());
         data.addProperty("capacity", message.getCapacity());
         data.addProperty("mafia", message.getMafia());
         data.addProperty("doctor", message.getDoctor());
@@ -155,7 +195,19 @@ public class RoomMessageService {
         data.addProperty("voteTime", message.getVoteTime());
         data.addProperty("nightTime", message.getNightTime());
 
-        // Todo : db에 게임 설정 변경된 내용 업데이트
+        // db에 게임 설정 변경된 내용 업데이트
+        RoomInfoDto roomInfo = new RoomInfoDto(message);
+        roomInfo.setRoomSeq(roomSeq);
+        roomInfo.setHostUser(roomRepo.getHostUser(roomSeq));
+        roomInfo.setCapacity(roomInfo.getCapacity());
+        roomInfo.setTitle(message.getTitle());
+
+        GameInfoDto gameInfo = new GameInfoDto(message);
+
+        roomRepo.modifyRoomInfo(roomInfo);
+        gameRepo.setGameInfo(roomSeq, gameInfo);
+
+
 
         // Response json build
         JsonObject response = new JsonObject();
