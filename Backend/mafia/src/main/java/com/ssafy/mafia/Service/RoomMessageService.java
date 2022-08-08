@@ -4,7 +4,11 @@ package com.ssafy.mafia.Service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.ssafy.mafia.Entity.GameInfo;
+import com.ssafy.mafia.Model.GameInfoDto;
+import com.ssafy.mafia.Model.RoomInfoDto;
 import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
+import com.ssafy.mafia.Repository.GameRepo;
 import com.ssafy.mafia.Repository.RoomRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +21,9 @@ public class RoomMessageService {
 
     @Autowired
     private RoomRepo roomRepo;
+
+    @Autowired
+    private GameRepo gameRepo;
 
     private static final Logger log = LoggerFactory.getLogger(RoomMessageService.class);
 
@@ -178,6 +185,7 @@ public class RoomMessageService {
         header.addProperty("type", "setting");
 
         // Data json build
+        data.addProperty("title", message.getTitle());
         data.addProperty("capacity", message.getCapacity());
         data.addProperty("mafia", message.getMafia());
         data.addProperty("doctor", message.getDoctor());
@@ -186,7 +194,19 @@ public class RoomMessageService {
         data.addProperty("voteTime", message.getVoteTime());
         data.addProperty("nightTime", message.getNightTime());
 
-        // Todo : db에 게임 설정 변경된 내용 업데이트
+        // db에 게임 설정 변경된 내용 업데이트
+        RoomInfoDto roomInfo = new RoomInfoDto(message);
+        roomInfo.setRoomSeq(roomSeq);
+        roomInfo.setHostUser(roomRepo.getHostUser(roomSeq));
+        roomInfo.setCapacity(roomInfo.getCapacity());
+        roomInfo.setTitle(message.getTitle());
+
+        GameInfoDto gameInfo = new GameInfoDto(message);
+
+        roomRepo.modifyRoomInfo(roomInfo);
+        gameRepo.setGameInfo(roomSeq, gameInfo);
+
+
 
         // Response json build
         JsonObject response = new JsonObject();

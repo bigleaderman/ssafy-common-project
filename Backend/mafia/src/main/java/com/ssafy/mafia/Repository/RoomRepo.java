@@ -71,6 +71,11 @@ public class RoomRepo {
         entity.setHostUser(userSeq);
     }
 
+    public int getHostUser(int roomSeq){
+        RoomInfo entity = em.find(RoomInfo.class, roomSeq);
+        return entity.getHostUser();
+    }
+
     // 방 정보 수정
     public RoomInfo modifyRoomInfo(RoomInfoDto roomInfo){
         // 기존의 방 entity 불러오기
@@ -80,9 +85,6 @@ public class RoomRepo {
         entity.setTitle(roomInfo.getTitle());
         entity.setHostUser(roomInfo.getHostUser());
         entity.setCapacity(roomInfo.getCapacity());
-
-        // DB에 update
-        em.merge(entity);
 
         // update 된 정보 return
         return entity;

@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class RoomDataDto {
+    private String title;
     private String nickname;
     private String message;
     private String status;

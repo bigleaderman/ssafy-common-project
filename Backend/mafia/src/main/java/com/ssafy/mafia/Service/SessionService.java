@@ -74,6 +74,7 @@ public class SessionService {
             return token;
         }
         catch (Exception e){
+            e.printStackTrace();
             log.error("room [" + roomSeq + "] " + "방 입장 오류 발생");
             return null;
         }

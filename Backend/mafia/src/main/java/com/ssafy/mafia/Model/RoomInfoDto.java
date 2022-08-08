@@ -1,5 +1,7 @@
 package com.ssafy.mafia.Model;
 
+import com.ssafy.mafia.Entity.RoomInfo;
+import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
 import lombok.Data;
 
 @Data
@@ -25,6 +27,19 @@ public class RoomInfoDto {
         this.hostUser = hostUser;
         this.title = title;
         this.capacity = capacity;
+    }
+
+    public RoomInfoDto(RoomInfo roomInfo){
+        this.roomSeq = roomInfo.getRoomSeq();
+        this.hostUser = roomInfo.getHostUser();
+        this.title = roomInfo.getTitle();
+        this.capacity = roomInfo.getCapacity();
+        this.isLocked = (roomInfo.getPassword() != "" && roomInfo.getPassword() != null);
+    }
+
+    public RoomInfoDto(RoomDataDto roomData){
+        this.title = roomData.getTitle();
+        this.capacity = roomData.getCapacity();
     }
 
     private int roomSeq;

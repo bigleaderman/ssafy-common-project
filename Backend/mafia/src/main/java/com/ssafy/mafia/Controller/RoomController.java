@@ -31,8 +31,6 @@ public class RoomController {
 
     private final RoomService service;
 
-
-
     private final SessionService sessionService;
 
     @ApiOperation(value = "방 생성", notes = "방 생성")
