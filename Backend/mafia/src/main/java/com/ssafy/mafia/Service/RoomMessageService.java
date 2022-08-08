@@ -171,7 +171,7 @@ public class RoomMessageService {
         return response;
     }
 
-    // Todo : 게임 설정 변경 처리
+    // 게임 설정 변경 처리
     public JsonObject setting(int roomSeq, RoomDataDto message){
         log.info("게임 설정 변경 " + message.toString());
 
