@@ -12,7 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @Service
@@ -81,18 +83,21 @@ public class UserService {
 
     }
 
-    @Transactional
-    public void validationUser(int userId, int num) throws Exception {
-        User user = em.find(User.class, userId);
-        if (user.getEmailCode() == num ) {
-            user.setAuth(true);
-        }
-    }
 
     @Transactional(readOnly = true)
     public User userInformation(String nickname) {
         return userRepository.findByNickname(nickname)
-                .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
+                .orElseThrow(() -> new NoSuchElementException(nickname));
+    }
+
+    @Transactional(readOnly = true)
+    public List findByNickname(String nick) {
+        try {
+            return em.createQuery("SELECT u.nickname, u.winCount, u.loseCount, u.rankPoint, u.isRedUser, u.nowRoomSeq FROM User u WHERE u.nickname LIKE CONCAT('%', :nick, '%')")
+                    .setParameter("nick", nick).getResultList();
+        } catch (NoResultException e) {
+            throw new NoResultException();
+        }
     }
 
     @Transactional(readOnly = true)

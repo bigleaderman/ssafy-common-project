@@ -57,15 +57,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers("/api/room/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().permitAll()
-                .and();
-//                .addFilterBefore(new JwtFilter(tokenProvider), OAuth2LoginAuthenticationFilter.class)
-//                .oauth2Login().loginPage("/api/login")
-//                .successHandler(successHandler)
-//                .userInfoEndpoint()
-//                .userService(oAuth2UserService);
-//                .oauth2Login()
-//                .defaultSuccessUrl("/")
-        http.apply(new JwtSecurityConfig(tokenProvider)); // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
+                .and()
+                .apply(new JwtSecurityConfig(tokenProvider)); // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용
         // + 토큰에 저장된 유저정보를 활용하여야 하기 때문에 CustomUserDetailService 클래스를 생성합니다.
     }
 }
