@@ -49,7 +49,11 @@ public class RoomService {
         // 필요한 정보만 build 후 리턴
         for(RoomInfo room : list) {
             RoomInfoResponseDto dto = new RoomInfoResponseDto(room);
-            dto.setParticipants(roomRepo.getAllUsersOfRoom(room.getRoomSeq()).size());
+
+            if(roomRepo.getAllUsersOfRoom(room.getRoomSeq()) == null)
+                dto.setParticipants(0);
+            else
+                dto.setParticipants(roomRepo.getAllUsersOfRoom(room.getRoomSeq()).size());
             result.add(dto);
         }
         return result;
