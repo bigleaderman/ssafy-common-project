@@ -2,6 +2,7 @@ package com.ssafy.mafia.Repository;
 
 import com.ssafy.mafia.Entity.GameInfo;
 import com.ssafy.mafia.Entity.RoomInfo;
+import com.ssafy.mafia.Model.GameInfoDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,6 +47,24 @@ public class GameRepo {
 
         if(datas.size() == 0) return null;
         else return datas.get(0);
+    }
+
+    public int getGameSeq(int roomSeq){
+        return getGameInfo(roomSeq).getGameInfoSeq();
+    }
+
+    // 게임 정보 수정
+    public GameInfo setGameInfo(int roomSeq, GameInfoDto gameInfo){
+        GameInfo entity = em.find(GameInfo.class, getGameSeq(roomSeq));
+        entity.setDoctorNum(gameInfo.getDoctorNum());
+        entity.setPoliceNum(gameInfo.getPoliceNum());
+        entity.setMafiaNum(gameInfo.getMafiaNum());
+        entity.setTalkTimeoutSec(gameInfo.getTalkTimeoutSec());
+        entity.setVoteTimeoutSec(gameInfo.getVoteTimeoutSec());
+        entity.setDay(gameInfo.getDay());
+        entity.setNight(gameInfo.getNight());
+
+        return entity;
     }
 
     // 게임 정보 삭제
