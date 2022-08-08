@@ -1,20 +1,18 @@
 package com.ssafy.mafia.Controller;
 
 import com.ssafy.mafia.Model.LobbyProtocol.LobbyMessage;
-import com.ssafy.mafia.Model.MessageDto;
-import com.ssafy.mafia.Service.LobbyMessageService;
+import com.ssafy.mafia.Service.LobbySockService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class LobbyController {
+public class LobbySockController {
 
-    private final LobbyMessageService messageService;
+    private final LobbySockService messageService;
 
     private final SimpMessagingTemplate template;
 

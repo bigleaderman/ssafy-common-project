@@ -43,7 +43,9 @@ public class RoomService {
         
         // response data
         List<RoomInfoResponseDto> result = new ArrayList<>();
-        
+
+
+        if(list == null) return null;
         // 필요한 정보만 build 후 리턴
         for(RoomInfo room : list) {
             RoomInfoResponseDto dto = new RoomInfoResponseDto(room);
