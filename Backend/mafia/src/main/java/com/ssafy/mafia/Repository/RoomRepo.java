@@ -25,6 +25,10 @@ public class RoomRepo {
     // 방별 유저를 위한 map
     private final Map<Integer, List<Integer>> map = new ConcurrentHashMap<>();
     private final Map<Integer, JsonArray> roomUserMap = new ConcurrentHashMap<>();
+    
+    // 앉을 수 있는 좌석
+    private final Map<Integer, List<Integer>> seat = new ConcurrentHashMap<>();
+
 
     /*
     *
@@ -54,6 +58,7 @@ public class RoomRepo {
         // 방 생성
         map.put(entity.getRoomSeq(), new ArrayList<>());
         roomUserMap.put(entity.getRoomSeq(), new JsonArray());
+        seat.put(entity.getRoomSeq(), new ArrayList<>());
         
         // 데이터 리턴
         return entity;
@@ -163,6 +168,21 @@ public class RoomRepo {
 
     public JsonArray getAllUsersOfRoomSock(int roomSeq){
         return this.roomUserMap.get(roomSeq);
+    }
+
+    // 유저 ready
+    public void userSeat(int roomSeq, int seatNum, int userSeq){
+        seat.get(roomSeq).set(seatNum, userSeq);
+    }
+
+    // 유저 레디 해제
+    public void userStand(int roomSeq, int seatNum, int userSeq){
+        seat.get(roomSeq).set(seatNum, 0);
+    }
+
+    // 남은 좌석 정보 확인
+    public List<Integer> getSeatInfo(int roomSeq){
+        return seat.get(roomSeq);
     }
 
 }

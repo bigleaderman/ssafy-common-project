@@ -2,9 +2,7 @@ package com.ssafy.mafia.Service;
 
 
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.ssafy.mafia.Entity.GameInfo;
 import com.ssafy.mafia.Model.GameInfoDto;
 import com.ssafy.mafia.Model.RoomInfoDto;
 import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
@@ -14,10 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import springfox.documentation.spring.web.json.Json;
 
 @Service
-public class RoomMessageService {
+public class RoomSockService {
 
     @Autowired
     private RoomRepo roomRepo;
@@ -25,7 +22,7 @@ public class RoomMessageService {
     @Autowired
     private GameRepo gameRepo;
 
-    private static final Logger log = LoggerFactory.getLogger(RoomMessageService.class);
+    private static final Logger log = LoggerFactory.getLogger(RoomSockService.class);
 
     // 방 입장 메시지 처리
     public JsonObject joinRoom(int roomSeq, RoomDataDto message){
@@ -109,6 +106,8 @@ public class RoomMessageService {
 
     // 방에 있는 모든 유저 리스트 반환
     public JsonObject getUserlist(int roomSeq){
+        log.info("유저목록 불러오기 요청 " + roomSeq + " 번방");
+
         // header build
         JsonObject header = new JsonObject();
         header.addProperty("type", "list");
@@ -124,6 +123,8 @@ public class RoomMessageService {
         JsonObject response = new JsonObject();
         response.add("header", header);
         response.add("data", data);
+
+        log.info("유저 목록 불러오기 응답 " + response.toString());
 
         return response;
     }

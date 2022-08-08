@@ -1,8 +1,6 @@
 package com.ssafy.mafia.Controller;
 
 import com.ssafy.mafia.Model.*;
-import com.ssafy.mafia.Model.RoomProtocol.RoomMessageDto;
-import com.ssafy.mafia.Service.RoomMessageService;
 import com.ssafy.mafia.Service.RoomService;
 import com.ssafy.mafia.Service.SessionService;
 import com.ssafy.mafia.auth.util.SecurityUtil;
@@ -13,10 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
