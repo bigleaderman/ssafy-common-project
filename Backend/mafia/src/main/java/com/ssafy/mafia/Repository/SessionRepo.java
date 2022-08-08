@@ -23,6 +23,7 @@ public class SessionRepo {
     public Session createSession(int roomSeq, Session session) {
         if(getSession(roomSeq) == null){
             roomSessionMap.put(roomSeq, session);
+            roomTokensMap.put(roomSeq, new ConcurrentHashMap<>());
             return getSession(roomSeq);
         }
         else{
@@ -45,6 +46,7 @@ public class SessionRepo {
         }
 
         roomSessionMap.remove(roomSeq);
+        roomTokensMap.remove(roomSeq);
     }
 
     // 비디오 세션 입장
