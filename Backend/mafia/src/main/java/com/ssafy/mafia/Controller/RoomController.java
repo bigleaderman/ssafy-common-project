@@ -30,6 +30,9 @@ public class RoomController {
     @ApiOperation(value = "방 생성", notes = "방 생성")
     @PostMapping
     public ResponseEntity<SettingsDto> createRoom(@RequestBody SettingsDto request){
+        log.info("User ["+SecurityUtil.getCurrentUserId()+"] 가 새로운 방을 생성했습니다.");
+        log.info("방 생성 요청 데이터 : " + request.toString());
+
         int hostUser = SecurityUtil.getCurrentUserId();
         request.getRoomInfo().setHostUser(hostUser);
 

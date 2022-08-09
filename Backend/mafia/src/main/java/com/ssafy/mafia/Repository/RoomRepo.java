@@ -44,7 +44,7 @@ public class RoomRepo {
     // 방 신규 생성
     public RoomInfo createRoom(RoomInfoDto roomInfo){
 
-        // 집어넣은 데이터 설정
+        // 집어넣을 데이터 설정
         RoomInfo entity = new RoomInfo();
         entity.setTitle(roomInfo.getTitle());
         entity.setCapacity(roomInfo.getCapacity());
