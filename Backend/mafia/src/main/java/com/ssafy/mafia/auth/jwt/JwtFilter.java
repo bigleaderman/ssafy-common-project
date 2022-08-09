@@ -44,6 +44,9 @@ public class JwtFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             log.info("User ["+SecurityUtil.getCurrentUserId()+"] 의 로그인 권한이 확인되었습니다.");
         }
+        else{
+            log.info("비정상 적인 토큰 요청이 들어왔습니다.");
+        }
 
 
 
