@@ -1,7 +1,10 @@
 package com.ssafy.mafia.auth.jwt;
 
 
+import com.ssafy.mafia.auth.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -17,6 +20,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
+    private static final Logger log = LoggerFactory.getLogger(JwtFilter.class);
+
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String BEARER_PREFIX = "Bearer ";
 
@@ -30,12 +35,17 @@ public class JwtFilter extends OncePerRequestFilter {
         // 1. Request Header 에서 토큰을 꺼냄
         String jwt = resolveToken(request);
 
+        log.info("입력 들어온 token : " + jwt);
+
         // 2. validateToken 으로 토큰 유효성 검사
         // 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt)) {
+            log.info("User ["+SecurityUtil.getCurrentUserId()+"] 의 로그인 권한이 확인되었습니다.");
             Authentication authentication = tokenProvider.getAuthentication(jwt);
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
+
+
 
         filterChain.doFilter(request, response);
     }
