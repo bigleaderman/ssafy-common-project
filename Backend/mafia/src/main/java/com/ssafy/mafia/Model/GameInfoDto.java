@@ -2,9 +2,11 @@ package com.ssafy.mafia.Model;
 
 import com.ssafy.mafia.Entity.GameInfo;
 import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 public class GameInfoDto {
     private int gameInfoSeq;
     private int mafiaNum;

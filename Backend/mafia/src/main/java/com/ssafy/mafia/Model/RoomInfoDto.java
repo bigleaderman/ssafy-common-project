@@ -2,9 +2,12 @@ package com.ssafy.mafia.Model;
 
 import com.ssafy.mafia.Entity.RoomInfo;
 import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
 public class RoomInfoDto {
 
     public RoomInfoDto(){

@@ -28,6 +28,7 @@ public class GameService {
         return null;
     }
 
+    // 게임 설정 변경 json 패러미터
     public GameInfoDto modifyGameSetting(int roomSeq, JsonObject gameInfo){
 
         return null;

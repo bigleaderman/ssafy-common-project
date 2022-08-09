@@ -65,9 +65,9 @@ public class RoomService {
         List<RoomInfoDto> result = new ArrayList<>();
         for(RoomInfo room : list) {
             GameInfo game = gameRepo.getGameInfo(room.getRoomSeq());
-            if(room.getTitle().equals(filter.getTitle())
+            if(room.getTitle().contains(filter.getTitle())
                     && room.getCapacity() >= filter.getCapacity()
-                    && game.getMafiaNum() == filter.getMafiaNum())
+                    && game.getMafiaNum() >= filter.getMafiaNum())
                 result.add(new RoomInfoDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(), room.getCapacity()));
         }
         return result;
