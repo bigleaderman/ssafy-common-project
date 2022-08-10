@@ -83,7 +83,6 @@ public class UserService {
 
     }
 
-
     @Transactional(readOnly = true)
     public User userInformation(String nickname) {
         return userRepository.findByNickname(nickname)
