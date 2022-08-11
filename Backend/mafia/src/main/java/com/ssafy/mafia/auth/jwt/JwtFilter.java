@@ -34,15 +34,14 @@ public class JwtFilter extends OncePerRequestFilter {
 
         // 웹 소켓은 무시한다.
         if(request.getHeader("upgrade") != null && request.getHeader("upgrade").equals("websocket")){
+            log.info("[JWT] 소켓 리다이렉트");
             filterChain.doFilter(request, response);
             return;
         }
 
-        request.getHeaderNames().asIterator().forEachRemaining(header -> log.info("[필터] 입력 들어온 헤더 {} : {}", header, request.getHeader(header)));
-
         // 1. Request Header 에서 토큰을 꺼냄
         String jwt = resolveToken(request);
-        log.info("[필터] 입력 들어온 token : " + jwt);
+        log.info("[JWT] Token : " + jwt);
 
         // 2. validateToken 으로 토큰 유효성 검사
         // 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
@@ -52,7 +51,7 @@ public class JwtFilter extends OncePerRequestFilter {
             log.info("User ["+SecurityUtil.getCurrentUserId()+"] 의 로그인 권한이 확인되었습니다.");
         }
         else{
-            log.error("[필터] 비정상 적인 토큰 요청이 들어왔습니다.");
+            log.error("[JWT] Token invalid");
         }
 
         filterChain.doFilter(request, response);
