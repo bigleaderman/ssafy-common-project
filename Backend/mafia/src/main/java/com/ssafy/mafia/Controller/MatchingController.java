@@ -155,7 +155,7 @@ public class MatchingController {
                     successMatchingResponse.getData().setGameInfo(response.getGameInfo());
                     successMatchingResponse.getData().setUserInfo(userInfoList);
                     System.out.println(successMatchingResponse + "총응답");
-                    template.convertAndSend("/sub/game-matching/", successMatchingResponse);
+                    template.convertAndSend("/sub/game-matching", successMatchingResponse);
                     // List 비우기
                     userList.clear();
 
