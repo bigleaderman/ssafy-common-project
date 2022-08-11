@@ -4,6 +4,7 @@ package com.ssafy.mafia.Controller;
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.GameInfoDto;
 import com.ssafy.mafia.Model.RoomInfoDto;
+import com.ssafy.mafia.Model.RoomInfoResponseDto;
 import com.ssafy.mafia.Model.SettingsDto;
 import com.ssafy.mafia.Model.matching_connection.*;
 import com.ssafy.mafia.Service.RoomService;
@@ -55,6 +56,9 @@ public class MatchingController {
                     settingsDto.getRoomInfo().setMatching(true);
                     settingsDto.getRoomInfo().setTitle("matchingGame");
                     settingsDto.getRoomInfo().setHostUser(redUserList.get(0));
+                    settingsDto.getRoomInfo().setPassword("matching");
+                    settingsDto.setRoomResponse(new RoomInfoResponseDto());
+                    System.out.println(settingsDto + "세팅Dto");
 
                     // 방생성
                     SettingsDto response = roomService.createRoom(settingsDto.getRoomInfo(), settingsDto.getGameInfo());
@@ -99,7 +103,7 @@ public class MatchingController {
             }
             // disconnection 요청
             else {
-                redUserList.remove(matchingRequset.getData().getUserSeq());
+                redUserList.remove(redUserList.indexOf(matchingRequset.getData().getUserSeq()));
                 MatchingResponse matchingResponse = new MatchingResponse();
                 matchingResponse.setData(new MatchingResponseData());
                 matchingResponse.setHeader(new MatchingHeader());
@@ -124,6 +128,8 @@ public class MatchingController {
                     settingsDto.getRoomInfo().setMatching(true);
                     settingsDto.getRoomInfo().setTitle("matchingGame");
                     settingsDto.getRoomInfo().setHostUser(userList.get(0));
+                    settingsDto.getRoomInfo().setPassword("matching");
+                    settingsDto.setRoomResponse(new RoomInfoResponseDto());
                     System.out.println(settingsDto + "세팅Dto");
                     // 방생성
                     SettingsDto response = roomService.createRoom(settingsDto.getRoomInfo(), settingsDto.getGameInfo());
@@ -170,7 +176,7 @@ public class MatchingController {
             // disconnection 요청
             else {
                 System.out.println(userList + "디스코넥션했을때 유저 리스트");
-                userList.remove(matchingRequset.getData().getUserSeq());
+                userList.remove(userList.indexOf(matchingRequset.getData().getUserSeq()));
                 MatchingResponse matchingResponse = new MatchingResponse();
                 matchingResponse.setHeader(new MatchingHeader());
                 matchingResponse.setData(new MatchingResponseData());
