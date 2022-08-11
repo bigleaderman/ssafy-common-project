@@ -38,11 +38,14 @@ public class MatchingController {
     @MessageMapping("/game-matching")
     public void matching(@Payload MatchingRequset matchingRequset) {
         System.out.println(matchingRequset);
+        System.out.println(matchingRequset.getData());
+        System.out.println(matchingRequset.getHeader());
+
         // red 유저
         if (matchingRequset.getData().getIsRedUser() == 1){
 
             // connection 요청
-            if (matchingRequset.getHeader().getType() == "connection") {
+            if (matchingRequset.getHeader().getType().equals("connection")) {
 
 
                 // 대기 queue에 userSeq 넣기
@@ -82,7 +85,7 @@ public class MatchingController {
                     template.convertAndSend("/sub/game-matching/", successMatchingResponse);
 
                     // List 비우기
-                    userList.clear();
+                    redUserList.clear();
 
 
                 }
@@ -106,11 +109,13 @@ public class MatchingController {
         }
         // 일반 유저
         else {
-            if (matchingRequset.getHeader().getType() == "connection") {
-                System.out.println(matchingRequset+ "1111");
+            if (matchingRequset.getHeader().getType().equals("connection")) {
+                System.out.println(matchingRequset.getHeader().getType()=="connection" + "true or false");
+                System.out.println(matchingRequset.getHeader().getType() + "헤더타입");
+                System.out.println(matchingRequset+ "일반유저");
 
                 userList.add(matchingRequset.getData().getUserSeq());
-                System.out.println(userList+ "2222");
+                System.out.println(userList+"코낵션했을때 유저 리스트");
                 // 방생성
                 if (userList.size() == 6 ) {
                     //방 생성 로직
@@ -155,13 +160,14 @@ public class MatchingController {
                     MatchingResponse matchingResponse = new MatchingResponse();
                     matchingResponse.getHeader().setType("GeneralUserNotCompleted");
                     matchingResponse.getData().setNum(userList.size());
-                    System.out.println(matchingResponse+ "333");
+                    System.out.println(matchingResponse+"매칭리스폰스응답");
                     template.convertAndSend("/sub/game-matching", matchingResponse);
                 }
             }
             // disconnection 요청
             else {
-                redUserList.remove(matchingRequset.getData().getUserSeq());
+                System.out.println(userList + "디스코넥션했을때 유저 리스트");
+                userList.remove(matchingRequset.getData().getUserSeq());
                 MatchingResponse matchingResponse = new MatchingResponse();
                 matchingResponse.getHeader().setType("GeneralUserNotCompleted");
                 matchingResponse.getData().setNum(userList.size());
