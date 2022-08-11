@@ -2,6 +2,7 @@ package com.ssafy.mafia.Config;
 
 import com.ssafy.mafia.auth.jwt.TokenProvider;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +23,9 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 @Configuration
-@RequiredArgsConstructor
 @EnableWebSocketMessageBroker
-@Order(Ordered.HIGHEST_PRECEDENCE + 99)
+@Slf4j
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
-
-    private static final Logger log = LoggerFactory.getLogger(WebSocketConfig.class);
-
-    private final TokenProvider tokenProvider;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -41,30 +37,4 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setApplicationDestinationPrefixes("/pub");
         registry.enableSimpleBroker("/sub");
     }
-
-    @Override
-    public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(new ChannelInterceptor() {
-            @Override
-            public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
-
-                String command = accessor.getMessageHeaders().get("simpMessageType").toString();
-
-
-                if(command != null && command.equals("MESSAGE")){
-                    String token = accessor.getNativeHeader("token").get(0);
-                    log.info("[Stomp] Token : {}", token);
-
-                    if(token == null){
-                        log.info("[Stomp] Token Null : 액세스 토큰이 필요합니다.");
-                        return message;
-                    }
-                }
-
-                return message;
-            }
-        });
-    }
-
 }

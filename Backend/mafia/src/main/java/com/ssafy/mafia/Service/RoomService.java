@@ -80,19 +80,17 @@ public class RoomService {
 
     // 방 생성
     public SettingsDto createRoom(RoomInfoDto roomInfo, GameInfoDto gameInfo){
-        // database에 roomInfo 집어 넣고 roomSeq return 받기
+        // 방 정보 생성, DB에 넣기
         RoomInfo roomEntity = roomRepo.createRoom(roomInfo);
         roomInfo.setRoomSeq(roomEntity.getRoomSeq());
 
-        // database에 default gameinfo 생성 후 집어넣기
+        // 게임 정보 생성 (기본정보 입력)
         GameInfo gameEntity = gameRepo.createGameInfo(roomEntity);
-
-        gameSockService.createGameManager(roomEntity.getRoomSeq());
 
         // room id { room, game } 으로 묶기
         SettingsDto response = new SettingsDto();
         response.setRoomInfo(roomInfo);
-        response.setGameInfo(gameInfo);
+        response.setGameInfo(new GameInfoDto(gameEntity));
 
         return response;
     }

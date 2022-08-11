@@ -1,30 +1,36 @@
 package com.ssafy.mafia.Game;
 
 import com.google.gson.JsonObject;
+import com.ssafy.mafia.Repository.GameRepo;
+import com.ssafy.mafia.Repository.RoomRepo;
+import com.ssafy.mafia.auth.util.SecurityUtil;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class GameSockService {
-    private Map<Integer, GameManager> roomGameManagerMap = new ConcurrentHashMap<>();
 
-    public void createGameManager(int roomSeq){
-        roomGameManagerMap.put(roomSeq, new GameManager());
-    }
+    private final GameRepo gameRepo;
+    private final RoomRepo roomRepo;
+
 
     public JsonObject start(int roomSeq){
-        GameManager gm = roomGameManagerMap.get(roomSeq);
+        GameManager gm = getGm(roomSeq);
         return gm.start(roomSeq);
     }
 
     public GameManager getGm(int roomSeq){
-        return roomGameManagerMap.get(roomSeq);
+        return gameRepo.getGameManager(roomSeq);
     }
 
     public void endGame(int roomSeq){
-        this.roomGameManagerMap.remove(roomSeq);
+        this.gameRepo.removeGame(roomSeq);
     }
 
 
