@@ -2,6 +2,7 @@ package com.ssafy.mafia.Controller;
 
 
 import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Model.GameInfoDto;
 import com.ssafy.mafia.Model.RoomInfoDto;
 import com.ssafy.mafia.Model.SettingsDto;
 import com.ssafy.mafia.Model.matching_connection.*;
@@ -72,6 +73,8 @@ public class MatchingController {
 
                     //ResponseDto 생성
                     SuccessMatchingResponse successMatchingResponse = new SuccessMatchingResponse();
+                    successMatchingResponse.setData(new SuccessMatchingResponseData());
+                    successMatchingResponse.setHeader(new MatchingHeader());
                     successMatchingResponse.getHeader().setType("RedUserCompleted");
                     successMatchingResponse.getData().setRoomInfo(response.getRoomInfo());
                     successMatchingResponse.getData().setGameInfo(response.getGameInfo());
@@ -86,6 +89,8 @@ public class MatchingController {
                 // 현재 redUserListSize 반환
                 else {
                     MatchingResponse matchingResponse = new MatchingResponse();
+                    matchingResponse.setHeader(new MatchingHeader());
+                    matchingResponse.setData(new MatchingResponseData());
                     matchingResponse.getHeader().setType("RedUserNotCompleted");
                     matchingResponse.getData().setNum(redUserList.size());
                     template.convertAndSend("/sub/game-matching", matchingResponse);
@@ -96,6 +101,8 @@ public class MatchingController {
             else {
                 redUserList.remove(matchingRequset.getData().getUserSeq());
                 MatchingResponse matchingResponse = new MatchingResponse();
+                matchingResponse.setData(new MatchingResponseData());
+                matchingResponse.setHeader(new MatchingHeader());
                 matchingResponse.getHeader().setType("RedUserNotCompleted");
                 matchingResponse.getData().setNum(redUserList.size());
                 template.convertAndSend("/sub/game-matching", matchingResponse);
@@ -116,7 +123,6 @@ public class MatchingController {
                     //방 생성 로직
 
                     SettingsDto settingsDto = new SettingsDto(); //Dto생성
-                    settingsDto.setRoomInfo(new RoomInfoDto());
                     // RoomDto 기본 setting
                     settingsDto.getRoomInfo().setMatching(true);
                     settingsDto.getRoomInfo().setTitle("matchingGame");
@@ -138,6 +144,8 @@ public class MatchingController {
 
                     //ResponseDto 생성
                     SuccessMatchingResponse successMatchingResponse = new SuccessMatchingResponse();
+                    successMatchingResponse.setHeader(new MatchingHeader());
+                    successMatchingResponse.setData(new SuccessMatchingResponseData());
                     successMatchingResponse.getHeader().setType("GeneralUserCompleted");
                     successMatchingResponse.getData().setRoomInfo(response.getRoomInfo());
                     successMatchingResponse.getData().setGameInfo(response.getGameInfo());
@@ -154,13 +162,10 @@ public class MatchingController {
                 // 현재 UserListSize 반환
                 else {
                     MatchingResponse matchingResponse = new MatchingResponse();
-                    System.out.println(matchingResponse + "매칭리스폰응답1");
                     matchingResponse.setHeader(new MatchingHeader());
                     matchingResponse.setData(new MatchingResponseData());
                     matchingResponse.getHeader().setType("GeneralUserNotCompleted");
-                    System.out.println(matchingResponse +  "매칭리스폰응답2");
                     matchingResponse.getData().setNum(userList.size());
-                    System.out.println(matchingResponse + "매칭리스폰스응답3");
                     template.convertAndSend("/sub/game-matching", matchingResponse);
                 }
             }
@@ -169,6 +174,8 @@ public class MatchingController {
                 System.out.println(userList + "디스코넥션했을때 유저 리스트");
                 userList.remove(matchingRequset.getData().getUserSeq());
                 MatchingResponse matchingResponse = new MatchingResponse();
+                matchingResponse.setHeader(new MatchingHeader());
+                matchingResponse.setData(new MatchingResponseData());
                 matchingResponse.getHeader().setType("GeneralUserNotCompleted");
                 matchingResponse.getData().setNum(userList.size());
                 template.convertAndSend("/sub/game-matching", matchingResponse);
