@@ -2,7 +2,7 @@ package com.ssafy.mafia.Game;
 
 import com.google.gson.JsonObject;
 import com.ssafy.mafia.Model.RoomProtocol.GameProgressReq;
-import com.ssafy.mafia.auth.util.SecurityUtil;
+import com.ssafy.mafia.auth.jwt.TokenProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,12 +10,18 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 public class GameSockController {
 
     private static final Logger log = LoggerFactory.getLogger(GameSockController.class);
+
+    @Autowired
+    private TokenProvider tokenProvider;
 
     @Autowired
     private SimpMessagingTemplate template;
@@ -24,29 +30,45 @@ public class GameSockController {
     private GameSockService gameSockService;
 
     @MessageMapping("/room/{room-seq}/game")
-    public void gameControll(@DestinationVariable("room-seq") int roomSeq, @Payload GameProgressReq request) {
-        log.info("[게임 컨트롤러] request data = " + request.toString());
-        int userSeq = SecurityUtil.getCurrentUserId();
-        String type = request.getHeader().getType();
+    public void gameControll(@DestinationVariable("room-seq") int roomSeq, StompHeaderAccessor header, @Payload GameProgressReq payload) {
+        log.info("[게임] Payload : {}", payload.toString());
+
+        String token, type;
+        int userSeq;
+
+        try{
+            type = payload.getHeader().getType();
+            token = header.getNativeHeader("token").get(0);
+            userSeq = Integer.parseInt(tokenProvider.getAuthentication(token).getName());
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            log.error("[게임] 요청 데이터가 잘못되었습니다.");
+            return;
+        }
 
         if(type == null){
-            log.error("[게임 컨트롤러] null request");
-            template.convertAndSend("/sub/room/" + roomSeq + "/game", "잘못된 데이터로 요청중입니다.");
+            log.error("[게임] Type null");
+            template.convertAndSend("/sub/room/" + roomSeq + "/game", "요청 에러 발생");
             return;
         }
 
         if(type.equals("start")){
-            log.info("[게임 컨트롤러] 방 {} - 게임 시작 요청", roomSeq);
-            JsonObject res = gameSockService.start(roomSeq);
-            if(res != null)
+            log.info("[게임] 방 {} - 게임 시작 요청", roomSeq);
+            try{
+                JsonObject res = gameSockService.start(roomSeq);
                 template.convertAndSend("/sub/room/" + roomSeq + "/game", res);
-            else
+            } catch (Exception e){
                 template.convertAndSend("/sub/room/" + roomSeq + "/game", "게임 시작 오류");
+                log.error("[게임] 방 {} : 게임 시작 오류", roomSeq);
+                e.printStackTrace();
+            }
             return;
         }
 
         if(type.equals("day")){
-            log.info("[게임 컨트롤러] room({}) user({}) 낮을 시작할 준비가 되었습니다.", roomSeq, userSeq);
+            log.info("[게임 컨트롤러] room({}) user({}) Day 신호 전송", roomSeq, userSeq);
+
         }
 
         if(type.equals("vote")){
@@ -54,7 +76,7 @@ public class GameSockController {
         }
 
         if(type.equals("vote-result")){
-            log.info("[게임 컨트롤러] room({}) 투표 정보 {} -> {}", request.getData().getNickname(), request.getData().getTarget());
+            log.info("[게임 컨트롤러] room({}) 투표 정보 {} -> {}", payload.getData().getNickname(), payload.getData().getTarget());
         }
 
         if(type.equals("gameover")){

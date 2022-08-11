@@ -16,8 +16,6 @@ public class GameSockService {
 
     public JsonObject start(int roomSeq){
         GameManager gm = roomGameManagerMap.get(roomSeq);
-        if(gm == null)
-            return null;
         return gm.start(roomSeq);
     }
 
