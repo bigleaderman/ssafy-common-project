@@ -37,10 +37,6 @@ public class MatchingController {
 
     @MessageMapping("/game-matching")
     public void matching(@Payload MatchingRequset matchingRequset) {
-        System.out.println(matchingRequset);
-        System.out.println(matchingRequset.getData());
-        System.out.println(matchingRequset.getHeader());
-
         // red 유저
         if (matchingRequset.getData().getIsRedUser() == 1){
 
@@ -116,6 +112,7 @@ public class MatchingController {
 
                 userList.add(matchingRequset.getData().getUserSeq());
                 System.out.println(userList+"코낵션했을때 유저 리스트");
+                System.out.println(userList.size() + "유저리스트 사이즈");
                 // 방생성
                 if (userList.size() == 6 ) {
                     //방 생성 로직
@@ -158,9 +155,11 @@ public class MatchingController {
                 // 현재 UserListSize 반환
                 else {
                     MatchingResponse matchingResponse = new MatchingResponse();
+                    System.out.println(matchingResponse + "매칭리스폰응답1");
                     matchingResponse.getHeader().setType("GeneralUserNotCompleted");
+                    System.out.println(matchingResponse +  "매칭리스폰응답2");
                     matchingResponse.getData().setNum(userList.size());
-                    System.out.println(matchingResponse+"매칭리스폰스응답");
+                    System.out.println(matchingResponse + "매칭리스폰스응답3");
                     template.convertAndSend("/sub/game-matching", matchingResponse);
                 }
             }
