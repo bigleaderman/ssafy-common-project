@@ -107,8 +107,10 @@ public class MatchingController {
         // 일반 유저
         else {
             if (matchingRequset.getHeader().getType() == "connection") {
+                System.out.println(matchingRequset+ "1111");
 
                 userList.add(matchingRequset.getData().getUserSeq());
+                System.out.println(userList+ "2222");
                 // 방생성
                 if (userList.size() == 6 ) {
                     //방 생성 로직
@@ -153,6 +155,7 @@ public class MatchingController {
                     MatchingResponse matchingResponse = new MatchingResponse();
                     matchingResponse.getHeader().setType("GeneralUserNotCompleted");
                     matchingResponse.getData().setNum(userList.size());
+                    System.out.println(matchingResponse+ "333");
                     template.convertAndSend("/sub/game-matching", matchingResponse);
                 }
             }
