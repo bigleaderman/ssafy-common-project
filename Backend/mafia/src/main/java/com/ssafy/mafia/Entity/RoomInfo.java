@@ -23,13 +23,4 @@ public class RoomInfo {
     private int capacity;
 
     private int hostUser;
-
-
-    @JsonIgnore
-    @OneToOne(mappedBy = "roomInfoSeq", fetch = FetchType.LAZY)
-    private GameInfo roomInfoSeq;
-
-
-
-
 }

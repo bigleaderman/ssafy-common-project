@@ -50,6 +50,7 @@ public class RoomController {
     @ApiOperation(value = "방 전체 목록 조회", notes = "방 전체 목록 조회")
     @GetMapping("/list")
     public ResponseEntity<List<RoomInfoResponseDto>> getRoomList(){
+        log.info("[Room] 방 전체 목록 조회", service.getAllRooms());
         // 방 목록 조회
         return new ResponseEntity<List<RoomInfoResponseDto>>(service.getAllRooms(), HttpStatus.OK);
     }
@@ -97,6 +98,7 @@ public class RoomController {
     @PostMapping("/{room-seq}/join")
     public ResponseEntity<SettingsDto> joinRoom(@PathVariable("room-seq") int roomSeq){
         int userSeq = SecurityUtil.getCurrentUserId();
+        log.info("[Room] 유저({}) 방 ({}) 입장", userSeq, roomSeq);
         // 방 입장
         return new ResponseEntity<SettingsDto>(service.joinRoom(roomSeq, userSeq), HttpStatus.OK);
     }

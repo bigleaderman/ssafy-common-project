@@ -14,7 +14,6 @@ public class GameInfoDto {
     private int doctorNum;
     private int voteTimeoutSec;
     private int talkTimeoutSec;
-    private int day;
     private int night;
 
     public GameInfoDto() {
@@ -22,20 +21,17 @@ public class GameInfoDto {
         mafiaNum=2;
         policeNum=1;
         doctorNum=1;
-        voteTimeoutSec=15;
-        talkTimeoutSec=15;
-        day=90;
+        voteTimeoutSec=30;
+        talkTimeoutSec=60;
         night=30;
     }
 
     public GameInfoDto(GameInfo gameInfo) {
-        this.gameInfoSeq = gameInfo.getGameInfoSeq();
         this.mafiaNum = gameInfo.getMafiaNum();
         this.policeNum = gameInfo.getPoliceNum();
         this.doctorNum = gameInfo.getDoctorNum();
         this.voteTimeoutSec = gameInfo.getVoteTimeoutSec();
         this.talkTimeoutSec = gameInfo.getTalkTimeoutSec();
-        this.day = gameInfo.getDay();
         this.night = gameInfo.getNight();
     }
 

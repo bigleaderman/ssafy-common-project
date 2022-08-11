@@ -26,6 +26,7 @@ public class LobbySockController {
         }
 
         if(type.equals("join")){
+            template.convertAndSend("/sub/lobby", message);
             template.convertAndSend("/sub/lobby", messageService.join(message.getData()).toString());
             return;
         }

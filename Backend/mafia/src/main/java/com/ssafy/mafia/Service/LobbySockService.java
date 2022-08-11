@@ -21,27 +21,23 @@ public class LobbySockService {
 
     // 채팅 메시지
     public JsonObject chat(LobbyData message){
-        log.info("로비 채팅 메시지 " + message.toString());
+        log.info("[Lobby] 채팅 :: " + message.toString());
 
         // header build
         JsonObject header = new JsonObject();
         header.addProperty("type", "chat");
-
-        log.info("로비 헤더 빌드 완료");
 
         // data build
         JsonObject data = new JsonObject();
         data.addProperty("nickname", message.getNickname());
         data.addProperty("message", message.getMessage());
 
-        log.info("로비 데이터 빌드 완료");
-
         // response build
         JsonObject response = new JsonObject();
         response.add("header", header);
         response.add("data", data);
 
-        log.info("로비 응답 완료" + response.toString());
+        log.info("[Lobby] chat 응답 :: " + response.toString());
 
         return response;
     }
@@ -76,6 +72,8 @@ public class LobbySockService {
         JsonObject response = new JsonObject();
         response.add("header", header);
         response.add("data", data);
+
+        log.info("[Lobby] 입장 응답 :: {}", response.toString());
 
         return response;
     }
