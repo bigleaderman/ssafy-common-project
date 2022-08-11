@@ -39,7 +39,7 @@ public class SessionRepo {
     // 방의 세션 삭제
     public void deleteSession(int roomSeq){
         try{
-            roomSessionMap.get(roomSeq).close();
+//            roomSessionMap.get(roomSeq).close();
         }
         catch (Exception e){
             log.error("세션 close시 에러 발생");
