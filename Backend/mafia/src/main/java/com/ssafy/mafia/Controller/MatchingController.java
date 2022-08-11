@@ -37,7 +37,7 @@ public class MatchingController {
 
     @MessageMapping("/game-matching")
     public void matching(@Payload MatchingRequset matchingRequset) {
-
+        System.out.println(matchingRequset);
         // red 유저
         if (matchingRequset.getData().getIsRedUser() == 1){
 
