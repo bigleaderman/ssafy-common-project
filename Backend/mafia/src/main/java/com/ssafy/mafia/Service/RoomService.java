@@ -3,6 +3,7 @@ package com.ssafy.mafia.Service;
 import com.ssafy.mafia.Entity.GameInfo;
 import com.ssafy.mafia.Entity.RoomInfo;
 import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Game.GameSockService;
 import com.ssafy.mafia.Model.GameInfoDto;
 import com.ssafy.mafia.Model.RoomInfoDto;
 import com.ssafy.mafia.Model.SettingsDto;
@@ -33,6 +34,9 @@ public class RoomService {
 
     @Autowired
     private GameRepo gameRepo;
+
+    @Autowired
+    private GameSockService gameSockService;
 
 
 
@@ -66,8 +70,9 @@ public class RoomService {
         for(RoomInfo room : list) {
             GameInfo game = gameRepo.getGameInfo(room.getRoomSeq());
             if(room.getTitle().contains(filter.getTitle())
-                    && room.getCapacity() >= filter.getCapacity()
-                    && game.getMafiaNum() >= filter.getMafiaNum())
+//                    && room.getCapacity() >= filter.getCapacity()
+//                    && game.getMafiaNum() >= filter.getMafiaNum()
+                )
                 result.add(new RoomInfoDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(), room.getCapacity()));
         }
         return result;
@@ -82,6 +87,7 @@ public class RoomService {
         // database에 default gameinfo 생성 후 집어넣기
         GameInfo gameEntity = gameRepo.createGameInfo(roomEntity);
 
+        gameSockService.createGameManager(roomEntity.getRoomSeq());
 
         // room id { room, game } 으로 묶기
         SettingsDto response = new SettingsDto();
@@ -110,7 +116,6 @@ public class RoomService {
     public SettingsDto createRoom(){
         // Todo : roominfo dto response로 변경
         RoomInfoDto roomInfo = new RoomInfoDto();
-        GameInfoDto gameInfo = new GameInfoDto();
 
         // database에 roomInfo 집어 넣고 roomSeq return 받기
         RoomInfo roomEntity = roomRepo.createRoom(roomInfo);
@@ -118,6 +123,7 @@ public class RoomService {
 
         // database에 default gameinfo 생성 후 집어넣기
         GameInfo gameEntity = gameRepo.createGameInfo(roomEntity);
+        GameInfoDto gameInfo = new GameInfoDto(gameEntity);
 
 
         // room id { room, game } 으로 묶기

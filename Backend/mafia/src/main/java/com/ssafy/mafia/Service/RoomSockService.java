@@ -3,11 +3,13 @@ package com.ssafy.mafia.Service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.ssafy.mafia.Game.GameSockService;
 import com.ssafy.mafia.Model.GameInfoDto;
 import com.ssafy.mafia.Model.RoomInfoDto;
 import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
 import com.ssafy.mafia.Repository.GameRepo;
 import com.ssafy.mafia.Repository.RoomRepo;
+import com.ssafy.mafia.auth.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,9 @@ public class RoomSockService {
 
     @Autowired
     private GameRepo gameRepo;
+
+
+    private UserService userService;
 
     private static final Logger log = LoggerFactory.getLogger(RoomSockService.class);
 
@@ -130,8 +135,18 @@ public class RoomSockService {
     }
     
     // 캐릭터 상호작용 처리
-    public JsonObject interact(int roomSeq, RoomDataDto message){
+    public JsonObject interact(int roomSeq, int userSeq, RoomDataDto message){
         log.info("게임 캐릭터 데이터 " + message.toString());
+
+        // ready 상태로 만들기
+        if(message.getStatus().equals("ready")){
+            roomRepo.seat(roomSeq, Integer.parseInt(message.getChairNum()), userSeq);
+        }
+
+        // ready 취소
+        if(message.getStatus().equals("stand")){
+            roomRepo.stand(roomSeq, Integer.parseInt(message.getChairNum()), userSeq);
+        }
 
 
         // header객체, data 객체 생성
@@ -157,7 +172,7 @@ public class RoomSockService {
                 user.addProperty("y", message.getY());
 
                 users.remove(i);
-                users.add(data);
+                users.add(user);
                 break;
             }
         }
