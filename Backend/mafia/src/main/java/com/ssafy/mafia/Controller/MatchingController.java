@@ -30,8 +30,8 @@ public class MatchingController {
     private List<Integer> redUserList = new ArrayList<Integer>();
     private List<Integer> userList = new ArrayList<Integer>();
 
-    private RoomService roomService;
-    private EntityManager em;
+    private final RoomService roomService;
+    private final EntityManager em;
 
     private final SessionService sessionService;
 
