@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,7 +22,7 @@ public class RankService {
     private final EntityManager em;
 
     public List searchTopRank() {
-         Query query = em.createQuery("SELECT u.nickname, u.winCount, u.loseCount, u.rankPoint FROM User u ORDER BY u.rankPoint DESC").setMaxResults(10);
+         Query query = em.createQuery("SELECT u.nickname, u.winCount, u.loseCount, u.rankPoint FROM User u ORDER BY u.rankPoint DESC");
          List resultList = query.getResultList();
         return resultList;
     }
@@ -39,4 +40,19 @@ public class RankService {
         }
         return RankDto.rankConvert(user);
     }
+
+//    public List<RankDto> searchUserRank(String username) {
+//        try{
+//
+//            List<User> userList = em.createQuery("SELECT u FROM User u ORDER BY u.rankPoint DESC",User.class).getResultList();
+//            List<RankDto> rankUserList = new ArrayList<>();
+//            for (int i = 0; i < userList.size(); i++) {
+//                if (userList.get(i).getNickname().contains(username)) {
+//                    rankUserList.add(RankDto.rankConvert(userList.get(i)));
+//
+//                }
+//            }
+//        }
+//
+//    }
 }

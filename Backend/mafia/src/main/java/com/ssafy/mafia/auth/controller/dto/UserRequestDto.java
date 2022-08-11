@@ -33,6 +33,8 @@ public class UserRequestDto {
                 .password(passwordEncoder.encode(password))
                 .createdAt(LocalDate.now())
                 .authority(Authority.ROLE_USER)
+                .isOauth(false)
+                .isAuth(false)
                 .build();
     }
 
@@ -42,6 +44,7 @@ public class UserRequestDto {
                 .password(passwordEncoder.encode(password))
                 .createdAt(LocalDate.now())
                 .isAuth(true)
+                .isOauth(true)
                 .authority(Authority.ROLE_USER)
                 .build();
     }
