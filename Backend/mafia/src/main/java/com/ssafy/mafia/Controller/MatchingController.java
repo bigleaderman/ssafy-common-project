@@ -111,9 +111,6 @@ public class MatchingController {
         // 일반 유저
         else {
             if (matchingRequset.getHeader().getType().equals("connection")) {
-                System.out.println(matchingRequset.getHeader().getType()=="connection" + "true or false");
-                System.out.println(matchingRequset.getHeader().getType() + "헤더타입");
-                System.out.println(matchingRequset+ "일반유저");
 
                 userList.add(matchingRequset.getData().getUserSeq());
                 System.out.println(userList+"코낵션했을때 유저 리스트");
@@ -127,11 +124,11 @@ public class MatchingController {
                     settingsDto.getRoomInfo().setMatching(true);
                     settingsDto.getRoomInfo().setTitle("matchingGame");
                     settingsDto.getRoomInfo().setHostUser(userList.get(0));
-
+                    System.out.println(settingsDto + "세팅Dto");
                     // 방생성
                     SettingsDto response = roomService.createRoom(settingsDto.getRoomInfo(), settingsDto.getGameInfo());
                     roomService.setHost(response.getRoomInfo().getRoomSeq(), userList.get(0));
-
+                    System.out.println(response + "응답어떻게 받아오는지");
                     //오픈비두 세션 생성
                     sessionService.createSession(response.getRoomInfo().getRoomSeq());
 
@@ -150,6 +147,7 @@ public class MatchingController {
                     successMatchingResponse.getData().setRoomInfo(response.getRoomInfo());
                     successMatchingResponse.getData().setGameInfo(response.getGameInfo());
                     successMatchingResponse.getData().setUserInfo(userInfoList);
+                    System.out.println(successMatchingResponse + "총응답");
                     template.convertAndSend("/sub/game-matching/", successMatchingResponse);
                     // List 비우기
                     userList.clear();
