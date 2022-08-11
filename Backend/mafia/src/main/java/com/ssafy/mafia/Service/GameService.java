@@ -28,8 +28,13 @@ public class GameService {
         return null;
     }
 
+    // 게임 설정 변경 json 패러미터
     public GameInfoDto modifyGameSetting(int roomSeq, JsonObject gameInfo){
-
         return null;
+    }
+
+    // 게임 설정 불러오기
+    public GameInfo getGameSetting(int roomSeq){
+        return gameRepo.getGameInfo(roomSeq);
     }
 }

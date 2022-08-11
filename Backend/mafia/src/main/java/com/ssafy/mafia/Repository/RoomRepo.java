@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.ssafy.mafia.Entity.RoomInfo;
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.RoomInfoDto;
+import com.ssafy.mafia.Model.RoomManager;
 import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -22,13 +23,8 @@ public class RoomRepo {
     @Autowired
     private EntityManager em;
 
-    // 방별 유저를 위한 map
-    private final Map<Integer, List<Integer>> map = new ConcurrentHashMap<>();
-    private final Map<Integer, JsonArray> roomUserMap = new ConcurrentHashMap<>();
-    
-    // 앉을 수 있는 좌석
-    private final Map<Integer, List<Integer>> seat = new ConcurrentHashMap<>();
-
+    // 방별 정보를 담고 있는 map
+    private final Map<Integer, RoomManager> map = new ConcurrentHashMap<>();
 
     /*
     *
@@ -56,9 +52,7 @@ public class RoomRepo {
         em.flush();
 
         // 방 생성
-        map.put(entity.getRoomSeq(), new ArrayList<>());
-        roomUserMap.put(entity.getRoomSeq(), new JsonArray());
-        seat.put(entity.getRoomSeq(), new ArrayList<>());
+        map.put(entity.getRoomSeq(), new RoomManager());
         
         // 데이터 리턴
         return entity;
@@ -98,7 +92,6 @@ public class RoomRepo {
     // 방 삭제
     public void deleteRoom(int roomSeq){
         map.remove(roomSeq);
-        roomUserMap.remove(roomSeq);
         em.remove(em.find(RoomInfo.class, roomSeq));
     }
 
@@ -109,19 +102,18 @@ public class RoomRepo {
 
     // 방 입장
     public void joinRoom(int roomSeq, int userSeq){
-        map.get(roomSeq).add(userSeq);
+        map.get(roomSeq).addUser(userSeq);
     }
 
 
     // 방 퇴장
     public void leavRoom(int roomSeq, int userSeq){
-        int idx = map.get(roomSeq).indexOf(userSeq);
-        map.get(roomSeq).remove(idx);
+        map.get(roomSeq).removeUser(userSeq);
     }
 
     // 방 전체 인원 조회
     public List<Integer> getAllUsersOfRoom(int roomSeq){
-        return map.get(roomSeq);
+        return map.get(roomSeq).getUsers();
     }
 
 
@@ -137,52 +129,42 @@ public class RoomRepo {
 
     // 방 정보 업데이트
     public void updateRoom(int roomSeq, JsonArray list){
-        this.roomUserMap.put(roomSeq, list);
+        this.map.get(roomSeq).setRoomUser(list);
     }
+
 
     // 방에서 유저 삭제
     public void deleteUserSock(int roomSeq, RoomDataDto message){
-        JsonArray users = this.roomUserMap.get(roomSeq);
-
-        for(int i = 0; i < users.size(); i++){
-            JsonObject o = users.get(i).getAsJsonObject();
-            if(o.get("nickname").equals(message.getNickname())){
-                users.remove(i);
-                break;
-            }
-        }
-
-        this.roomUserMap.put(roomSeq, users);
+        this.map.get(roomSeq).removeUser(message);
     }
 
     public void addUserSock(int roomSeq, RoomDataDto message){
-        JsonObject user = new JsonObject();
-        user.addProperty("nickname", message.getNickname());
-        user.addProperty("status", "move");
-        user.addProperty("color", message.getColor());
-        user.addProperty("x", 0.0);
-        user.addProperty("y", 0.0);
-
-        this.roomUserMap.get(roomSeq).add(user);
+        this.map.get(roomSeq).addUser(message);
     }
 
+
     public JsonArray getAllUsersOfRoomSock(int roomSeq){
-        return this.roomUserMap.get(roomSeq);
+        return this.map.get(roomSeq).getRoomUser();
     }
 
     // 유저 ready
-    public void userSeat(int roomSeq, int seatNum, int userSeq){
-        seat.get(roomSeq).set(seatNum, userSeq);
+    public void seat(int roomSeq, int seatNum, int userSeq){
+        this.map.get(roomSeq).seat(userSeq, seatNum);
     }
 
     // 유저 레디 해제
-    public void userStand(int roomSeq, int seatNum, int userSeq){
-        seat.get(roomSeq).set(seatNum, 0);
+    public void stand(int roomSeq, int seatNum, int userSeq){
+        this.map.get(roomSeq).stand(userSeq, seatNum);
     }
 
     // 남은 좌석 정보 확인
-    public List<Integer> getSeatInfo(int roomSeq){
-        return seat.get(roomSeq);
+    public int[] getSeatInfo(int roomSeq){
+        return this.map.get(roomSeq).getSeatState();
+    }
+
+    // 앉은 좌석 수 확인
+    public int getSeatCnt(int roomSeq){
+        return this.map.get(roomSeq).getSeatCnt();
     }
 
 }

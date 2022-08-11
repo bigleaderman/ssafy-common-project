@@ -32,13 +32,13 @@ public class GameInfo {
 
     // default values
     public GameInfo() {
-        mafiaNum = 1;
-        policeNum = 0;
-        doctorNum = 0;
-        voteTimeoutSec = 120;
-        talkTimeoutSec = 30;
+        mafiaNum = 2;
+        policeNum = 1;
+        doctorNum = 1;
+        voteTimeoutSec = 30;
+        talkTimeoutSec = 60;
         day = 0;
-        night = 0;
+        night = 30;
     }
 
     @JsonIgnore
