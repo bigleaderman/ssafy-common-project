@@ -4,16 +4,20 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Slf4j
 public class RoomManager {
     private List<Integer> users;
     private JsonArray roomUser;
     private int[] seatState;
     private int seatCnt;
+
+    private int roomSeq;
 
     public RoomManager(){
         users = new ArrayList<>();
@@ -23,7 +27,10 @@ public class RoomManager {
     }
 
     public void addUser(int userSeq){
-        users.add(userSeq);
+        if(!users.contains(userSeq))
+            users.add(userSeq);
+        else
+            log.error("[Room] 이미 방에 존재하는 유저 입니다.");
     }
 
     public void addUser(RoomDataDto message){
@@ -33,7 +40,6 @@ public class RoomManager {
         user.addProperty("color", message.getColor());
         user.addProperty("x", 0.0);
         user.addProperty("y", 0.0);
-
         roomUser.add(user);
     }
 

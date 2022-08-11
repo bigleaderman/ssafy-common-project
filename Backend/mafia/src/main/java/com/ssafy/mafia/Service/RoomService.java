@@ -13,6 +13,7 @@ import com.ssafy.mafia.Repository.RoomRepo;
 import com.ssafy.mafia.Model.*;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ import java.util.List;
 *
 * */
 @Service
+@Slf4j
 public class RoomService {
 
     @Autowired
@@ -52,7 +54,9 @@ public class RoomService {
         if(list == null) return null;
         // 필요한 정보만 build 후 리턴
         for(RoomInfo room : list) {
+            log.info("[Room] - {}", room);
             RoomInfoResponseDto dto = new RoomInfoResponseDto(room);
+
 
             if(roomRepo.getAllUsersOfRoom(room.getRoomSeq()) == null)
                 dto.setParticipants(0);

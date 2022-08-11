@@ -8,6 +8,7 @@ import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.RoomInfoDto;
 import com.ssafy.mafia.Model.RoomManager;
 import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +18,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
 @Transactional
+@Slf4j
 public class RoomRepo {
 
     // db 접근을 위한 entity manager
@@ -24,7 +26,7 @@ public class RoomRepo {
     private EntityManager em;
 
     // 방별 정보를 담고 있는 map
-    private final Map<Integer, RoomManager> map = new ConcurrentHashMap<>();
+    private Map<Integer, RoomManager> map = new ConcurrentHashMap<>();
 
     /*
     *
@@ -51,8 +53,9 @@ public class RoomRepo {
         // primary key 생성
         em.flush();
 
-        // 방 생성
+        // 방 관리자 생성
         map.put(entity.getRoomSeq(), new RoomManager());
+        map.get(entity.getRoomSeq()).setRoomSeq(entity.getRoomSeq());
         
         // 데이터 리턴
         return entity;
@@ -113,6 +116,12 @@ public class RoomRepo {
 
     // 방 전체 인원 조회
     public List<Integer> getAllUsersOfRoom(int roomSeq){
+        RoomManager rm = map.get(roomSeq);
+        if(rm == null){
+            log.error("[RoomRepo] 방({})이 없습니다.", roomSeq);
+            return null;
+        }
+        log.info("[RoomRepo] 방({}) 전체 인원 조회 :: {}", roomSeq, rm);
         return map.get(roomSeq).getUsers();
     }
 
@@ -138,6 +147,7 @@ public class RoomRepo {
         this.map.get(roomSeq).removeUser(message);
     }
 
+    // 유저 추가
     public void addUserSock(int roomSeq, RoomDataDto message){
         this.map.get(roomSeq).addUser(message);
     }
