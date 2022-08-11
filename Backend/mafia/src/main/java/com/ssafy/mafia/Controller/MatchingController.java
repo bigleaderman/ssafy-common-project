@@ -134,6 +134,7 @@ public class MatchingController {
                     // 방생성
                     SettingsDto response = roomService.createRoom(settingsDto.getRoomInfo(), settingsDto.getGameInfo());
                     roomService.setHost(response.getRoomInfo().getRoomSeq(), userList.get(0));
+                    roomService.setRoomPassword(response.getRoomInfo().getRoomSeq(), response.getRoomInfo().getPassword());
                     System.out.println(response + "응답어떻게 받아오는지");
                     //오픈비두 세션 생성
                     sessionService.createSession(response.getRoomInfo().getRoomSeq());
