@@ -15,6 +15,7 @@ import javax.persistence.EntityManager;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -39,7 +40,7 @@ public class NoticeBoardRepo {
             noticeListResponseDto.setWriter(writer.getNickname());
             result.add(noticeListResponseDto);
         }
-
+        Collections.reverse(result);
         log.info("전체 글 목록을 반환합니다.");
         return result;
     }
@@ -128,7 +129,7 @@ public class NoticeBoardRepo {
             noticeListResponseDto.setWriter(writer.getNickname());
             result.add(noticeListResponseDto);
         }
-
+        Collections.reverse(result);
         log.info("글목록을 반환합니다.");
         return result;
     }

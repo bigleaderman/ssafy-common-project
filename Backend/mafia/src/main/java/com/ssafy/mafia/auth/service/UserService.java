@@ -87,7 +87,6 @@ public class UserService {
 
     }
 
-
     @Transactional(readOnly = true)
     public User userInformation(String nickname) {
         return userRepository.findByNickname(nickname)
@@ -97,7 +96,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public List findByNickname(String nick) {
         try {
-            return em.createQuery("SELECT u.nickname, u.winCount, u.loseCount, u.rankPoint, u.isRedUser, u.nowRoomSeq FROM User u WHERE u.nickname LIKE CONCAT('%', :nick, '%')")
+            return em.createQuery("SELECT u FROM User u WHERE u.nickname LIKE CONCAT('%', :nick, '%')", User.class)
                     .setParameter("nick", nick).getResultList();
         } catch (NoResultException e) {
             throw new NoResultException();

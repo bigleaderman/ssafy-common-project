@@ -48,6 +48,7 @@ public class KakaoUserController {
 
         }
         String email = userRequestDto.getEmail();
+        System.out.println(email);
         Optional<User> user = userRepository.findByEmail(email);
 
         if (!userRepository.existsByEmail(userRequestDto.getEmail())){

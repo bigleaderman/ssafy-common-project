@@ -34,6 +34,7 @@ public class User {
         loseCount = 0;
         reportedCount = 0;
         rankPoint = 0;
+        isOauth = false;
     }
 
     @Id
@@ -65,6 +66,8 @@ public class User {
     private boolean isLogin;
 
     private boolean isRedUser;
+
+    private boolean isOauth;
 
     private int winCount;
 

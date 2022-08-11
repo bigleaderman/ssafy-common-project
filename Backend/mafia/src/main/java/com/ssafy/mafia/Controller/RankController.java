@@ -16,7 +16,7 @@ public class RankController {
     private final RankService rankService;
 
     @GetMapping("/game/topRank")
-    @ApiOperation(value = "탑10랭크유저정보", notes = "랭크 유저정보 list로 반환하기", response = List.class)
+    @ApiOperation(value = "전체 유저 랭크 정보", notes = "랭크 유저정보 list로 반환하기", response = List.class)
     public List searchTopRank () {
         return rankService.searchTopRank();
     }
@@ -26,4 +26,10 @@ public class RankController {
     public RankDto changeRank(@RequestBody boolean result) {
         return rankService.changeRank(result);
     }
+
+//    @PostMapping("/game/userRanl")
+//    @ApiOperation(value = "이 정보를 가진 유저의 랭킹 보여주기", notes = "랭크 유저정보 list 반환하기", response = List.class)
+//    public List searchUserRank (@RequestBody String username) {
+//        return rankService.searchUserRank;
+//    }
 }

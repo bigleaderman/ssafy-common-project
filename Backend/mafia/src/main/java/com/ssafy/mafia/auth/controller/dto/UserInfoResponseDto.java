@@ -37,9 +37,12 @@ public class UserInfoResponseDto {
     @ApiParam(value = "rankPoint", required = true)
     private  int rankPoint;
 
+    @ApiParam(value = "자체회원인지, Oauth 회원인지", required = true)
+    private boolean isOauth;
+
     public static UserInfoResponseDto convert(User user){
         return new UserInfoResponseDto(user.getUserSeq(),user.getAuthority(), user.getEmail(), user.getNickname(),
-                user.isAuth(), user.isRedUser(), user.getWinCount(), user.getLoseCount(), user.getRankPoint() );
+                user.isAuth(), user.isRedUser(), user.getWinCount(), user.getLoseCount(), user.getRankPoint(), user.isOauth() );
     }
 
 }
