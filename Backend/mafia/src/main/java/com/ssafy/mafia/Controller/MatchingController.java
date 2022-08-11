@@ -2,11 +2,9 @@ package com.ssafy.mafia.Controller;
 
 
 import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Model.RoomInfoDto;
 import com.ssafy.mafia.Model.SettingsDto;
-import com.ssafy.mafia.Model.matching_connection.MatchingRequset;
-import com.ssafy.mafia.Model.matching_connection.MatchingResponse;
-import com.ssafy.mafia.Model.matching_connection.SuccessMatchingResponse;
-import com.ssafy.mafia.Model.matching_connection.SuccessMatchingResponseData;
+import com.ssafy.mafia.Model.matching_connection.*;
 import com.ssafy.mafia.Service.RoomService;
 import com.ssafy.mafia.Service.SessionService;
 import com.ssafy.mafia.auth.controller.dto.UserInfoResponseDto;
@@ -118,6 +116,7 @@ public class MatchingController {
                     //방 생성 로직
 
                     SettingsDto settingsDto = new SettingsDto(); //Dto생성
+                    settingsDto.setRoomInfo(new RoomInfoDto());
                     // RoomDto 기본 setting
                     settingsDto.getRoomInfo().setMatching(true);
                     settingsDto.getRoomInfo().setTitle("matchingGame");
@@ -156,6 +155,8 @@ public class MatchingController {
                 else {
                     MatchingResponse matchingResponse = new MatchingResponse();
                     System.out.println(matchingResponse + "매칭리스폰응답1");
+                    matchingResponse.setHeader(new MatchingHeader());
+                    matchingResponse.setData(new MatchingResponseData());
                     matchingResponse.getHeader().setType("GeneralUserNotCompleted");
                     System.out.println(matchingResponse +  "매칭리스폰응답2");
                     matchingResponse.getData().setNum(userList.size());
