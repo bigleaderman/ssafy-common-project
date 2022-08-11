@@ -46,8 +46,6 @@ public class RoomSockController {
             return;
         }
 
-
-
         if(type.equals("join")){
             template.convertAndSend("/sub/room/" + roomSeq, roomSockService.joinRoom(roomSeq, message.getData()).toString());
             template.convertAndSend("/sub/room/" + roomSeq, roomSockService.getUserlist(roomSeq).toString());

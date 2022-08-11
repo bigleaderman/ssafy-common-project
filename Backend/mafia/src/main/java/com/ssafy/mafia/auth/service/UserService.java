@@ -33,6 +33,10 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
     }
 
+    public User getUserByNickname(String nickname){
+        return em.createQuery("select u from User u where u.nickname=:nickname", User.class).getSingleResult();
+    }
+
     @Transactional(readOnly=true)
     public User getMyInfo() {
         // SecurityUtil.getCurrentUserId() 여기서 UserSeq를 받아오기 때문에

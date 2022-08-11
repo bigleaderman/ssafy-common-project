@@ -3,6 +3,7 @@ package com.ssafy.mafia.Service;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Game.GameSockService;
 import com.ssafy.mafia.Model.GameInfoDto;
 import com.ssafy.mafia.Model.RoomInfoDto;
@@ -33,8 +34,11 @@ public class RoomSockService {
     public JsonObject joinRoom(int roomSeq, RoomDataDto message){
         log.info("방 입장 유저 데이터 " + message.toString());
 
+        User user = userService.getUserByNickname(message.getNickname());
+
         // 유저 방에다 추가
         roomRepo.addUserSock(roomSeq, message);
+        roomRepo.joinRoom(roomSeq, user.getUserSeq());
 
 
         // header객체, data 객체 생성
@@ -61,8 +65,11 @@ public class RoomSockService {
     public JsonObject leaveRoom(int roomSeq, RoomDataDto message){
         log.info("방 퇴장 유저 데이터 " + message.toString());
 
+        User user = userService.getUserByNickname(message.getNickname());
+
         // 유저 삭제
         roomRepo.deleteUserSock(roomSeq, message);
+        roomRepo.leavRoom(roomSeq, user.getUserSeq());
 
         // header객체, data 객체 생성
         JsonObject header = new JsonObject();
