@@ -5,6 +5,5 @@ import lombok.Data;
 @Data
 public class MatchingRequestData {
     private int userSeq;
-    private int isRedUser;
 
 }
