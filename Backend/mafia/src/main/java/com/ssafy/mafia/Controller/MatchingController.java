@@ -26,8 +26,6 @@ import java.util.List;
 public class MatchingController {
     private final SimpMessagingTemplate template;
 
-
-    private List<Integer> redUserList = new ArrayList<Integer>();
     private List<Integer> userList = new ArrayList<Integer>();
 
     private final RoomService roomService;
