@@ -65,10 +65,12 @@ public class GameRepo {
         em.remove(entity);
     }
 
+    // 게임 매니저 리턴
     public GameManager getGameManager(int roomSeq){
         return this.gmMap.get(roomSeq);
     }
 
+    // 게임 제거
     public void removeGame(int roomSeq){
         this.gmMap.remove(roomSeq);
     }

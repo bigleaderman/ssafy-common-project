@@ -11,34 +11,31 @@ import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
 import com.ssafy.mafia.Repository.GameRepo;
 import com.ssafy.mafia.Repository.RoomRepo;
 import com.ssafy.mafia.auth.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class RoomSockService {
 
-    @Autowired
-    private RoomRepo roomRepo;
-
-    @Autowired
-    private GameRepo gameRepo;
-
-
-    private UserService userService;
+    private final RoomRepo roomRepo;
+    private final GameRepo gameRepo;
+    private final UserService userService;
 
     private static final Logger log = LoggerFactory.getLogger(RoomSockService.class);
 
     // 방 입장 메시지 처리
     public JsonObject joinRoom(int roomSeq, RoomDataDto message){
-        log.info("방 입장 유저 데이터 " + message.toString());
+        log.info("[Room] 입장 :: " + message.toString());
 
         User user = userService.getUserByNickname(message.getNickname());
 
         // 유저 방에다 추가
-        roomRepo.addUserSock(roomSeq, message);
-        roomRepo.joinRoom(roomSeq, user.getUserSeq());
+        roomRepo.addUserSock(roomSeq, user.getUserSeq(), message);
+        roomRepo.joinRoom(roomSeq, user);
 
 
         // header객체, data 객체 생성
@@ -49,7 +46,7 @@ public class RoomSockService {
         JsonObject response = new JsonObject();
 
         // header json build
-        header.addProperty("type", "leave");
+        header.addProperty("type", "join");
 
         // data json build
         data.addProperty("nickname", message.getNickname());
