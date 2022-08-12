@@ -104,8 +104,8 @@ public class RoomRepo {
     }
 
     // 방 입장
-    public void joinRoom(int roomSeq, int userSeq){
-        map.get(roomSeq).addUser(userSeq);
+    public void joinRoom(int roomSeq, User user){
+        map.get(roomSeq).addUser(user);
     }
 
 
@@ -148,8 +148,8 @@ public class RoomRepo {
     }
 
     // 유저 추가
-    public void addUserSock(int roomSeq, RoomDataDto message){
-        this.map.get(roomSeq).addUser(message);
+    public void addUserSock(int roomSeq, int userSeq, RoomDataDto message){
+        this.map.get(roomSeq).addUser(userSeq, message);
     }
 
 

@@ -13,6 +13,8 @@ import com.ssafy.mafia.Repository.RoomRepo;
 import com.ssafy.mafia.Model.*;
 
 
+import com.ssafy.mafia.auth.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,16 +31,14 @@ import java.util.List;
 * */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class RoomService {
 
-    @Autowired
-    private RoomRepo roomRepo;
+    private final RoomRepo roomRepo;
+    private final GameRepo gameRepo;
+    private final UserService userService;
 
-    @Autowired
-    private GameRepo gameRepo;
-
-    @Autowired
-    private GameSockService gameSockService;
+    private final GameSockService gameSockService;
 
 
 
@@ -166,7 +166,7 @@ public class RoomService {
     // 방 입장
     public SettingsDto joinRoom(int roomSeq, int userSeq){
         // 방에 유저 추가
-        roomRepo.joinRoom(roomSeq, userSeq);
+        roomRepo.joinRoom(roomSeq, userService.getUserInfo(userSeq));
 
         // 내부 객체 생성
         RoomInfoResponseDto roomInfo = new RoomInfoResponseDto(roomRepo.getRoomInfo(roomSeq));

@@ -33,8 +33,12 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
     }
 
+    public User getUserInfo(int userSeq){
+        return em.find(User.class, userSeq);
+    }
+
     public User getUserByNickname(String nickname){
-        return em.createQuery("select u from User u where u.nickname=:nickname", User.class).getSingleResult();
+        return em.createQuery("select u from User u where u.nickname=:nickname", User.class).setParameter("nickname", nickname).getSingleResult();
     }
 
     @Transactional(readOnly=true)
