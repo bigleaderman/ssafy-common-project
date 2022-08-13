@@ -35,7 +35,6 @@ public class RoomSockService {
 
         // 유저 방에다 추가
         roomRepo.addUserSock(roomSeq, user.getUserSeq(), message);
-        roomRepo.joinRoom(roomSeq, user);
 
 
         // header객체, data 객체 생성
@@ -50,6 +49,9 @@ public class RoomSockService {
 
         // data json build
         data.addProperty("nickname", message.getNickname());
+        data.addProperty("color", message.getColor());
+        data.addProperty("x", message.getX());
+        data.addProperty("y", message.getY());
 
         // reponse json build
         response.add("header", header);
@@ -59,14 +61,14 @@ public class RoomSockService {
     }
 
     // 방 퇴장 메시지 처리
-    public JsonObject leaveRoom(int roomSeq, RoomDataDto message){
-        log.info("방 퇴장 유저 데이터 " + message.toString());
+    public JsonObject leaveRoom(int roomSeq, int userSeq){
+        log.info("[Room {}] {} 퇴장", roomSeq, userSeq);
 
-        User user = userService.getUserByNickname(message.getNickname());
+        User user = userService.getUserInfo(userSeq);
 
         // 유저 삭제
-        roomRepo.deleteUserSock(roomSeq, message);
-        roomRepo.leavRoom(roomSeq, user.getUserSeq());
+        roomRepo.deleteUserSock(roomSeq, userSeq);
+        roomRepo.leavRoom(roomSeq, userSeq);
 
         // header객체, data 객체 생성
         JsonObject header = new JsonObject();
@@ -79,7 +81,7 @@ public class RoomSockService {
         header.addProperty("type", "leave");
 
         // data json build
-        data.addProperty("nickname", message.getNickname());
+        data.addProperty("nickname", user.getNickname());
 
         // reponse json build
         response.add("header", header);
@@ -113,7 +115,7 @@ public class RoomSockService {
         return response;
     }
 
-    // 방에 있는 모든 유저 리스트 반환
+    // Todo : 방에 있는 모든 유저 리스트 반환
     public JsonObject getUserlist(int roomSeq){
         log.info("유저목록 불러오기 요청 " + roomSeq + " 번방");
 
@@ -140,55 +142,36 @@ public class RoomSockService {
     
     // 캐릭터 상호작용 처리
     public JsonObject interact(int roomSeq, int userSeq, RoomDataDto message){
-        log.info("게임 캐릭터 데이터 " + message.toString());
-
         // ready 상태로 만들기
         if(message.getStatus().equals("ready")){
+            log.info("[Room {}] {} ready", roomSeq, message.getNickname());
             roomRepo.seat(roomSeq, Integer.parseInt(message.getChairNum()), userSeq);
         }
 
         // ready 취소
         if(message.getStatus().equals("stand")){
+            log.info("[Room {}] {} stand", roomSeq, message.getNickname());
             roomRepo.stand(roomSeq, Integer.parseInt(message.getChairNum()), userSeq);
         }
 
-
-        // header객체, data 객체 생성
+        // return data
         JsonObject header = new JsonObject();
+        header.addProperty("type", "interact");
+
         JsonObject data = new JsonObject();
-        JsonArray users = roomRepo.getAllUsersOfRoomSock(roomSeq);
+        data.addProperty("x", message.getX());
+        data.addProperty("y", message.getY());
+        data.addProperty("nickname", message.getNickname());
+        data.addProperty("status", message.getStatus());
+        data.addProperty("color", message.getColor());
 
-        // 응답 객체 생성
-        JsonObject response = new JsonObject();
+        JsonObject jo = new JsonObject();
+        jo.add("header", header);
+        jo.add("data", data);
 
-        // header json build
-        header.addProperty("type", "list");
-
-        // data json build
-        for(int i = 0; i < users.size(); i++){
-            JsonObject o = users.get(i).getAsJsonObject();
-            if(o.get("nickname").equals(message.getNickname())){
-                JsonObject user = new JsonObject();
-                user.addProperty("nickname", message.getNickname());
-                user.addProperty("status", message.getStatus());
-                user.addProperty("color", message.getColor());
-                user.addProperty("x", message.getX());
-                user.addProperty("y", message.getY());
-
-                users.remove(i);
-                users.add(user);
-                break;
-            }
-        }
-        roomRepo.updateRoom(roomSeq, users);
-        data.add("users", users);
-
-
-        // reponse json build
-        response.add("header", header);
-        response.add("data", data);
-
-        return response;
+        // list update
+        roomRepo.updateUserSock(roomSeq, userSeq, message);
+        return jo;
     }
 
     // 게임 설정 변경 처리

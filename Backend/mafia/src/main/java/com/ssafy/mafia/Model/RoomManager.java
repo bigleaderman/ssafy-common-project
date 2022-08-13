@@ -27,30 +27,15 @@ public class RoomManager {
         seatCnt = 0;
     }
 
-    public void addUser(User user){
-        if(!users.contains(user.getUserSeq())){
-            users.add(user.getUserSeq());
-            JsonObject userjo = new JsonObject();
-            userjo.addProperty("nickname", user.getNickname());
-            userjo.addProperty("status", "move");
-            userjo.addProperty("color", "black");
-            userjo.addProperty("x", 0.0);
-            userjo.addProperty("y", 0.0);
-            roomUser.add(userjo);
-        }
-        else
-            log.error("[Room] 이미 방에 존재하는 유저 입니다.");
-    }
-
     public void addUser(int userSeq, RoomDataDto message){
         if(!users.contains(userSeq)){
             users.add(userSeq);
             JsonObject user = new JsonObject();
             user.addProperty("nickname", message.getNickname());
-            user.addProperty("status", "move");
+            user.addProperty("status", message.getStatus());
             user.addProperty("color", message.getColor());
-            user.addProperty("x", 0.0);
-            user.addProperty("y", 0.0);
+            user.addProperty("x", message.getX());
+            user.addProperty("y", message.getY());
             roomUser.add(user);
         }
         else
@@ -66,14 +51,9 @@ public class RoomManager {
         }
     }
 
-    public void removeUser(RoomDataDto message){
-        for(int i = 0; i < roomUser.size(); i++){
-            JsonObject o = roomUser.get(i).getAsJsonObject();
-            if(o.get("nickname").equals(message.getNickname())){
-                users.remove(i);
-                break;
-            }
-        }
+    public void updateUser(int userSeq, RoomDataDto message){
+        removeUser(userSeq);
+        addUser(userSeq, message);
     }
 
     public void seat(int userSeq, int seatNum){

@@ -96,7 +96,13 @@ public class RoomRepo {
 
     // 방 입장
     public void joinRoom(int roomSeq, User user){
-        map.get(roomSeq).addUser(user);
+        RoomDataDto dummy = new RoomDataDto();
+        dummy.setNickname(user.getNickname());
+        dummy.setColor("#000000");
+        dummy.setStatus("move");
+        dummy.setX(350.0);
+        dummy.setY(600.0);
+        addUserSock(roomSeq, user.getUserSeq(), dummy);
     }
 
 
@@ -124,15 +130,14 @@ public class RoomRepo {
     * */
 
 
-    // 방 정보 업데이트
-    public void updateRoom(int roomSeq, JsonArray list){
-        this.map.get(roomSeq).setRoomUser(list);
+    public void updateUserSock(int roomSeq, int userSeq, RoomDataDto data){
+
     }
 
 
     // 방에서 유저 삭제
-    public void deleteUserSock(int roomSeq, RoomDataDto message){
-        this.map.get(roomSeq).removeUser(message);
+    public void deleteUserSock(int roomSeq, int userSeq){
+        this.map.get(roomSeq).removeUser(userSeq);
     }
 
     // 유저 추가

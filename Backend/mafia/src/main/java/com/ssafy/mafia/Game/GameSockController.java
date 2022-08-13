@@ -66,7 +66,7 @@ public class GameSockController {
                 log.info("[Game {}] 세션 연결 완료", roomSeq);
                 template.convertAndSend(dest, jo.toString());
 
-                List<String[]> list = gameSockService.assignRole(roomSeq);
+                List<String[]> list = gameSockService.assignRoles(roomSeq);
                 for(String[] info : list){
                     String nickname = info[0];
                     String role = info[1];
@@ -84,7 +84,7 @@ public class GameSockController {
         }
 
         if(type.equals("role")){
-            JsonObject jo = gameSockService.checkRole(roomSeq, userSeq);
+            JsonObject jo = gameSockService.checkRoles(roomSeq, userSeq);
             if(jo != null){
                 log.info("[Game {}] 낮 시작", roomSeq);
                 template.convertAndSend(dest, jo.toString());
@@ -127,12 +127,12 @@ public class GameSockController {
 
     }
 
-    @MessageMapping("/pub/room/{room-seq}/game/mafia")
+    @MessageMapping("/room/{room-seq}/game/mafia")
     public void mafiaControll(@DestinationVariable("room-seq") int roomSeq, @Payload GameProgressReq request) {
-
+        template.convertAndSend("/sub/room/{room-seq}/game/mafia", request);
     }
 
-    @MessageMapping("/pub/room/{room-seq}/game/police")
+    @MessageMapping("/room/{room-seq}/game/police")
     public void policeControll(@DestinationVariable("room-seq") int roomSeq, @Payload GameProgressReq request) {
 
     }
