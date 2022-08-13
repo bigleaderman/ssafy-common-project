@@ -28,20 +28,14 @@ public class RoomRepo {
     // 방별 정보를 담고 있는 map
     private Map<Integer, RoomManager> map = new ConcurrentHashMap<>();
 
-    /*
-    *
-    * 대기방 관련 기능 구현
-    *
-    * */
 
-    // 전체 방 리스트 조회
+    /*********** 대기방 기능 **************/
+
     public List<RoomInfo> getAllRooms(){
         return em.createQuery("select r from RoomInfo r", RoomInfo.class).getResultList();
     }
 
-    // 방 신규 생성
     public RoomInfo createRoom(RoomInfoDto roomInfo){
-
         // 집어넣을 데이터 설정
         RoomInfo entity = new RoomInfo();
         entity.setTitle(roomInfo.getTitle());
@@ -61,14 +55,13 @@ public class RoomRepo {
         return entity;
     }
 
-    // 방 비밀번호 변경
     public void setRoomPassword(int roomSeq, String password){
         RoomInfo entity = em.find(RoomInfo.class, roomSeq);
         entity.setPassword(password);
     }
 
-    // 호스트 유저 변경
     public void setHostUser(int roomSeq, int userSeq){
+        // 호스트 변경
         RoomInfo entity = em.find(RoomInfo.class, roomSeq);
         entity.setHostUser(userSeq);
     }
@@ -78,7 +71,6 @@ public class RoomRepo {
         return entity.getHostUser();
     }
 
-    // 방 정보 수정
     public RoomInfo modifyRoomInfo(RoomInfoDto roomInfo){
         // 기존의 방 entity 불러오기
         RoomInfo entity = em.find(RoomInfo.class, roomInfo.getRoomSeq());
@@ -92,7 +84,6 @@ public class RoomRepo {
         return entity;
     }
 
-    // 방 삭제
     public void deleteRoom(int roomSeq){
         map.remove(roomSeq);
         em.remove(em.find(RoomInfo.class, roomSeq));
@@ -126,13 +117,10 @@ public class RoomRepo {
     }
 
 
-
     /*
-    *
     * ******************************* *
     * 소켓 통신용
     * ******************************* *
-    *
     * */
 
 

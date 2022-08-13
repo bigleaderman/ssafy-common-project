@@ -6,6 +6,6 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class GameProgressReq {
-    private GameProgressHeaderReq header;
+    private String type;
     private GameProgressDataReq data;
 }

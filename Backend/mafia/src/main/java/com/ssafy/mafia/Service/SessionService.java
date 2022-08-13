@@ -29,22 +29,24 @@ public class SessionService {
     }
 
     // 비디오 세션 생성
-    public void createSession(int roomSeq){
+    public boolean createSession(int roomSeq){
         log.info("room [" + roomSeq + "] " + "비디오 세션 생성 요청");
-        if(repo.getSession(roomSeq) != null){
-            log.error("room [" + roomSeq + "] " + "이미 세션이 존재합니다.");
-            return;
-        }
-
         try{
+            // 이미 세션이 존재하는 경우 지운다.
+            if(repo.getSession(roomSeq) != null)
+                repo.deleteSession(roomSeq);
+
             // 새로운 세션을 생성한다.
             Session session = this.openVidu.createSession();
             repo.createSession(roomSeq, session);
             log.info("room [" + roomSeq + "] " + "세션이 생성되었습니다.");
+
+            return true;
         }
         catch (Exception e){
             e.printStackTrace();
             log.error("세션 생성 중 에러 발생");
+            return false;
         }
     }
 

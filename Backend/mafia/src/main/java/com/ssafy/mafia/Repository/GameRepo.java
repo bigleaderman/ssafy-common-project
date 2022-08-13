@@ -18,38 +18,24 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 @Transactional
 public class GameRepo {
-
-    private final EntityManager em;
-
-    private Map<Integer, GameManager> gmMap = new ConcurrentHashMap<>();
+    private Map<Integer, GameInfo> map = new ConcurrentHashMap<>();
 
     // 게임 정보 생성
     public GameInfo createGameInfo(RoomInfo roomInfo){
-        // 기본정보로 게임 생성
         GameInfo entity = new GameInfo();
-
-        // 게임 매니저 생성
-        GameManager gm = new GameManager();
-        gm.setGameInfo(entity);
-        gm.setRoomSeq(roomInfo.getRoomSeq());
-        gmMap.put(roomInfo.getRoomSeq(), gm);
-
-        // 게임 정보 리턴
+        map.put(roomInfo.getRoomSeq(), entity);
         return entity;
     }
 
     // 게임 정보 조회
     public GameInfo getGameInfo(int roomSeq){
-        // 방 정보 가져오기
-        RoomInfo roomInfo = em.find(RoomInfo.class, roomSeq);
-
-        // 방 정보로 게임 정보 불러오기
-        return gmMap.get(roomSeq).getGameInfo();
+        // 방 번호로 게임 정보 불러오기
+        return map.get(roomSeq);
     }
 
     // 게임 정보 수정
     public GameInfo setGameInfo(int roomSeq, GameInfoDto gameInfo){
-        GameInfo entity = gmMap.get(roomSeq).getGameInfo();
+        GameInfo entity = map.get(roomSeq);
         entity.setDoctorNum(gameInfo.getDoctorNum());
         entity.setPoliceNum(gameInfo.getPoliceNum());
         entity.setMafiaNum(gameInfo.getMafiaNum());
@@ -61,17 +47,11 @@ public class GameRepo {
 
     // 게임 정보 삭제
     public void deleteGameInfo(int roomSeq){
-        GameInfo entity = getGameInfo(roomSeq);
-        em.remove(entity);
+        map.remove(roomSeq);
     }
 
-    // 게임 매니저 리턴
-    public GameManager getGameManager(int roomSeq){
-        return this.gmMap.get(roomSeq);
-    }
-
-    // 게임 제거
-    public void removeGame(int roomSeq){
-        this.gmMap.remove(roomSeq);
+    // 게임 정보 제거
+    public void removeGameInfo(int roomSeq){
+        this.map.remove(roomSeq);
     }
 }

@@ -34,8 +34,10 @@ public class RoomSockController {
 
     @MessageMapping("/room/{room-seq}")
     public void messageControll(@DestinationVariable("room-seq") int roomSeq, StompHeaderAccessor header, @Payload RoomMessageDto message){
+        log.info(message.toString());
+        final String dest = "/sub/room/" + roomSeq;
+        final String type, token;
         int userSeq;
-        String type="", token;
 
         try{
             token = header.getNativeHeader("token").get(0).toString();
@@ -47,25 +49,25 @@ public class RoomSockController {
         }
 
         if(type.equals("join")){
-            template.convertAndSend("/sub/room/" + roomSeq, roomSockService.joinRoom(roomSeq, message.getData()).toString());
-            template.convertAndSend("/sub/room/" + roomSeq, roomSockService.getUserlist(roomSeq).toString());
+            template.convertAndSend(dest, roomSockService.joinRoom(roomSeq, message.getData()).toString());
+            template.convertAndSend(dest, roomSockService.getUserlist(roomSeq).toString());
             return;
         }
 
         if(type.equals("leave")){
-            template.convertAndSend("/sub/room/" + roomSeq, roomSockService.leaveRoom(roomSeq, message.getData()).toString());
-            template.convertAndSend("/sub/room/" + roomSeq, roomSockService.getUserlist(roomSeq).toString());
+            template.convertAndSend(dest, roomSockService.leaveRoom(roomSeq, message.getData()).toString());
+            template.convertAndSend(dest, roomSockService.getUserlist(roomSeq).toString());
             return;
         }
 
         if(type.equals("chat")){
-            template.convertAndSend("/sub/room/" + roomSeq, roomSockService.chat(message.getData()).toString());
+            template.convertAndSend(dest, roomSockService.chat(message.getData()).toString());
             return;
         }
 
         if(type.equals("interact")){
-            template.convertAndSend("/sub/room/" + roomSeq, roomSockService.interact(roomSeq, userSeq, message.getData()).toString());
-            template.convertAndSend("/sub/room/" + roomSeq, roomSockService.getUserlist(roomSeq).toString());
+            template.convertAndSend(dest, roomSockService.interact(roomSeq, userSeq, message.getData()).toString());
+            template.convertAndSend(dest, roomSockService.getUserlist(roomSeq).toString());
             return;
         }
 
@@ -75,7 +77,7 @@ public class RoomSockController {
         }
 
         if(type.equals("settings")){
-            template.convertAndSend("/sub/room/" + roomSeq, roomSockService.setting(roomSeq, message.getData()).toString());
+            template.convertAndSend(dest, roomSockService.setting(roomSeq, message.getData()).toString());
             return;
         }
 

@@ -34,12 +34,15 @@ public class GameSockController {
     public void gameControll(@DestinationVariable("room-seq") int roomSeq, StompHeaderAccessor header, @Payload GameProgressReq payload) {
         log.info("[Game] Payload : {}", payload.toString());
 
-        String type, token;
-        int userSeq;
+        final String dest = "/sub/room/"+roomSeq+"/game";
+        final String type, token;
+        final int userSeq;
 
         try{
-            type = payload.getHeader().getType();
+            // Message Type Check
+            type = payload.getType();
             token = header.getNativeHeader("token").get(0);
+            // 토큰 유효성 검사
             userSeq = Integer.parseInt(tokenProvider.getAuthentication(token).getName());
         }
         catch (Exception e){
@@ -48,83 +51,79 @@ public class GameSockController {
             return;
         }
 
-        if(type == null){
-            log.error("[Game] Type null");
-            template.convertAndSend("/sub/room/" + roomSeq + "/game", "요청 에러 발생");
-            return;
+        /* * * Handler * * */
+        if(type.equals("ready")){
+            if(gameSockService.createGame(roomSeq)==1){
+                JsonObject jo = new JsonObject();
+                jo.addProperty("type", "session-created");
+                template.convertAndSend(dest, jo.toString());
+            }
         }
 
-        if(type.equals("start")){
-            log.info("[Game] 방 {} - 게임 시작 요청", roomSeq);
-            try{
-                JsonObject res = gameSockService.start(roomSeq);
-                template.convertAndSend("/sub/room/" + roomSeq + "/game", res.toString());
+        if(type.equals("session-connect")){
+            JsonObject jo = gameSockService.sessionConnect(roomSeq, userSeq);
+            if(jo != null){
+                log.info("[Game {}] 세션 연결 완료", roomSeq);
+                template.convertAndSend(dest, jo.toString());
 
-                List<String[]> roles = gameSockService.getAllRoles(roomSeq);
+                List<String[]> list = gameSockService.assignRole(roomSeq);
+                for(String[] info : list){
+                    String nickname = info[0];
+                    String role = info[1];
 
-                for(int i = 0; i < roles.size(); i++){
-                    template.convertAndSend("/sub/room/" + roomSeq + "/game/" + roles.get(i)[0], gameSockService.getRole(roles.get(i)));
+                    JsonObject res = new JsonObject();
+                    res.addProperty("type", "role");
+
+                    JsonObject data = new JsonObject();
+                    data.addProperty("role", role);
+
+                    res.add("data", data);
+                    template.convertAndSend(dest +"/"+nickname, res.toString());
                 }
-
-            } catch (Exception e){
-                template.convertAndSend("/sub/room/" + roomSeq + "/game", "게임 시작 오류");
-                log.error("[Game] 방 {} : 게임 시작 오류", roomSeq);
-                e.printStackTrace();
             }
-            return;
         }
 
         if(type.equals("role")){
-            log.info("[Game] 방({}) 유저({}) 자신의 role 확인", roomSeq, userSeq);
-            try{
-                JsonObject jo = gameSockService.getRole(roomSeq, userSeq);
-                String nickname = jo.getAsJsonObject("data").get("nickname").toString();
-                log.info("[Game] 방({}) 유저({}) role : {}", roomSeq, userSeq, jo.toString());
-                template.convertAndSend("/sub/room/" + roomSeq + "/game/" + nickname, jo);
+            JsonObject jo = gameSockService.checkRole(roomSeq, userSeq);
+            if(jo != null){
+                log.info("[Game {}] 낮 시작", roomSeq);
+                template.convertAndSend(dest, jo.toString());
             }
-            catch (Exception e){
-                log.error("[Game] role 확인 오류");
-                e.printStackTrace();
-            }
-            return;
         }
 
-        if(type.equals("talk")){
-            log.info("[Game] 방({}) 유저({}) talk 완료", roomSeq, userSeq);
-            if(gameSockService.ready("talk", roomSeq, userSeq)){
-                template.convertAndSend("/sub/room/" + roomSeq + "/game", gameSockService.talk(roomSeq));
-                log.info("[Game] 방({}) talk 전송");
-            }
-            return;
-        }
-
-        if(type.equals("vote-ready")){
-            log.info("[Game] room({}) user({}) 투표 준비", roomSeq, userSeq);
-            if(gameSockService.ready("vote-ready", roomSeq, userSeq)){
-                template.convertAndSend("/sub/room/" + roomSeq + "/game", gameSockService.voteReady(roomSeq));
-                log.info("[Game] room({}) 투표 시작", roomSeq, userSeq);
+        if(type.equals("talk-end")){
+            JsonObject jo = gameSockService.talkEnd(roomSeq, userSeq);
+            if(jo!=null){
+                log.info("[Game {}] 투표 시작", roomSeq);
+                template.convertAndSend(dest, jo.toString());
             }
         }
 
         if(type.equals("vote")){
-            log.info("[Game] room({}) 투표 정보 {} -> {}", payload.getData().getNickname(), payload.getData().getTarget());
-            User user = userService.getUserInfo(userSeq);
-            template.convertAndSend("/sub/room/" + roomSeq + "/game/" + user.getNickname(), gameSockService.vote(roomSeq, payload.getData()));
+            gameSockService.vote(roomSeq, userSeq, payload.getData().getTarget());
+            template.convertAndSend(dest, userService.getUserInfo(userSeq).getNickname() + "투표완료");
         }
 
         if(type.equals("vote-result")){
-            log.info("[Game] room({}) 투표 정보 {} -> {}", payload.getData().getNickname(), payload.getData().getTarget());
+            JsonObject data = gameSockService.voteResult(roomSeq, userSeq);
+            if(data != null){
+                log.info("[Game {}] 투표 결과 확인", roomSeq);
+                JsonObject jo = new JsonObject();
+                jo.addProperty("type", "vote-result");
+                template.convertAndSend(dest, jo.toString());
+            }
         }
 
-        if(type.equals("gameover")){
-            log.info("[Game] 방({}) 게임 종료", roomSeq);
+        if(type.equals("vote-check")){
+            JsonObject jo = gameSockService.voteCheck(roomSeq, userSeq);
+            if(jo != null){
+                log.info("[Game {}] 투표 결과 확인 완료");
+                template.convertAndSend(dest , jo.toString());
+            }
         }
 
-        if(type.equals("chat")){
-            log.info("[Game] 방({}) 유저({}) 채팅", roomSeq, payload.getData().getNickname());
-        }
 
-        // Todo : 밤 기능 추가
+
 
     }
 
