@@ -31,7 +31,9 @@ public class GameSockService {
     // 방별 게임 매니저
     private Map<Integer, GameManager> gmMap = new ConcurrentHashMap<>();
 
-
+    public boolean isDead(int roomSeq, int userSeq){
+        return gmMap.get(roomSeq).getUsers().get(userSeq).isDead();
+    }
 
     public int createGame(int roomSeq){
         if(gmMap.get(roomSeq)!=null)
@@ -76,12 +78,12 @@ public class GameSockService {
         return null;
     }
 
-    public List<String[]> assignRole(int roomSeq){
-        gmMap.get(roomSeq).assignUserRole();
-        return gmMap.get(roomSeq).getUserRole();
+    public List<String[]> assignRoles(int roomSeq){
+        gmMap.get(roomSeq).assignUserRoles();
+        return gmMap.get(roomSeq).getUserRoles();
     }
 
-    public JsonObject checkRole(int roomSeq, int userSeq){
+    public JsonObject checkRoles(int roomSeq, int userSeq){
         log.info("[Game {}] {} 역할 확인중", roomSeq, userSeq);
         gmMap.get(roomSeq).ready("role", userService.getUserInfo(userSeq));
         if(gmMap.get(roomSeq).isReady()){
@@ -98,6 +100,10 @@ public class GameSockService {
             return jo;
         }
         return null;
+    }
+
+    public String getUserRole(int roomSeq, int userSeq){
+        return gmMap.get(roomSeq).getUsers().get(userSeq).getRole();
     }
 
     public JsonObject talkEnd(int roomSeq, int userSeq){
@@ -120,6 +126,10 @@ public class GameSockService {
     }
 
     public void vote(int roomSeq, int userSeq, String target){
+        if(isDead(roomSeq, userSeq)){
+            log.error("[Game {}] 죽은자는 말이 없다.", roomSeq);
+            return;
+        }
         log.info("[Game] {} 한표 획득", target);
         int targetSeq=0;
         if(userService.getUserByNickname(target) != null)
@@ -190,7 +200,16 @@ public class GameSockService {
     }
 
     public void nightAct(int roomSeq, int userSeq, String target){
-
+        if(isDead(roomSeq, userSeq)){
+            log.info("[Game {}] 죽은자는 말이 없다.");
+            return;
+        }
+        final int targetSeq = userService.getUserByNickname(target).getUserSeq();
+        if(gmMap.get(roomSeq).getUsers().get(targetSeq).isDead()){
+            log.info("[Game {}] 이미 죽은 사람의 정보를 알아낼 수 없다.");
+            return;
+        }
+        gmMap.get(roomSeq).getUsers().get(userSeq).setTarget(targetSeq);
     }
 
     public JsonObject gameOver(int roomSeq){

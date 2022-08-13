@@ -3,6 +3,7 @@ package com.ssafy.mafia.Controller;
 import com.ssafy.mafia.Model.RoomProtocol.RoomMessageDto;
 import com.ssafy.mafia.Service.RoomSockService;
 import com.ssafy.mafia.auth.jwt.TokenProvider;
+import com.ssafy.mafia.auth.service.UserService;
 import com.ssafy.mafia.auth.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -19,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class RoomSockController {
     private final SimpMessagingTemplate template;
     private final RoomSockService roomSockService;
-
     private final TokenProvider tokenProvider;
+    private final UserService userService;
 
     private static final Logger log = LoggerFactory.getLogger(RoomSockController.class);
 
@@ -42,6 +43,7 @@ public class RoomSockController {
         try{
             token = header.getNativeHeader("token").get(0).toString();
             userSeq = Integer.parseInt(tokenProvider.getAuthentication(token).getName());
+            userSeq = userService.getUserByNickname(message.getData().getNickname()).getUserSeq();
             type = message.getHeader().getType();
         } catch (Exception e){
             e.printStackTrace();
@@ -55,7 +57,7 @@ public class RoomSockController {
         }
 
         if(type.equals("leave")){
-            template.convertAndSend(dest, roomSockService.leaveRoom(roomSeq, message.getData()).toString());
+            template.convertAndSend(dest, roomSockService.leaveRoom(roomSeq, userSeq).toString());
             template.convertAndSend(dest, roomSockService.getUserlist(roomSeq).toString());
             return;
         }
@@ -67,12 +69,6 @@ public class RoomSockController {
 
         if(type.equals("interact")){
             template.convertAndSend(dest, roomSockService.interact(roomSeq, userSeq, message.getData()).toString());
-            template.convertAndSend(dest, roomSockService.getUserlist(roomSeq).toString());
-            return;
-        }
-
-        if(type.equals("start")){
-//            template.convertAndSend("/sub/room/" + roomSeq, messageService.(message.getData()));
             return;
         }
 

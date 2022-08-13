@@ -92,7 +92,7 @@ public class GameManager {
         this.dead = 0;
     }
 
-    public void assignUserRole(){
+    public void assignUserRoles(){
         List<String> role = new ArrayList<>();
 
         int n = this.users.size();
@@ -114,7 +114,7 @@ public class GameManager {
         log.info("[Game] User Role 할당 완료");
     }
 
-    public List<String[]> getUserRole(){
+    public List<String[]> getUserRoles(){
         List<String[]> list = new ArrayList<>();
         for(Integer key : users.keySet())
             list.add(new String[]{users.get(key).getNickname(), users.get(key).getRole()});
