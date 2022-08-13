@@ -5,12 +5,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.ssafy.mafia.Entity.GameInfo;
 
+import com.ssafy.mafia.Entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import springfox.documentation.spring.web.json.Json;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 @Data
@@ -20,119 +21,165 @@ public class GameManager {
 
     private int roomSeq;
     private GameInfo gameInfo;
-    private List<Integer> users;
-    private List<String> roles;
+    private Map<Integer, Player> users;
     private Set<Integer> readyQueue;
-    private int readyCnt = 0;
-
-    private Map<Integer, JsonObject> voteResult;
-
-    private String status = "start";
+    private Map<Integer, Integer> vote;
+    private String status;
+    private int dead;
+    private int alive;
+    private int mafia;
 
     public GameManager(){
-        this.users = new ArrayList<>();
-        this.roles = new ArrayList<>();
+        this.gameInfo = new GameInfo();
+        this.users = new ConcurrentHashMap<>();
         this.readyQueue = new HashSet<>();
-    }
-
-    public void ready(String status, int userSeq){
-        if(readyQueue.contains(userSeq)){
-            log.error("[Game] 유저({})은 이미 준비상태 입니다.", userSeq);
-            return;
-        }
-        if(!status.equals(this.status)){
-            log.error("[Game] 유저({})의 상태 이상 {} -> {}", userSeq, status, this.status);
-            return;
-        }
-
-        readyQueue.add(userSeq);
-    }
-
-    public boolean isReady(){
-        return users.size() == readyCnt;
-    }
-
-    public void clear(){
-        readyQueue.clear();
+        this.vote = new ConcurrentHashMap<>();
+        this.status = "ready";
+        this.dead = 0;
+        this.alive = 0;
+        this.mafia = 0;
     }
 
     public void clearAll(){
-        this.roles.clear();
+        this.vote.clear();
+        this.users.clear();
         this.readyQueue.clear();
-        this.readyCnt = 0;
-        this.status = "start";
+        this.status = "ready";
+        this.dead = 0;
+        this.alive = 0;
+        this.mafia = 0;
     }
 
-    public JsonObject gameStart(int roomSeq) {
-        log.info("[GM] 방 {} 에서 게임 시작 요청", roomSeq);
-
-        if(users == null){
-            log.error("[GM] 방 {} - 방에 유저가 없습니다.", roomSeq);
-            JsonObject jo = new JsonObject();
-            jo.addProperty("error", "방에 유저가 없습니다.");
-            return jo;
-        }
-
-        if(!isReady()){
-            log.error("[GM] 방 {} : 누군가 준비되지 않았습니다.");
-            JsonObject jo = new JsonObject();
-            jo.addProperty("error", "누군가 준비되지 않았습니다.");
-            return jo;
-        }
-
-        // 역할 설정
-        setRoles();
-
-        // Todo : 게임 시작 신호 return
-        JsonObject header = new JsonObject();
-        header.addProperty("type", "start");
-
-        JsonObject res = new JsonObject();
-        res.add("header", header);
-        res.add("data", null);
-
-        log.info("[게임 매니저] 방 {} - 게임 시작 메시지 발송 :: {}", roomSeq, res.toString());
-
-        return res;
-    }
-
-    // 역할 정하기
-    public void setRoles(){
-        roles.clear();
-        int n = users.size();
-        for(int i = 0; i < n && i < gameInfo.getMafiaNum(); i++, n--) roles.add("mafia");
-        for(int i = 0; i < n && i < gameInfo.getDoctorNum(); i++, n--) roles.add("doctor");
-        for(int i = 0; i < n && i < gameInfo.getPoliceNum(); i++, n--) roles.add("police");
-        for(int i = 0; i < n; i++) roles.add("civil");
-        Collections.shuffle(roles);
-        log.info("[GM] 방 {} : 역할이 배정되었습니다.", roomSeq);
-    }
-
-    public String getRole(int userSeq){
-        for(int i = 0; i < users.size(); i++){
-            if(users.get(i) == userSeq){
-                return roles.get(i);
-            }
-        }
-        return "civil";
-    }
-
-    public String getRole(String nickname){
-        for(int i = 0; i < users.size(); i++){
-            // Todo : 닉네임으로 Role 조회 구현
-        }
-        return "civil";
-    }
-
-    public void vote(int userSeq, String nickname, String target){
-        if(voteResult.get(userSeq) != null){
-            log.error("[Game] 이미 투표한 유저입니다.");
+    public void addUser(User user){
+        if(users.get(user.getUserSeq())!=null){
+            log.info("[Game] 이미 추가된 유저");
             return;
         }
-
-        JsonObject jo = new JsonObject();
-        jo.addProperty("nickname", nickname);
-        jo.addProperty("target", target);
-        voteResult.put(userSeq, jo);
+        Player p = new Player();
+        p.setUserSeq(user.getUserSeq());
+        p.setDead(false);
+        p.setRole("civil");
+        p.setNickname(user.getNickname());
+        users.put(p.getUserSeq(), p);
     }
+
+    public int ready(String type, User user){
+        if(!type.equals(this.status)){
+            log.error("[Game] type error");
+            return 0;
+        }
+        if(readyQueue.contains(user.getUserSeq())){
+            log.error("[Game] {} Aleady ready", user.getNickname());
+            return 0;
+        }
+        readyQueue.add(user.getUserSeq());
+        return this.readyQueue.size();
+    }
+
+    public boolean isReady(){
+        // ready 한 사람이 전체 인원인가?
+        return this.readyQueue.size() == this.users.size();
+    }
+
+    public int readyClear(){
+        this.readyQueue.clear();
+        return readyQueue.size();
+    }
+
+    public void initGame(){
+        this.mafia = this.gameInfo.getMafiaNum();
+        this.alive = this.users.size();
+        this.dead = 0;
+    }
+
+    public void assignUserRole(){
+        List<String> role = new ArrayList<>();
+
+        int n = this.users.size();
+        for(int i = 0; i < n && i < gameInfo.getMafiaNum(); i++, n--)
+            role.add("mafia");
+        for(int i = 0; i < n && i < gameInfo.getPoliceNum(); i++, n--)
+            role.add("police");
+        for(int i = 0; i < n && i < gameInfo.getDoctorNum(); i++, n--)
+            role.add("doctor");
+        for(int i = 0; i < n; i++)
+            role.add("civil");
+
+        Collections.shuffle(role);
+
+        int r = 0;
+        for(Integer key : users.keySet())
+            users.get(key).setRole(role.get(r++));
+
+        log.info("[Game] User Role 할당 완료");
+    }
+
+    public List<String[]> getUserRole(){
+        List<String[]> list = new ArrayList<>();
+        for(Integer key : users.keySet())
+            list.add(new String[]{users.get(key).getNickname(), users.get(key).getRole()});
+
+        return list;
+    }
+
+    public void vote(int userSeq, int targetSeq){
+        if(vote.get(userSeq) != null) {
+            log.error("[Game] 이미 투표함");
+            return;
+        }
+        if(users.get(userSeq).isDead()){
+            log.error("[Game] 죽은사람이 투표함");
+            return;
+        }
+        if(users.get(targetSeq).isDead()){
+            log.error("[Game] 죽은자에게 투표함");
+            return;
+        }
+        if(targetSeq == 0){
+            log.error("[Game] 기권");
+            return;
+        }
+        users.get(targetSeq).voted();
+        vote.put(userSeq, targetSeq);
+    }
+
+    public Map<Integer, Integer> getVoteCount(){
+        Map<Integer, Integer> map = new HashMap<>();
+        for(Integer key : users.keySet())
+            map.put(key, users.get(key).getVoteCnt());
+        return map;
+    }
+
+    public void voteClear(){
+        vote.clear();
+        users.forEach((Integer k, Player p)->{
+            p.setVoteCnt(0);
+        });
+    }
+
+    public void kill(int userSeq){
+        if(users.get(userSeq).isDead()){
+            log.info("[Game] 두번 죽임");
+            return;
+        }
+        dead++;
+        alive--;
+        if(users.get(userSeq).getRole().equals("mafia"))
+            mafia--;
+        users.get(userSeq).setDead(true);
+    }
+
+    public boolean isGameOver(){
+        return mafia == 0 || mafia >= (alive - mafia);
+    }
+
+    public String getWinner(){
+        if(!isGameOver()){
+            log.info("[Game] 아직 안끝났다.");
+            return null;
+        }
+        if(mafia == 0) return "civil";
+        else return "mafia";
+    }
+
 }
