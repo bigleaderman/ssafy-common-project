@@ -4,7 +4,6 @@ package com.ssafy.mafia.Service;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.ssafy.mafia.Entity.User;
-import com.ssafy.mafia.Game.GameSockService;
 import com.ssafy.mafia.Model.GameInfoDto;
 import com.ssafy.mafia.Model.RoomInfoDto;
 import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
@@ -14,8 +13,9 @@ import com.ssafy.mafia.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -124,9 +124,14 @@ public class RoomSockService {
         header.addProperty("type", "list");
 
         // user list 불러오기
-        JsonArray users = roomRepo.getAllUsersOfRoomSock(roomSeq);
+        Map<Integer, JsonObject> list = roomRepo.getAllUsersOfRoomSock(roomSeq);
+        JsonArray users = new JsonArray();
 
         // data build
+        list.forEach((k, v)->{
+            users.add(v);
+        });
+
         JsonObject data = new JsonObject();
         data.add("users", users);
 
