@@ -1,5 +1,6 @@
 package com.ssafy.mafia.Service;
 
+import com.google.gson.JsonObject;
 import com.ssafy.mafia.Entity.GameInfo;
 import com.ssafy.mafia.Entity.RoomInfo;
 import com.ssafy.mafia.Entity.User;
@@ -21,6 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 
 /*
@@ -137,7 +139,7 @@ public class RoomService {
     }
 
     // 방에 있는 모든 유저 정보 조회
-    public List<Integer> getUsersByRoomSeq(int roomSeq){
+    public Map<Integer, JsonObject> getUsersByRoomSeq(int roomSeq){
         return roomRepo.getAllUsersOfRoom(roomSeq);
     }
 

@@ -112,7 +112,7 @@ public class RoomRepo {
     }
 
     // 방 전체 인원 조회
-    public List<Integer> getAllUsersOfRoom(int roomSeq){
+    public Map<Integer, JsonObject> getAllUsersOfRoom(int roomSeq){
         RoomManager rm = map.get(roomSeq);
         if(rm == null){
             log.error("[RoomRepo] 방({})이 없습니다.", roomSeq);
@@ -146,8 +146,8 @@ public class RoomRepo {
     }
 
 
-    public JsonArray getAllUsersOfRoomSock(int roomSeq){
-        return this.map.get(roomSeq).getRoomUser();
+    public Map<Integer, JsonObject> getAllUsersOfRoomSock(int roomSeq){
+        return this.map.get(roomSeq).getUsers();
     }
 
     // 유저 ready
