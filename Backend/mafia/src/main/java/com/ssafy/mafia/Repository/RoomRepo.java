@@ -131,7 +131,7 @@ public class RoomRepo {
 
 
     public void updateUserSock(int roomSeq, int userSeq, RoomDataDto data){
-
+        map.get(roomSeq).updateUser(userSeq, data);
     }
 
 
