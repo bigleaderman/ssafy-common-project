@@ -12,9 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 
@@ -199,17 +197,151 @@ public class GameSockService {
         return null;
     }
 
-    public void nightAct(int roomSeq, int userSeq, String target){
+    public JsonObject nightAct(int roomSeq, int userSeq, String target){
+        String role = getUserRole(roomSeq, userSeq);
+        if(role.equals("mafia"))
+            mafiaAct(roomSeq, userSeq, target);
+        if(role.equals("doctor"))
+            doctorAct(roomSeq, userSeq, target);
+        if(role.equals("police"))
+            return policeAct(roomSeq, userSeq, target);
+        return null;
+    }
+
+    public void mafiaAct(int roomSeq, int userSeq, String target){
         if(isDead(roomSeq, userSeq)){
             log.info("[Game {}] 죽은자는 말이 없다.");
             return;
         }
+
         final int targetSeq = userService.getUserByNickname(target).getUserSeq();
         if(gmMap.get(roomSeq).getUsers().get(targetSeq).isDead()){
-            log.info("[Game {}] 이미 죽은 사람의 정보를 알아낼 수 없다.");
+            log.info("[Game {}] 마피아가 죽은 사람을 또죽일려 하네");
             return;
         }
         gmMap.get(roomSeq).getUsers().get(userSeq).setTarget(targetSeq);
+    }
+
+    public void doctorAct(int roomSeq, int userSeq, String target){
+        if(isDead(roomSeq, userSeq)){
+            log.info("[Game {}] 죽은자는 말이 없다.");
+            return;
+        }
+
+        final int targetSeq = userService.getUserByNickname(target).getUserSeq();
+        if(gmMap.get(roomSeq).getUsers().get(targetSeq).isDead()){
+            log.info("[Game {}] 이미 죽은 사람은 살릴 수 없다.");
+            return;
+        }
+        gmMap.get(roomSeq).getUsers().get(userSeq).setTarget(targetSeq);
+    }
+
+    public JsonObject policeAct(int roomSeq, int userSeq, String target){
+        if(isDead(roomSeq, userSeq)){
+            log.info("[Game {}] 죽은자는 말이 없다.");
+            return null;
+        }
+
+        final int targetSeq = userService.getUserByNickname(target).getUserSeq();
+        if(gmMap.get(roomSeq).getUsers().get(targetSeq).isDead()){
+            log.info("[Game {}] 이미 죽은 사람의 정보를 알아낼 수 없다.");
+            return null;
+        }
+
+        if(gmMap.get(roomSeq).getUsers().get(userSeq).getTarget() != 0){
+            log.info("[Game {}] 경찰은 욕심쟁이야");
+            return null;
+        }
+
+        // target Role
+        String role = getUserRole(roomSeq, targetSeq);
+
+        JsonObject jo = new JsonObject();
+        JsonObject data = new JsonObject();
+        jo.addProperty("type", "act-result");
+        data.addProperty("target", target);
+        data.addProperty("role", role);
+
+        jo.add("data", data);
+
+        return jo;
+    }
+
+    public JsonObject nightResult(int roomSeq, int userSeq){
+        gmMap.get(roomSeq).ready("night-check", userService.getUserInfo(userSeq));
+        if(gmMap.get(roomSeq).isReady()){
+            JsonObject jo = new JsonObject();
+            jo.addProperty("type", "night-result");
+
+            // 죽일 사람
+            Set<Integer> tmp = new HashSet<>();
+            gmMap.get(roomSeq).getUsers().forEach((k, v)->{
+                if(!v.isDead() && v.getRole().equals("mafia")) {
+                    tmp.add(v.getTarget());
+                }
+            });
+
+            // 살릴사람
+            gmMap.get(roomSeq).getUsers().forEach((k, v)->{
+                if(!v.isDead() && v.getRole().equals("doctor")) {
+                    tmp.remove(v.getTarget());
+                }
+            });
+
+            // kill
+            JsonArray dead = new JsonArray();
+            tmp.forEach((k)->{
+                dead.add(gmMap.get(roomSeq).getUsers().get(k).getNickname());
+                gmMap.get(roomSeq).kill(k);
+            });
+
+            JsonArray alive = new JsonArray();
+            gmMap.get(roomSeq).getUsers().forEach((k, v)->{
+                if(!v.isDead()) {
+                    alive.add(v.getNickname());
+                }
+            });
+
+            JsonObject data = new JsonObject();
+            data.add("dead", dead);
+            data.add("alive", alive);
+
+            jo.add("data", data);
+
+            // Next Step
+            gmMap.get(roomSeq).readyClear();
+            gmMap.get(roomSeq).targetClear();
+            gmMap.get(roomSeq).setStatus("night-check");
+
+            log.info("[Game {}] 밤 종료", roomSeq);
+            return jo;
+        }
+        return null;
+    }
+
+    public JsonObject nightCheck(int roomSeq, int userSeq){
+        gmMap.get(roomSeq).ready("night-check", userService.getUserInfo(userSeq));
+        if(gmMap.get(roomSeq).isReady()){
+            if(gmMap.get(roomSeq).isGameOver()){
+                // 게임 오버
+                return gameOver(roomSeq);
+            }
+            else{
+                // 낮
+                JsonObject jo = new JsonObject();
+                jo.addProperty("type", "talk-start");
+
+                JsonObject data = new JsonObject();
+                data.addProperty("time", gmMap.get(roomSeq).getGameInfo().getTalkTimeoutSec());
+                jo.add("data", data);
+
+                // Next Stop
+                gmMap.get(roomSeq).readyClear();
+                gmMap.get(roomSeq).setStatus("talk-end");
+                return jo;
+            }
+        }
+        return null;
     }
 
     public JsonObject gameOver(int roomSeq){

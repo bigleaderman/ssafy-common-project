@@ -169,6 +169,12 @@ public class GameManager {
         users.get(userSeq).setDead(true);
     }
 
+    public void targetClear(){
+        users.forEach((k, v)->{
+            v.setTarget(0);
+        });
+    }
+
     public boolean isGameOver(){
         return mafia == 0 || mafia >= (alive - mafia);
     }
