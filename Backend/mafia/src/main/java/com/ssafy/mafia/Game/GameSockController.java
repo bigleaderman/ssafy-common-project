@@ -122,9 +122,20 @@ public class GameSockController {
             }
         }
 
+        if(type.equals("night-act")){
+            JsonObject jo = gameSockService.nightAct(roomSeq, userSeq, payload.getData().getTarget());
+            if(jo != null){
+                template.convertAndSend(dest + "/" + userService.getUserInfo(userSeq).getNickname(), jo.toString());
+            }
+        }
 
-
-
+        if(type.equals("night-check")){
+            JsonObject jo = gameSockService.nightCheck(roomSeq, userSeq);
+            if(jo != null){
+                log.info("[Game {}] 낮 시작", roomSeq);
+                template.convertAndSend(dest, jo.toString());
+            }
+        }
     }
 
     @MessageMapping("/room/{room-seq}/game/mafia")
