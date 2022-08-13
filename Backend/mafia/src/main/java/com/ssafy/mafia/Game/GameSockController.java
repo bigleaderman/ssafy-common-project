@@ -1,16 +1,11 @@
 package com.ssafy.mafia.Game;
 
 import com.google.gson.JsonObject;
-import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.RoomProtocol.GameProgressReq;
 import com.ssafy.mafia.auth.jwt.TokenProvider;
 import com.ssafy.mafia.auth.service.UserService;
-import com.ssafy.mafia.auth.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;

@@ -87,6 +87,10 @@ public class RoomSockService {
         response.add("header", header);
         response.add("data", data);
 
+        if(roomRepo.getAllUsersOfRoom(roomSeq).size() == 0){
+            roomRepo.deleteRoom(roomSeq);
+        }
+
         return response;
     }
 
