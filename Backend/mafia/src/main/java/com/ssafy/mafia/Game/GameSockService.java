@@ -48,8 +48,8 @@ public class GameSockService {
         sessionService.createSession(roomSeq);
 
         // 방에 있는 유저 전원 참가
-        roomRepo.getAllUsersOfRoom(roomSeq).forEach((Integer us)->{
-            gmMap.get(roomSeq).addUser(userService.getUserInfo(us));
+        roomRepo.getAllUsersOfRoom(roomSeq).forEach((k, v)->{
+            gmMap.get(roomSeq).addUser(userService.getUserInfo(k));
         });
 
         // Next Step
