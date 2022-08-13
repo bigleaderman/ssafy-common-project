@@ -131,7 +131,8 @@ public class RoomRepo {
 
 
     public void updateUserSock(int roomSeq, int userSeq, RoomDataDto data){
-
+        deleteUserSock(roomSeq, userSeq);
+        addUserSock(roomSeq, userSeq, data);
     }
 
 
