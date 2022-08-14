@@ -290,10 +290,12 @@ public class GameSockService {
 
             // kill
             JsonArray dead = new JsonArray();
-            tmp.forEach((k)->{
-                dead.add(gmMap.get(roomSeq).getUsers().get(k).getNickname());
-                gmMap.get(roomSeq).kill(k);
-            });
+            if(tmp.size() > 0){
+                tmp.forEach((k)->{
+                    dead.add(gmMap.get(roomSeq).getUsers().get(k).getNickname());
+                    gmMap.get(roomSeq).kill(k);
+                });
+            }
 
             JsonArray alive = new JsonArray();
             gmMap.get(roomSeq).getUsers().forEach((k, v)->{
