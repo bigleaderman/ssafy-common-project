@@ -57,9 +57,9 @@ public class RoomController {
 
     @ApiOperation(value = "필터를 이용한 방 목록 조회", notes = "필터를 이용한 방 목록 조회")
     @PostMapping("/list")
-    public ResponseEntity<List<RoomInfoDto>> searchByFilter(@RequestBody RoomSearchFilterDto filter){
+    public ResponseEntity<List<RoomInfoResponseDto>> searchByFilter(@RequestBody RoomSearchFilterDto filter){
         // 방 목록 필터로 검색
-        return new ResponseEntity<List<RoomInfoDto>>(service.searchRoomsByFilter(filter), HttpStatus.OK);
+        return new ResponseEntity<List<RoomInfoResponseDto>>(service.searchRoomsByFilter(filter), HttpStatus.OK);
     }
 
     @ApiOperation(value = "방 상세 정보 조회", notes = "방 상세 정보 조회")

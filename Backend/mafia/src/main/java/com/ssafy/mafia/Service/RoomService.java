@@ -70,16 +70,26 @@ public class RoomService {
     }
 
     // 방 필터로 검색하기
-    public List<RoomInfoDto> searchRoomsByFilter(RoomSearchFilterDto filter){
+    public List<RoomInfoResponseDto> searchRoomsByFilter(RoomSearchFilterDto filter){
         List<RoomInfo> list = roomRepo.getAllRooms();
-        List<RoomInfoDto> result = new ArrayList<>();
+        List<RoomInfoResponseDto> result = new ArrayList<>();
         for(RoomInfo room : list) {
             GameInfo game = gameRepo.getGameInfo(room.getRoomSeq());
             if(room.getTitle().contains(filter.getTitle())
 //                    && room.getCapacity() >= filter.getCapacity()
 //                    && game.getMafiaNum() >= filter.getMafiaNum()
-                )
-                result.add(new RoomInfoDto(room.getRoomSeq(), room.getHostUser(), room.getTitle(), room.getCapacity()));
+                ){
+                RoomInfoResponseDto dto = new RoomInfoResponseDto(room);
+
+                if(roomRepo.getAllUsersOfRoom(room.getRoomSeq()) == null)
+                    dto.setParticipants(0);
+                else
+                    dto.setParticipants(roomRepo.getAllUsersOfRoom(room.getRoomSeq()).size());
+
+                result.add(dto);
+            }
+
+
         }
         return result;
     }
