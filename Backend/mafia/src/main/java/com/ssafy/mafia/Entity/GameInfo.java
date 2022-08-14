@@ -23,7 +23,7 @@ public class GameInfo {
 
     // default values
     public GameInfo() {
-        mafiaNum = 2;
+        mafiaNum = 1;
         policeNum = 1;
         doctorNum = 1;
         voteTimeoutSec = 30;
