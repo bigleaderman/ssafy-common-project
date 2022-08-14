@@ -24,17 +24,17 @@ public class RoomManager {
     }
 
     public void addUser(int userSeq, RoomDataDto message){
-        if(users.get(userSeq)==null){
-            JsonObject user = new JsonObject();
-            user.addProperty("nickname", message.getNickname());
-            user.addProperty("status", message.getStatus());
-            user.addProperty("color", message.getColor());
-            user.addProperty("x", message.getX());
-            user.addProperty("y", message.getY());
-            users.put(userSeq, user);
-        }
-        else
-            log.error("[Room] 이미 방에 존재하는 유저 입니다.");
+        if(users.get(userSeq)!=null)
+            removeUser(userSeq);
+
+        JsonObject user = new JsonObject();
+        user.addProperty("nickname", message.getNickname());
+        user.addProperty("status", message.getStatus());
+        user.addProperty("color", message.getColor());
+        user.addProperty("x", message.getX());
+        user.addProperty("y", message.getY());
+        users.put(userSeq, user);
+
     }
 
     public void removeUser(int userSeq){
