@@ -289,18 +289,14 @@ public class GameSockService {
             });
 
             // kill
-            log.info("Kill : {}, {}", tmp.size(), Arrays.toString(tmp.toArray()));
             JsonArray dead = new JsonArray();
-            if(tmp.size() > 0){
-                tmp.forEach((k)->{
-                    log.info("dead {}", k);
-                    log.info("dead {}", gmMap.get(roomSeq));
-                    log.info("dead {}", gmMap.get(roomSeq).getUsers());
-                    log.info("dead {}", gmMap.get(roomSeq).getUsers().get(k));
+            tmp.forEach((k)->{
+                if(k!=0){
                     dead.add(gmMap.get(roomSeq).getUsers().get(k).getNickname());
                     gmMap.get(roomSeq).kill(k);
-                });
-            }
+                }
+            });
+
 
             JsonArray alive = new JsonArray();
             gmMap.get(roomSeq).getUsers().forEach((k, v)->{
