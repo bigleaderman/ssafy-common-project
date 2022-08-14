@@ -42,7 +42,6 @@ public class RoomSockController {
         try{
             token = header.getNativeHeader("token").get(0).toString();
             userSeq = Integer.parseInt(tokenProvider.getAuthentication(token).getName());
-            userSeq = userService.getUserByNickname(message.getData().getNickname()).getUserSeq();
             type = message.getHeader().getType();
         } catch (Exception e){
             e.printStackTrace();
