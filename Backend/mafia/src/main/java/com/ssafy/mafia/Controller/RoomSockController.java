@@ -37,14 +37,26 @@ public class RoomSockController {
     public void messageControll(@DestinationVariable("room-seq") int roomSeq, StompHeaderAccessor header, @Payload RoomMessageDto message){
         final String dest = "/sub/room/" + roomSeq;
         final String type, token;
-        int userSeq;
+        int userSeq=0;
 
         try{
             token = header.getNativeHeader("token").get(0).toString();
-            userSeq = Integer.parseInt(tokenProvider.getAuthentication(token).getName());
+            if(message != null
+                && message.getData() != null
+                && message.getData().getNickname() != null)
+                userSeq = userService.getUserByNickname(message.getData().getNickname()).getUserSeq();
+
+            if(token != null)
+                userSeq = Integer.parseInt(tokenProvider.getAuthentication(token).getName());
+
             type = message.getHeader().getType();
         } catch (Exception e){
             e.printStackTrace();
+            return;
+        }
+
+        if(userSeq == 0){
+            log.error("잘못된 유저 정보로 요청을 날리는 중입니다.");
             return;
         }
 
