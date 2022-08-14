@@ -35,7 +35,6 @@ public class RoomSockController {
 
     @MessageMapping("/room/{room-seq}")
     public void messageControll(@DestinationVariable("room-seq") int roomSeq, StompHeaderAccessor header, @Payload RoomMessageDto message){
-        log.info(message.toString());
         final String dest = "/sub/room/" + roomSeq;
         final String type, token;
         int userSeq;

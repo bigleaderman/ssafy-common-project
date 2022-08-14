@@ -52,6 +52,7 @@ public class RoomSockService {
         data.addProperty("color", message.getColor());
         data.addProperty("x", message.getX());
         data.addProperty("y", message.getY());
+        data.addProperty("isHost", roomRepo.getRoomInfo(roomSeq).getHostUser() == user.getUserSeq());
 
         // reponse json build
         response.add("header", header);

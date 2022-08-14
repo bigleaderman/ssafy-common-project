@@ -105,6 +105,7 @@ public class GameSockController {
                 log.info("[Game {}] 투표 결과 확인", roomSeq);
                 JsonObject jo = new JsonObject();
                 jo.addProperty("type", "vote-result");
+                jo.add("data", data);
                 template.convertAndSend(dest, jo.toString());
             }
         }
