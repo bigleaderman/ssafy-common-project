@@ -113,7 +113,7 @@ public class GameSockController {
         if(type.equals("vote-check")){
             JsonObject jo = gameSockService.voteCheck(roomSeq, userSeq);
             if(jo != null){
-                log.info("[Game {}] 투표 결과 확인 완료");
+                log.info("[Game {}] 투표 결과 확인 완료", roomSeq);
                 template.convertAndSend(dest , jo.toString());
             }
         }
@@ -122,6 +122,14 @@ public class GameSockController {
             JsonObject jo = gameSockService.nightAct(roomSeq, userSeq, payload.getData().getTarget());
             if(jo != null){
                 template.convertAndSend(dest + "/" + userService.getUserInfo(userSeq).getNickname(), jo.toString());
+            }
+        }
+
+        if(type.equals("night-result")){
+            JsonObject jo = gameSockService.nightResult(roomSeq, userSeq);
+            if(jo != null){
+                log.info("[Game {}] 밤 결과 확인", roomSeq);
+                template.convertAndSend(dest, jo.toString());
             }
         }
 
