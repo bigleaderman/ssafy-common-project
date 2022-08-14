@@ -132,10 +132,12 @@ public class RoomSockService {
         Map<Integer, JsonObject> list = roomRepo.getAllUsersOfRoomSock(roomSeq);
         JsonArray users = new JsonArray();
 
-        // data build
-        list.forEach((k, v)->{
-            users.add(v);
-        });
+        if(list != null){
+            // data build
+            list.forEach((k, v)->{
+                users.add(v);
+            });
+        }
 
         JsonObject data = new JsonObject();
         data.add("users", users);

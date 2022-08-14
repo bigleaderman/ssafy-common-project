@@ -147,6 +147,10 @@ public class RoomRepo {
 
 
     public Map<Integer, JsonObject> getAllUsersOfRoomSock(int roomSeq){
+        if(map.get(roomSeq) == null){
+            log.error("[Room {}] 없는 방에 접근하고 있습니다.", roomSeq);
+            return null;
+        }
         return this.map.get(roomSeq).getUsers();
     }
 
