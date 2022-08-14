@@ -283,7 +283,7 @@ public class GameSockService {
 
             // 살릴사람
             gmMap.get(roomSeq).getUsers().forEach((k, v)->{
-                if(!v.isDead() && v.getRole().equals("doctor")) {
+                if(!v.isDead() && tmp.contains(v.getTarget()) && v.getRole().equals("doctor")) {
                     tmp.remove(v.getTarget());
                 }
             });
