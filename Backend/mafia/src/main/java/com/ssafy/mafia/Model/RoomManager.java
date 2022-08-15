@@ -17,12 +17,12 @@ public class RoomManager {
     private int seatCnt;
 
     private int roomSeq;
-    private LinkedList<String> characters;
+    private LinkedList<Integer> characters;
 
     public RoomManager(){
         characters = new LinkedList<>();
         for(int i = 1; i <= 8; i++)
-            characters.add(i + "");
+            characters.add(i);
         Collections.shuffle(characters);
 
         users = new ConcurrentHashMap<>();
@@ -30,19 +30,19 @@ public class RoomManager {
         seatCnt = 0;
     }
 
-    public String getCharacter(){
+    public int getCharacter(){
         return characters.poll();
     }
 
-    public void returnCharacter(String character){
+    public void returnCharacter(int character){
         characters.add(character);
     }
 
     public void addUser(int userSeq, RoomDataDto message){
-        String character = "";
+        int character = 0;
 
         if(users.get(userSeq)!=null) {
-            character = users.get(userSeq).get("character").getAsString();
+            character = users.get(userSeq).get("character").getAsInt();
             users.remove(userSeq);
         }
         else{
@@ -60,7 +60,8 @@ public class RoomManager {
     }
 
     public void removeUser(int userSeq){
-        returnCharacter(users.get(userSeq).get("character").getAsString());
+        if(users.get(userSeq) != null)
+            returnCharacter(users.get(userSeq).get("character").getAsInt());
         users.remove(userSeq);
     }
 
