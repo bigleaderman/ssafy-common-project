@@ -2,8 +2,6 @@ package com.ssafy.mafia.Game;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.ssafy.mafia.Entity.User;
-import com.ssafy.mafia.Model.RoomProtocol.GameProgressDataReq;
 import com.ssafy.mafia.Repository.GameRepo;
 import com.ssafy.mafia.Repository.RoomRepo;
 import com.ssafy.mafia.Service.SessionService;

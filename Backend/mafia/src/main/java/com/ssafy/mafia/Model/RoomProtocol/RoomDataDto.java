@@ -10,6 +10,7 @@ public class RoomDataDto {
     private String status;
     private String chairNum;
     private String color;
+    private String dir;
     private double x;
     private double y;
     private int capacity;

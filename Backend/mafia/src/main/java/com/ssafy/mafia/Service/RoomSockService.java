@@ -175,6 +175,7 @@ public class RoomSockService {
         data.addProperty("y", message.getY());
         data.addProperty("nickname", message.getNickname());
         data.addProperty("status", message.getStatus());
+        data.addProperty("dir", message.getDir());
         data.addProperty("color", message.getColor());
 
         JsonObject jo = new JsonObject();
