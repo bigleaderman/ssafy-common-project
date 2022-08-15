@@ -2,8 +2,9 @@ package com.ssafy.mafia.auth.service;
 
 
 import com.ssafy.mafia.Entity.User;
+import com.ssafy.mafia.Entity.UserStatus;
+import com.ssafy.mafia.auth.controller.dto.UserInfoResponseDto;
 import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
-import com.ssafy.mafia.auth.controller.dto.UserResponseDto;
 import com.ssafy.mafia.auth.repository.UserRepository;
 import com.ssafy.mafia.auth.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
-import java.util.Optional;
+import javax.persistence.NoResultException;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @Service
@@ -22,10 +25,22 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
 
+
+
     @Transactional(readOnly=true)
     public User getUserInfo(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("유저 정보가 없습니다."));
+    }
+
+    public User getUserInfo(int userSeq){
+        return em.find(User.class, userSeq);
+    }
+
+    public User getUserByNickname(String nickname){
+        return em.createQuery("select u from User u where u.nickname=:nickname", User.class)
+                .setParameter("nickname", nickname)
+                .getSingleResult();
     }
 
     @Transactional(readOnly=true)
@@ -42,15 +57,18 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public Boolean checkNickname(String nickname) {
+    public boolean checkNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
     }
 
     @Transactional(readOnly = false)
-    public User enrollNickname(String nickname) {
+    public UserInfoResponseDto enrollNickname(String nickname) {
+        if (userRepository.existsByNickname(nickname)) {
+            throw new RuntimeException("이미 등록된 닉네임입니다");
+        }
         User user = em.find(User.class, SecurityUtil.getCurrentUserId());
         user.setNickname(nickname);
-        return user;
+        return UserInfoResponseDto.convert(user);
     }
 
     @Transactional(readOnly = false)
@@ -67,22 +85,38 @@ public class UserService {
     }
 
     @Transactional
-    public User changePw(String password) {
-        User user = em.find(User.class, SecurityUtil.getCurrentUserId());
-        user.setPassword(passwordEncoder.encode(password));
-        return user;
+    public void changePw(UserRequestDto userRequestDto) {
+        User user = em.createQuery("SELECT u FROM User u WHERE u.email like :email", User.class).setParameter("email", userRequestDto.getEmail()).getSingleResult();
+        User changeUser = em.find(User.class, user.getUserSeq());
+        changeUser.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
+        //return user;
 
     }
 
+    @Transactional(readOnly = true)
+    public User userInformation(String nickname) {
+        return userRepository.findByNickname(nickname)
+                .orElseThrow(() -> new NoSuchElementException(nickname));
+    }
+
+    @Transactional(readOnly = true)
+    public List findByNickname(String nick) {
+        try {
+            return em.createQuery("SELECT u FROM User u WHERE u.nickname LIKE CONCAT('%', :nick, '%')", User.class)
+                    .setParameter("nick", nick).getResultList();
+        } catch (NoResultException e) {
+            throw new NoResultException();
+        }
+    }
+
+    @Transactional(readOnly = true)
+    public List isLoginUser() {
+        return  em.createQuery("SELECT u.nickname, u.winCount, u.loseCount, u.rankPoint, u.isRedUser, u.nowRoomSeq FROM User u WHERE u.isLogin = true").getResultList();
+    }
+
     @Transactional
-    public boolean validationUser(int userId, int num) throws Exception {
-        User user = em.find(User.class, userId);
-        if (user.getEmailCode() == num ) {
-            user.setAuth(true);
-            return true;
-        }
-        else{
-            return false;
-        }
+    public void statusChange(String status) {
+        User user = em.find(User.class, SecurityUtil.getCurrentUserId());
+        user.setUserStatus(UserStatus.valueOf(status));
     }
  }

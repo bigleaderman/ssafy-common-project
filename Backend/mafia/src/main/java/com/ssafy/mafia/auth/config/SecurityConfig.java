@@ -1,6 +1,7 @@
 package com.ssafy.mafia.auth.config;
 
 
+import com.ssafy.mafia.auth.Oauth2.OAuth2SuccessHandler;
 import com.ssafy.mafia.auth.jwt.JwtAccessDeniedHandler;
 import com.ssafy.mafia.auth.jwt.JwtAuthenticationEntryPoint;
 import com.ssafy.mafia.auth.jwt.JwtFilter;
@@ -12,9 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 
 //해당 클래스는 JwtTokenProvider가 검증을 끝낸 Jwt로부터 유저 정보를 조회해와서 UserPasswordAuthenticationFilter 로 전달합니다.
 @RequiredArgsConstructor
@@ -24,12 +23,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final TokenProvider tokenProvider;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
+//
+//    private final CustomOAuth2UserService oAuth2UserService;
+    private final OAuth2SuccessHandler successHandler;
 
-    // 암호화에 필요한 PasswordEncoder 를 Bean 등록합니다.
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
+
+
 
     // authenticationManager를 Bean 등록합니다.
     @Bean
@@ -55,7 +54,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()// 요청에 대한 사용권한 체크
                 .antMatchers("/api/admin/**").hasRole("ADMIN")
-                .antMatchers("/api/user/**").hasRole("USER")
+                .antMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/api/room/**").hasAnyRole("USER", "ADMIN")
                 .anyRequest().permitAll()
                 .and()
                 .apply(new JwtSecurityConfig(tokenProvider)); // JwtFilter 를 addFilterBefore 로 등록했던 JwtSecurityConfig 클래스를 적용

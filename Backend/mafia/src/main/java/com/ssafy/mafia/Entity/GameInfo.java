@@ -1,22 +1,13 @@
 package com.ssafy.mafia.Entity;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.util.Lazy;
 
-import javax.persistence.*;
 
-@Entity
 @Getter
 @Setter
 public class GameInfo {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int gameInfoSeq;
-
     private int mafiaNum;
 
     private int policeNum;
@@ -27,24 +18,17 @@ public class GameInfo {
 
     private int talkTimeoutSec;
 
-    private int day;
 
     private int night;
 
     // default values
     public GameInfo() {
         mafiaNum = 1;
-        policeNum = 0;
-        doctorNum = 0;
-        voteTimeoutSec = 120;
-        talkTimeoutSec = 30;
-        day = 0;
-        night = 0;
+        policeNum = 1;
+        doctorNum = 1;
+        voteTimeoutSec = 30;
+        talkTimeoutSec = 60;
+        night = 30;
     }
-
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "roomSeq", name = "roomInfoSeq")
-    private RoomInfo roomInfoSeq;
 
 }

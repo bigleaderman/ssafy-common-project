@@ -2,6 +2,9 @@ package com.ssafy.mafia.auth.service;
 
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.auth.repository.UserRepository;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -36,5 +39,16 @@ public class CustomUserDetailsService implements UserDetailsService {
                 user.getPassword(),
                 Collections.singleton(grantedAuthority)
         );
+    }
+
+    @NoArgsConstructor
+    @Getter
+    public static class UserDto {
+        private String email;
+
+        @Builder
+        public UserDto(String email){
+            this.email = email;
+        }
     }
 }
