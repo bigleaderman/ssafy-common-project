@@ -177,6 +177,11 @@ public class RoomService {
 
     // 방 입장
     public SettingsDto joinRoom(int roomSeq, int userSeq){
+        if(roomRepo.locked(roomSeq)){
+            log.error("{} 이미 게임이 시작했습니다.", roomSeq);
+            return null;
+        }
+
         // 방에 유저 추가
         roomRepo.joinRoom(roomSeq, userService.getUserInfo(userSeq));
 
@@ -198,4 +203,5 @@ public class RoomService {
         // 방 정보 리스트에서 유저 삭제
         roomRepo.leavRoom(roomSeq, userSeq);
     }
+
 }

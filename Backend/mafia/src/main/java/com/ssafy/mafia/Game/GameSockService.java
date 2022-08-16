@@ -35,6 +35,8 @@ public class GameSockService {
         if(gmMap.get(roomSeq)!=null)
             return 0;
 
+        roomRepo.lock(roomSeq);
+
         log.info("[Game {}] 게임 스타트", roomSeq);
         log.info("[Game {}] 게임 매니저 생성", roomSeq);
         gmMap.put(roomSeq, new GameManager());
@@ -366,6 +368,8 @@ public class GameSockService {
 
         // delete game
         removeGame(roomSeq);
+
+        roomRepo.unlock(roomSeq);
         return jo;
     }
 
