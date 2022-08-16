@@ -35,6 +35,10 @@ public class RoomRepo {
         return em.createQuery("select r from RoomInfo r", RoomInfo.class).getResultList();
     }
 
+    public RoomManager getRoomManager(int roomSeq){
+        return map.get(roomSeq);
+    }
+
     public RoomInfo createRoom(RoomInfoDto roomInfo){
         // 집어넣을 데이터 설정
         RoomInfo entity = new RoomInfo();
@@ -137,12 +141,13 @@ public class RoomRepo {
 
     // 방에서 유저 삭제
     public void deleteUserSock(int roomSeq, int userSeq){
-        this.map.get(roomSeq).removeUser(userSeq);
+        map.get(roomSeq).removeUser(userSeq);
     }
 
     // 유저 추가
     public void addUserSock(int roomSeq, int userSeq, RoomDataDto message){
-        this.map.get(roomSeq).addUser(userSeq, message);
+        log.info("[Room Repo {}] {} 유저 추가", roomSeq, userSeq);
+        map.get(roomSeq).addUser(userSeq, message);
     }
 
 
@@ -151,22 +156,22 @@ public class RoomRepo {
             log.error("[Room {}] 없는 방에 접근하고 있습니다.", roomSeq);
             return null;
         }
-        return this.map.get(roomSeq).getUsers();
+        return map.get(roomSeq).getUsers();
     }
 
     // 유저 ready
     public void seat(int roomSeq, int seatNum, int userSeq){
-        this.map.get(roomSeq).seat(userSeq, seatNum);
+        map.get(roomSeq).seat(userSeq, seatNum);
     }
 
     // 유저 레디 해제
     public void stand(int roomSeq, int seatNum, int userSeq){
-        this.map.get(roomSeq).stand(userSeq, seatNum);
+        map.get(roomSeq).stand(userSeq, seatNum);
     }
 
     // 남은 좌석 정보 확인
     public int[] getSeatInfo(int roomSeq){
-        return this.map.get(roomSeq).getSeatState();
+        return map.get(roomSeq).getSeatState();
     }
 
     // 앉은 좌석 수 확인

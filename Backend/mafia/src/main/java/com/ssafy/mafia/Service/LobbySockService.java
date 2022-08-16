@@ -79,8 +79,8 @@ public class LobbySockService {
     }
 
     // 유저가 로비를 떠났을 때
-    public void leave(String nickname){
-
+    public void leave(int userSeq){
+        log.info("로비 퇴장 {}");
     }
 }
 
