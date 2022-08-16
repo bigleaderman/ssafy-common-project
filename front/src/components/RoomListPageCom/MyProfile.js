@@ -35,21 +35,21 @@ function MyProfile() {
       <List style={{color:"#ccc"}}>
         <ListItem sx={{p:0.5,pl:2}}>
           <ListItemAvatar>
-            {/* <ThumbUpAltIcon /> */}Win
+            {/* <ThumbUpAltIcon /> */}승리
           </ListItemAvatar>
-          <ListItemText primary={me.winCount} />
+          <ListItemText primary={`${me.winCount}회`} />
         </ListItem>
         <ListItem sx={{p:0.5,pl:2}}>
           <ListItemAvatar>
-            {/* <ThumbDownAltIcon /> */}Lose
+            {/* <ThumbDownAltIcon /> */}패배
           </ListItemAvatar>
-          <ListItemText primary={me.loseCount} />
+          <ListItemText primary={`${me.loseCount}회`} />
         </ListItem>
         <ListItem sx={{p:0.5,pl:2}}>
           <ListItemAvatar>
-            {/* <StarIcon /> */}Rank
+            {/* <StarIcon /> */}랭크
           </ListItemAvatar>
-          <ListItemText primary={me.rankPoint} />
+          <ListItemText primary={`${me.rankPoint}점`} />
         </ListItem>
       </List>
     </Paper>

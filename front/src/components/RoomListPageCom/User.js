@@ -13,8 +13,8 @@ import {
   TextField,
   Box,
 } from "@mui/material";
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { blueGrey } from '@mui/material/colors';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { blueGrey } from "@mui/material/colors";
 
 import { useSelector } from "react-redux";
 
@@ -22,7 +22,6 @@ import axios from "axios";
 
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
-
 
 const theme = createTheme({
   palette: {
@@ -32,10 +31,12 @@ const theme = createTheme({
     },
     secondary: {
       // This is green.A700 as hex.
-      main: '#11cb5f',
+      main: "#11cb5f",
     },
   },
 });
+
+
 
 function User({ loginUser, sendF }) {
   const me = useSelector((state) => state.user);
@@ -120,7 +121,7 @@ function User({ loginUser, sendF }) {
       if (res.data.redUser) {
         setNameColor("red");
       } else {
-        setNameColor('')
+        setNameColor("");
       }
     });
   };
@@ -142,192 +143,230 @@ function User({ loginUser, sendF }) {
 
   return (
     <ThemeProvider theme={theme}>
-    <Box sx={{ minHeight: "400px" }}>
-      <Stack sx={{ m: 1 }} direction='row' justifyContent='center' alignItems='center' spacing={1}>
-        <TextField
-
-          InputProps={{
-            sx: {
-              "& input": {
-                color: "#ccc",
+      <Box sx={{ minHeight: "374px" }}>
+        <Stack
+          sx={{ m: 1 }}
+          direction='row'
+          justifyContent='center'
+          alignItems='center'
+          spacing={1}
+        >
+          <TextField
+            InputProps={{
+              sx: {
+                "& input": {
+                  color: "#ccc",
+                },
+                height: "30px",
               },
-            },
-          }}
-          sx={{ border: "rgba(255,255,255) 1px solid", borderRadius: "2px" }}
-          fullWidth
-          id='outlined-textarea'
-          placeholder='UserSearch'
-          variant='outlined'
-          onChange={(e) => {
-            setSearch(e.target.value);
-          }}
-          onKeyPress={handleOnKeyPress}
-          size='small'
-        />
-        {searchResult === "" ? (
-          <Button
-
+            }}
             sx={{
-              width: "20%",
-              minHeight: "42px",
-              color: "rgba(255,255,255)",
+              minHeight: "30px",
+              maxHeight: "30px",
               border: "rgba(255,255,255) 1px solid",
-              borderRadius: "2px"
+              borderRadius: "2px",
             }}
-            size='small'
+            fullWidth
+            id='outlined-textarea'
+            placeholder='UserSearch'
             variant='outlined'
-            onClick={() => {
-              searchUser();
+            onChange={(e) => {
+              setSearch(e.target.value);
             }}
-          >
-            <SearchIcon />
-          </Button>
-        ) : (
-          <Button
-
-            sx={{ width: "20%", color: "rgba(255,255,255)", border: "rgba(255,255,255) 1px solid" ,borderRadius: "2px"}}
+            onKeyPress={handleOnKeyPress}
             size='small'
-            variant='outlined'
-            onClick={() => {
-              setSearchResult("");
-            }}
-          >
-            <ClearIcon />
-          </Button>
-        )}
-      </Stack>
-      <div>
-        {searchResult === "" ? (
-          <TableContainer
-            style={{ padding: "20px", height: "349px", backgroundColor: "rgba(0,0,0,0)","&::WebkitScrollbar": {
-              width: 20
-              },
-              "&::WebkitScrollbarTrack": {
-              backgroundColor: "rgba(0,0,0,0.5)"
-              },
-              "&::WebkitScrollbarThumb": {
-              backgroundColor: "rgba(255,255,255,0.8)",
-              borderRadius: '1px'
-              }}}
-            component={Paper}
-          >
-            <Table size='medium'>
-              <TableBody>
-                {loginUsers &&
-                  loginUsers.map((user, index) => (
-                    <TableRow key={index}>
-                      <TableCell sx={{ p: 0 }}>
-                        <Button
-                          sx={{ width: "100%", color: "#ccc" }}
-                          id='demo-positioned-button'
-                          aria-controls={open ? "demo-positioned-menu" : undefined}
-                          aria-haspopup='true'
-                          aria-expanded={open ? "true" : undefined}
-                          onClick={(e) => handleClick(user, e)}
-                        >
-                          {user.nickname}
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        ) : searchResult === true ? (
-          <TableContainer
-            style={{ padding: "20px", height: "351px", backgroundColor: "rgba(0,0,0,0)" }}
-            component={Paper}
-          >
-            <Table size='medium'>
-              <TableBody>
-                {nick &&
-                  nick.map((user, index) => (
-                    <TableRow key={index}>
-                      <TableCell sx={{ p: 0 }}>
-                        <Button
-                          sx={{ width: "100%", color: "#ccc" }}
-                          id='demo-positioned-button'
-                          aria-controls={open ? "demo-positioned-menu" : undefined}
-                          aria-haspopup='true'
-                          aria-expanded={open ? "true" : undefined}
-                          onClick={(e) => handleClick(user, e)}
-                        >
-                          {user.nickname}
-                        </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        ) : (
-          <div style={{ color: "white" }}>"존재하지 않는 닉네임 입니다."</div>
-        )}
-      </div>
-      {/* 친구가 아닌사람 */}
-      <Menu
-        sx={{ height: "100%" }}
-        id='demo-positioned-menu'
-        aria-labelledby='demo-positioned-button'
-        anchorEl={anchorEl}
-        open={open === 1}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={userProfile}>전적 보기</MenuItem>
-        <MenuItem
-          onClick={() => {
-            sendFriend();
-            handleClose();
-          }}
-        >
-          친구 신청
-        </MenuItem>
-      </Menu>
-      {/* 친구 */}
-      <Menu
-        id='demo-positioned-menu'
-        aria-labelledby='demo-positioned-button'
-        anchorEl={anchorEl}
-        open={open === 2}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={userProfile}>전적 보기</MenuItem>
-      </Menu>
-      {/* 전적보기 */}
-      <Menu
-        id='demo-positioned-menu'
-        aria-labelledby='demo-positioned-button'
-        anchorEl={anchorEl}
-        open={open === 3}
-        onClose={handleClose}
-        sx={{ height: "100%" }}
-      >
-        <div
-          style={{
-            width: 220,
-            padding: 10,
-            backgroundColor: "rgba(220,220,220,0.1)",
-            height: "100%",
-          }}
-        >
-          <h2 style={{ color: nameColor, marginLeft: 10, marginBottom: 10, textAlign: "left" }}>
-            {ff.nickname}
-          </h2>
-          <p style={{ fontWeight: "bolder", marginLeft: 10, fontSize: 20 }}>
-            <span style={{ marginRight: 10 }}>Win</span>
-            <span style={{ position: "relative", left: 63 }}>{ff.winCount}</span>
-          </p>
-          <p style={{ fontWeight: "bolder", marginLeft: 10, fontSize: 20 }}>
-            <span style={{ marginRight: 10 }}>Lose</span>
-            <span style={{ position: "relative", left: 52 }}>{ff.loseCount}</span>
-          </p>
-          <p style={{ fontWeight: "bolder", marginLeft: 10, fontSize: 20 }}>
-            <span style={{ marginRight: 10 }}>RankPoint</span>
-            {ff.rankPoint}
-          </p>
+          />
+          {searchResult === "" ? (
+            <Button
+              sx={{
+                width: "20%",
+                minHeight: "30px",
+                maxHeight: "30px",
+                color: "rgba(255,255,255)",
+                border: "rgba(255,255,255) 1px solid",
+                borderRadius: "2px",
+              }}
+              size='small'
+              variant='outlined'
+              onClick={() => {
+                searchUser();
+              }}
+            >
+              <SearchIcon />
+            </Button>
+          ) : (
+            <Button
+              sx={{
+                minHeight: "30px",
+                maxHeight: "30px",
+                width: "20%",
+                color: "rgba(255,255,255)",
+                border: "rgba(255,255,255) 1px solid",
+                borderRadius: "2px",
+              }}
+              size='small'
+              variant='outlined'
+              onClick={() => {
+                setSearchResult("");
+              }}
+            >
+              <ClearIcon />
+            </Button>
+          )}
+        </Stack>
+        <div>
+          {searchResult === "" ? (
+            <TableContainer
+              style={{
+                padding: "10px",
+                height: "335px",
+                backgroundColor: "rgba(0,0,0,0)",
+              }}
+              sx={{
+                "&::-webkit-scrollbar": {
+                  width: 15,
+                },
+                "&::-webkit-scrollbar-track": {
+                  backgroundColor: "black",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "white",
+                  borderRadius: '1px',
+                },
+              }}
+              component={Paper}
+            >
+              <Table size='medium'>
+                <TableBody>
+                  {loginUsers &&
+                    loginUsers.map((user, index) => (
+                      <TableRow key={index}>
+                        <TableCell sx={{ p: 0, border: "rgba(0,0,0,0) 1px solid" }}>
+                          <Button
+                            sx={{ width: "100%", color: "#ccc", fontSize: "20px", mt: "2px" }}
+                            id='demo-positioned-button'
+                            aria-controls={open ? "demo-positioned-menu" : undefined}
+                            aria-haspopup='true'
+                            aria-expanded={open ? "true" : undefined}
+                            onClick={(e) => handleClick(user, e)}
+                            style={{ justifyContent: "flex-start" }}
+                          >
+                            {user.nickname}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : searchResult === true ? (
+            <TableContainer
+              style={{ padding: "10px", minHeight: "323px", backgroundColor: "rgba(0,0,0,0)" }}
+              component={Paper}
+              sx={{
+                "&::-webkit-scrollbar": {
+                  width: 15,
+                },
+                "&::-webkit-scrollbar-track": {
+                  backgroundColor: "black",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "white",
+                  borderRadius: '1px',
+                },
+              }}
+            >
+              <Table size='medium'>
+                <TableBody>
+                  {nick &&
+                    nick.map((user, index) => (
+                      <TableRow key={index}>
+                        <TableCell sx={{ p: 0,border: "rgba(0,0,0,0) 1px solid"  }}>
+                          <Button
+                            sx={{ width: "100%", color: "#ccc" ,fontSize: "20px", }}
+                            id='demo-positioned-button'
+                            aria-controls={open ? "demo-positioned-menu" : undefined}
+                            aria-haspopup='true'
+                            aria-expanded={open ? "true" : undefined}
+                            onClick={(e) => handleClick(user, e)}
+                            style={{ justifyContent: "flex-start" }}
+                          >
+                            {user.nickname}
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          ) : (
+            <div style={{ color: "white" }}>"존재하지 않는 닉네임 입니다."</div>
+          )}
         </div>
-      </Menu>
-    </Box>
+        {/* 친구가 아닌사람 */}
+        <Menu
+          sx={{ height: "100%" }}
+          id='demo-positioned-menu'
+          aria-labelledby='demo-positioned-button'
+          anchorEl={anchorEl}
+          open={open === 1}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={userProfile}>전적 보기</MenuItem>
+          <MenuItem
+            onClick={() => {
+              sendFriend();
+              handleClose();
+            }}
+          >
+            친구 신청
+          </MenuItem>
+        </Menu>
+        {/* 친구 */}
+        <Menu
+          id='demo-positioned-menu'
+          aria-labelledby='demo-positioned-button'
+          anchorEl={anchorEl}
+          open={open === 2}
+          onClose={handleClose}
+        >
+          <MenuItem onClick={userProfile}>전적 보기</MenuItem>
+        </Menu>
+        {/* 전적보기 */}
+        <Menu
+          id='demo-positioned-menu'
+          aria-labelledby='demo-positioned-button'
+          anchorEl={anchorEl}
+          open={open === 3}
+          onClose={handleClose}
+          sx={{ height: "100%" }}
+        >
+          <div
+            style={{
+              width: 220,
+              padding: 10,
+              backgroundColor: "rgba(220,220,220,0.1)",
+              height: "100%",
+            }}
+          >
+            <h2 style={{ color: nameColor, marginLeft: 10, marginBottom: 10, textAlign: "left" }}>
+              {ff.nickname}
+            </h2>
+            <p style={{ fontWeight: "bolder", marginLeft: 10, fontSize: 20 }}>
+              <span style={{ marginRight: 10 }}>승리</span>
+              <span style={{ position: "relative", left: 63 }}>{ff.winCount}회</span>
+            </p>
+            <p style={{ fontWeight: "bolder", marginLeft: 10, fontSize: 20 }}>
+              <span style={{ marginRight: 10 }}>패배</span>
+              <span style={{ position: "relative", left: 63 }}>{ff.loseCount}회</span>
+            </p>
+            <p style={{ fontWeight: "bolder", marginLeft: 10, fontSize: 20 }}>
+              <span style={{ marginRight: 10 }}>랭크</span>
+              <span style={{ position: "relative", left: 63 }}>{ff.rankPoint}점</span>
+            </p>
+          </div>
+        </Menu>
+      </Box>
     </ThemeProvider>
   );
 }

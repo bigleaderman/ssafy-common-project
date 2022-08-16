@@ -29,7 +29,7 @@ const SignInPage = (props) => {
 
   const clickKakaoLogin = () => {
     console.log("kakao 로그인");
-    window.open('https://kauth.kakao.com/oauth/authorize?client_id=9e9b8aade342d72cf01ce50e6136e7e1&redirect_uri=http://localhost:3000/oauth/callback/kakao&response_type=code', '_self');
+    window.open('https://kauth.kakao.com/oauth/authorize?client_id=9e9b8aade342d72cf01ce50e6136e7e1&redirect_uri=https://i7d106.p.ssafy.io:8080/oauth/callback/kakao&response_type=code', '_self');
   }
 
   const onClickLogin = () => {
@@ -189,7 +189,7 @@ const SignInPage = (props) => {
                               color: 'var(--color-2)',
                               backgroundColor: 'var(--color-5)',
                               padding: '10px 10px',
-                              borderRadius: '6px',
+                              borderRadius: '2px',
                               fontSize: '16px',
                               marginLeft: '25%',
                               marginTop:"2%",
@@ -204,14 +204,14 @@ const SignInPage = (props) => {
             <h2 style={{color:'white'}}>Welcome back</h2>
             <label>
               <span>E-mail</span>
-              <input type="email" placeholder="E-mail" value={email}style={{backgroundColor:"rgba(0,0,0,0.3)", height:35, borderRadius: 4, color:'#c8c8c8'}}  id="email"onChange={(e) => {setEmail(e.target.value)}}/>
+              <input type="email" placeholder="E-mail" value={email}style={{backgroundColor:"rgba(0,0,0,0.3)", height:35, borderRadius: 2, color:'#c8c8c8'}}  id="email"onChange={(e) => {setEmail(e.target.value)}}/>
             </label>
             <label>
               <span>Password</span>
-              <input type="password" placeholder="Password" value={password} style={{backgroundColor:"rgba(0,0,0,0.3)", height:35 ,borderRadius: 4, marginBottom:10, color:'#c8c8c8'}} id="password" onChange={(e) => {setPassword(e.target.value)}}/>
+              <input type="password" placeholder="Password" value={password} style={{backgroundColor:"rgba(0,0,0,0.3)", height:35 ,borderRadius: 2, marginBottom:10, color:'#c8c8c8'}} id="password" onChange={(e) => {setPassword(e.target.value)}}/>
             </label>
             <Link style={{fontSize:15}} className="forgot-pass" to={`/findpassword`}>Forgot password?</Link>
-            <button  style={ { color:"rgba(240,240,240)", height:45 ,borderRadius: 6, backgroundColor:"rgba(80,0,0,0.7)"}}  type="button" className="submit" onClick={onClickLogin}>Sign In</button>
+            <button  style={ { color:"rgba(240,240,240)", height:45 ,borderRadius: 2, backgroundColor:"rgba(80,0,0,0.7)"}}  type="button" className="submit" onClick={onClickLogin}>Sign In</button>
             {/* <img style={{width:'260px', cursor: 'pointer'}} src="kakao_login_large_narrow.png" onClick={clickKakaoLogin} /> */}
             <KaKaoLoginButton onClick={clickKakaoLogin}><KakaoLogo src={'comment-solid.svg'} />카카오 로그인</KaKaoLoginButton>
             {/* <button type="button" className="fb-btn" style={{marginBottom:"16px"}} onClick={clickKakaoLogin}>Connect with <span style={{color:"yellow"}}>Kakao</span></button> */}
@@ -231,7 +231,7 @@ const SignInPage = (props) => {
                               color: 'var(--color-2)',
                               backgroundColor: 'var(--color-5)',
                               padding: '10px 10px',
-                              borderRadius: '6px',
+                              borderRadius: '2px',
                               fontSize: '16px',
                               marginLeft: '25%',
                               marginTop:30,
@@ -259,18 +259,18 @@ const SignInPage = (props) => {
               <h2 style={{color:'white'}}>Time to feel like home</h2>
               <label>
                 <span>E-mail</span>
-                <input type="text" placeholder="E-mail" value={signUpEmail} style={{backgroundColor:"rgba(0,0,0,0.3)", height:35, borderRadius: 4, color:'#c8c8c8'}} id="signUpEmail" onChange={(e) => {setIsValidEmail(false); setSignUpEmail(e.target.value);}}
+                <input type="text" placeholder="E-mail" value={signUpEmail} style={{backgroundColor:"rgba(0,0,0,0.3)", height:35, borderRadius: 2, color:'#c8c8c8'}} id="signUpEmail" onChange={(e) => {setIsValidEmail(false); setSignUpEmail(e.target.value);}}
                 onBlur={() => {if (signUpEmail.length) checkEmail(); else handleModalOpen('이메일을 입력해주세요.');}}/>
                 {/* <Button style={styleButton} onClick={() => {if (signUpEmail.length) checkEmail(); else handleModalOpen('이메일을 입력해주세요.');}}>중복검사</Button> */}
               </label>
               <label>
                 <span>Password validationPassword</span>
-                <input type="password" placeholder="Password" value={signUpPassword} style={{backgroundColor:"rgba(0,0,0,0.3)", height:35, borderRadius: 4, color:'#c8c8c8'}} id="signUpPassword" onChange={(e) => {setSignUpPassword(e.target.value)}}
+                <input type="password" placeholder="Password" value={signUpPassword} style={{backgroundColor:"rgba(0,0,0,0.3)", height:35, borderRadius: 2, color:'#c8c8c8'}} id="signUpPassword" onChange={(e) => {setSignUpPassword(e.target.value)}}
                 onBlur={() => {if (validationPassword()) ; else handleModalOpen('소문자, 대문자, 숫자가 포함된 6자리이상 20자리 이하의 비밀번호를 입력해 주세요');}}/>
               </label>
               <label>
                 <span>Check_Password</span>
-                <input type="password" placeholder="Check_Password" value={signUpPasswordCheck} style={{backgroundColor:"rgba(0,0,0,0.3)", height:35, borderRadius: 4, color:'#c8c8c8'}} id="signUpPasswordCheck"onChange={(e) => {setSignUpPasswordCheck(e.target.value)}}/>
+                <input type="password" placeholder="Check_Password" value={signUpPasswordCheck} style={{backgroundColor:"rgba(0,0,0,0.3)", height:35, borderRadius: 2, color:'#c8c8c8'}} id="signUpPasswordCheck"onChange={(e) => {setSignUpPasswordCheck(e.target.value)}}/>
               </label>
               {!isSamePassword() ? <span className="forgot-pass">비밀번호가 다릅니다.</span> : null}
 
@@ -288,7 +288,7 @@ const KaKaoLoginButton = styled.button`
   width: 260px;
   height: 46px;
   background-color: #FEE500;
-  border-radius: 6px;
+  border-radius: 2px;
   color: #191919;
   font-weight: bold;
   justify-content: center;

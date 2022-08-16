@@ -71,30 +71,33 @@ function Friends({ friends, sendF }) {
   };
 
   return (
-    <Box sx={{ minHeight: "408px" }}>
-      <TableContainer style={{ padding: "20px", height: "407px", backgroundColor: "rgba(0,0,0,0)","&::WebkitScrollbar": {
-            width: 20
-            },
-            "&::WebkitScrollbarTrack": {
-            backgroundColor: "rgba(0,0,0,0.5)"
-            },
-            "&::WebkitScrollbarThumb": {
-            backgroundColor: "rgba(255,255,255,0.8)",
-            borderRadius: '1px'
-            } }} component={Paper}>
+    <Box sx={{ minHeight: "382px" }}>
+      <TableContainer sx={{
+                "&::-webkit-scrollbar": {
+                  width: 15,
+                },
+                "&::-webkit-scrollbar-track": {
+                  backgroundColor: "black",
+                },
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "white",
+                  borderRadius: '1px',
+                },
+              }} style={{ padding: "10px", height: "378px", backgroundColor: "rgba(0,0,0,0)" }} component={Paper}>
         <Table size='medium'>
           <TableBody>
             {friends &&
-              friends.map((f, index) => (
+              Array.from(friends).map((f, index) => (
                 <TableRow key={index}>
-                  <TableCell sx={{ p: 0 }}>
+                  <TableCell sx={{ p: 0 ,border: "rgba(0,0,0,0) 1px solid"}}>
                     <Button
-                      sx={{ width: "100%", color:"#ccc" }}
+                      sx={{ width: "100%", color:"#ccc",fontSize:'20px',mt:'2px',  }}
                       id='demo-positioned-button'
                       aria-controls={open ? "demo-positioned-menu" : undefined}
                       aria-haspopup='true'
                       aria-expanded={open ? "true" : undefined}
                       onClick={(e) => handleClick(f, e)}
+                      style={{justifyContent: "flex-start", }}
                     >
                       {f.nickname}
                     </Button>
@@ -137,23 +140,31 @@ function Friends({ friends, sendF }) {
         anchorEl={anchorEl}
         open={open === 3}
         onClose={handleClose}
-        // anchorOrigin={{
-        //   vertical: "top",
-        //   horizontal: "left",
-        // }}
-        // transformOrigin={{
-        //   vertical: "top",
-        //   horizontal: "left",
-        // }}
       >
-        <div style={{width:220, backgroundColor:'rgba(220,220,220,0.1)', height:'100%', padding:0}}>
-          <h2 style={{ color: nameColor, marginLeft:10, marginBottom:10, textAlign:'left' }}>{ff.nickname}</h2>
-          <p style={{fontWeight:'bolder', marginLeft:10, fontSize:20}}><span style={{marginRight:10}}>Win</span><span style={{position:'relative', left:63}}>{ff.winCount}</span></p>
-          <p style={{fontWeight:'bolder', marginLeft:10, fontSize:20}}><span style={{marginRight:10}}>Lose</span><span style={{position:'relative', left:52}}>{ff.loseCount}</span></p>
-          <p style={{fontWeight:'bolder', marginLeft:10, fontSize:20}}><span style={{marginRight:10}}>RankPoint</span>{ff.rankPoint}</p>
-          {/* <p>Lose   {ff.loseCount}</p>
-          <p>RankPoint   {ff.rankPoint}</p> */}
-        </div>
+        <div
+            style={{
+              width: 220,
+              padding: 10,
+              backgroundColor: "rgba(220,220,220,0.1)",
+              height: "100%",
+            }}
+          >
+            <h2 style={{ color: nameColor, marginLeft: 10, marginBottom: 10, textAlign: "left" }}>
+              {ff.nickname}
+            </h2>
+            <p style={{ fontWeight: "bolder", marginLeft: 10, fontSize: 20 }}>
+              <span style={{ marginRight: 10 }}>승리</span>
+              <span style={{ position: "relative", left: 63 }}>{ff.winCount}회</span>
+            </p>
+            <p style={{ fontWeight: "bolder", marginLeft: 10, fontSize: 20 }}>
+              <span style={{ marginRight: 10 }}>패배</span>
+              <span style={{ position: "relative", left: 63 }}>{ff.loseCount}회</span>
+            </p>
+            <p style={{ fontWeight: "bolder", marginLeft: 10, fontSize: 20 }}>
+              <span style={{ marginRight: 10 }}>랭크</span>
+              <span style={{ position: "relative", left: 63 }}>{ff.rankPoint}점</span>
+            </p>
+          </div>
       </Menu>
     </Box>
   );

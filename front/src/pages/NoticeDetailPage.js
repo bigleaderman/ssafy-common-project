@@ -52,7 +52,7 @@ const NoticeDetailPage = () => {
           textAlign:"left",
           overflow:"auto",
           backgroundColor: "rgba(0,0,0,0.3)",
-          width:"70%", height:"80%", borderRadius: '15px'}}>
+          width:"70%", height:"80%", borderRadius: '2px'}}>
           <h1 style={{color:"#dcdcdc",fontSize:45, marginLeft:48, marginTop:30}} >{noticeData.title}</h1>
           <Box sx={{height:35, alignItems:'center', marginLeft:6, marginY:2}}>
             

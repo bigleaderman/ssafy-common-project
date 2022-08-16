@@ -22,7 +22,7 @@ import {
   TableRow,
   Menu,
   MenuItem,
-  Stack
+  Stack,
 } from "@mui/material";
 
 import axios from "axios";
@@ -135,9 +135,13 @@ export const SideBar = forwardRef((props, ref) => {
   };
 
   return (
-    <Box sx={{height: "600px", }}>
+    <Box sx={{ height: "600px" }}>
       <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs TabIndicatorProps={{ style: { background: "rgba(255,255,255)" } }} value={value} onChange={handleChange}>
+        <Tabs
+          TabIndicatorProps={{ style: { background: "rgba(255,255,255)" } }}
+          value={value}
+          onChange={handleChange}
+        >
           <Tab sx={{ width: "33%" }} style={{ color: "#ccc" }} label='채팅' {...a11yProps(0)} />
           <Tab
             sx={{ width: "33%" }}
@@ -183,7 +187,6 @@ const ChatBar = (props) => {
   return (
     <Box sx={{ p: 0.5 }}>
       <TableContainer
-
         component={Paper}
         sx={{
           width: "100%",
@@ -191,16 +194,17 @@ const ChatBar = (props) => {
           minHeight: "550px",
           maxHeight: "550px",
           backgroundColor: "rgba(0,0,0,0)",
-          "&::WebkitScrollbar": {
-            width: 20
-            },
-            "&::WebkitScrollbarTrack": {
-            backgroundColor: "rgba(0,0,0,0.5)"
-            },
-            "&::WebkitScrollbarThumb": {
-            backgroundColor: "rgba(255,255,255,0.8)",
-            borderRadius: '1px'
-            }
+
+          "&::-webkit-scrollbar": {
+            width: 15,
+          },
+          "&::-webkit-scrollbar-track": {
+            backgroundColor: "black",
+          },
+          "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "white",
+            borderRadius: "1px",
+          },
         }}
       >
         <Table>
@@ -208,15 +212,16 @@ const ChatBar = (props) => {
             {props.chats &&
               props.chats.map((data, index) => (
                 <TableRow key={index} sx={{ p: 0 }}>
-                  <Stack
-                    direction='row'
-                    justifyContent='flex-start'
-                    alignItems='flex-start'
-                    spacing={2}
-                    sx={{ color: "#ccc",fontSize:'20px',pl:1,p:0.5 }}
+                  <TableCell
+                    sx={{
+                      fontSize: "20px",
+                      p: 0.5,
+                      color: "#ccc",
+                      border: "rgba(0,0,0,0) 1px solid",
+                    }}
                   >
                     {data.nickname} : {data.message}
-                  </Stack>
+                  </TableCell>
                 </TableRow>
               ))}
           </TableBody>
@@ -231,7 +236,8 @@ const ChatBar = (props) => {
           marginBottom: 2,
           marginTop: 0,
           height: "40px",
-          border:'rgba(255,255,255) 1px solid',borderRadius: "2px"
+          border: "rgba(255,255,255) 1px solid",
+          borderRadius: "2px",
         }}
       />
     </Box>
@@ -252,7 +258,7 @@ const UserBar = (props) => {
   const handleClick = (fri, target) => {
     const friendYesNo = Array.from(friendList).filter((e) => e.nickname === fri.nickname);
     // 내친구인가?
-    if (friendYesNo.length !== 0 | fri.nickname === me.nickname) {
+    if ((friendYesNo.length !== 0) | (fri.nickname === me.nickname)) {
       setOpen(2); // 내친구
     } else {
       setOpen(1); // 친구 아님
@@ -280,11 +286,11 @@ const UserBar = (props) => {
       setOpen(0);
       setOpen(3);
       setFf(res.data);
-      console.log('여기를봐용',res.data)
+      console.log("여기를봐용", res.data);
       if (res.data.redUser) {
         setNameColor("red");
       } else {
-        setNameColor('')
+        setNameColor("");
       }
     });
   };
@@ -303,6 +309,18 @@ const UserBar = (props) => {
   return (
     <>
       <TableContainer
+      sx={{
+        "&::-webkit-scrollbar": {
+          width: 15,
+        },
+        "&::-webkit-scrollbar-track": {
+          backgroundColor: "black",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "white",
+          borderRadius: '1px',
+        },
+      }}
         style={{ padding: "20px", height: "600px", backgroundColor: "rgba(0,0,0,0)" }}
         component={Paper}
       >
@@ -310,14 +328,15 @@ const UserBar = (props) => {
           <TableBody>
             {props.userList.map((user, index) => (
               <TableRow key={index}>
-                <TableCell sx={{ p: 0 }}>
+                <TableCell sx={{ p: 0 ,border: "rgba(0,0,0,0) 1px solid"}}>
                   <Button
-                    sx={{ width: "100%", color: "#ccc" }}
+                    sx={{ width: "100%", color: "#ccc",fontSize:'20px',mt:'2px', }}
                     id='demo-positioned-button'
                     aria-controls={open ? "demo-positioned-menu" : undefined}
                     aria-haspopup='true'
                     aria-expanded={open ? "true" : undefined}
                     onClick={(e) => handleClick(user, e)}
+                    style={{justifyContent: "flex-start", }}
                   >
                     {user.nickname}
                   </Button>
@@ -366,29 +385,29 @@ const UserBar = (props) => {
         sx={{ height: "100%" }}
       >
         <div
-          style={{
-            width: 220,
-            padding: 10,
-            backgroundColor: "rgba(220,220,220,0.1)",
-            height: "100%",
-          }}
-        >
-          <h2 style={{ color: nameColor, marginLeft: 10, marginBottom: 10, textAlign: "left" }}>
-            {ff.nickname}
-          </h2>
-          <p style={{ fontWeight: "bolder", marginLeft: 10, fontSize: 20 }}>
-            <span style={{ marginRight: 10 }}>Win</span>
-            <span style={{ position: "relative", left: 63 }}>{ff.winCount}</span>
-          </p>
-          <p style={{ fontWeight: "bolder", marginLeft: 10, fontSize: 20 }}>
-            <span style={{ marginRight: 10 }}>Lose</span>
-            <span style={{ position: "relative", left: 52 }}>{ff.loseCount}</span>
-          </p>
-          <p style={{ fontWeight: "bolder", marginLeft: 10, fontSize: 20 }}>
-            <span style={{ marginRight: 10 }}>RankPoint</span>
-            {ff.rankPoint}
-          </p>
-        </div>
+            style={{
+              width: 220,
+              padding: 10,
+              backgroundColor: "rgba(220,220,220,0.1)",
+              height: "100%",
+            }}
+          >
+            <h2 style={{ color: nameColor, marginLeft: 10, marginBottom: 10, textAlign: "left" }}>
+              {ff.nickname}
+            </h2>
+            <p style={{ fontWeight: "bolder", marginLeft: 10, fontSize: 20 }}>
+              <span style={{ marginRight: 10 }}>승리</span>
+              <span style={{ position: "relative", left: 63 }}>{ff.winCount}회</span>
+            </p>
+            <p style={{ fontWeight: "bolder", marginLeft: 10, fontSize: 20 }}>
+              <span style={{ marginRight: 10 }}>패배</span>
+              <span style={{ position: "relative", left: 63 }}>{ff.loseCount}회</span>
+            </p>
+            <p style={{ fontWeight: "bolder", marginLeft: 10, fontSize: 20 }}>
+              <span style={{ marginRight: 10 }}>랭크</span>
+              <span style={{ position: "relative", left: 63 }}>{ff.rankPoint}점</span>
+            </p>
+          </div>
       </Menu>
     </>
   );

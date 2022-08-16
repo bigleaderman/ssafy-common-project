@@ -73,7 +73,7 @@ const NoticeListPage = (props) => {
         <Stack direction="row" spacing={2}
         style={{marginBottom:"1%", width:"30%"}}>
           <input id="search" type={'text'}
-          style={{backgroundColor:"rgba(0,0,0,0.7)", color:'white', position:'relative', top:70, borderRadius: '4px'}}
+          style={{backgroundColor:"rgba(0,0,0,0.7)", color:'white', position:'relative', top:70, borderRadius: '2px'}}
           value={keyword}
           onChange={(e) => {
               setKeyword(e.target.value);
@@ -84,7 +84,7 @@ const NoticeListPage = (props) => {
                   color: 'var(--color-2)',
                   backgroundColor: 'var(--color-5)',
                   padding: '2px 10px',
-                  borderRadius: '6px',
+                  borderRadius: '2px',
                   fontSize: '16px',
                   marginLeft: '10px',
                   cursor: 'pointer',

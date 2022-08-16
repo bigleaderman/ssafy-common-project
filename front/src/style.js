@@ -16,7 +16,7 @@ const Button = styled.button`
   color: var(--color-2);
   background-color: var(--color-5);
   padding: 4px 10px;
-  border-radius: 6px;
+  border-radius: 2px;
   font-size: 16px;
   margin-left: 10px;
   cursor: pointer;
@@ -27,7 +27,7 @@ const styleButton = {
   color: 'var(--color-2)',
   backgroundColor: 'var(--color-5)',
   padding: '2px 10px',
-  borderRadius: '6px',
+  borderRadius: '2px',
   fontSize: '16px',
   marginLeft: '10px',
   cursor: 'pointer',
@@ -39,7 +39,7 @@ const smallButton = {
   color: 'var(--color-2)',
   backgroundColor: 'var(--color-5)',
   padding: '2px 10px',
-  borderRadius: '6px',
+  borderRadius: '2px',
   fontSize: '16px',
   marginLeft: '10px',
   cursor: 'pointer',
@@ -54,7 +54,7 @@ const middleButton = {
   backgroundColor: 'var(--color-5)',
   margin: '20px 10px',
   padding: '2px 10px',
-  borderRadius: '6px',
+  borderRadius: '2px',
   fontSize: '16px',
   marginLeft: '10px',
   cursor: 'pointer',
@@ -69,7 +69,7 @@ const checkStyleButton = {
   backgroundColor: 'var(--color-5)',
   margin: '20px 10px',
   padding: '15px 15px',
-  borderRadius: '6px',
+  borderRadius: '2px',
   fontSize: '15px',
   marginLeft: '10px',
   cursor: 'pointer',
@@ -82,7 +82,7 @@ const checkButton = {
   border: 'solid 2px var(--color-2)',
   color: 'var(--color-2)',
   margin: '20px 10px',
-  borderRadius: '6px',
+  borderRadius: '2px',
   fontSize: '40px',
   textDecoration: 'none',
   width : "180px",
@@ -101,18 +101,18 @@ const styleModal = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
-  borderRadius: '15px'
+  borderRadius: '2px'
 };
 
 const styleTextField = {
   color: 'var(--color-2)',
-  borderRadius: '6px',
+  borderRadius: '2px',
   fontSize: '16px',
 };
 
 const EmailValidationstyleTextField = {
   color: 'var(--color-2)',
-  borderRadius: '6px',
+  borderRadius: '2px',
   fontSize: '16px',
   width : '200px'
 }
@@ -121,14 +121,14 @@ const styleTableContainer = {
   padding: '20px',
   width: '75%',
   backgroundColor: "rgba(0,0,0,0.3)",
-  borderRadius: '15px'
-  
+  borderRadius: '2px'
 }
+
 const styleContainer = {
   padding: '20px',
   width: '75%',
   backgroundColor: "rgba(0,0,0,0.3)",
-  borderRadius: '15px'
+  borderRadius: '2px'
 }
 
 const styleModalkContainer = {
@@ -136,7 +136,7 @@ const styleModalkContainer = {
   width : '38%',
   height : '35%',
   backgroundColor : 'rgba(0,0,0,0.3)',
-  borderRadius: '15px'
+  borderRadius: '2px'
 }
 
 const stylePagination = {
@@ -148,7 +148,7 @@ const styleModalmiddleContainer = {
   width : '38%',
   height : '55%',
   backgroundColor : 'rgba(0,0,0,0.3)',
-  borderRadius: '15px'
+  borderRadius: '2px'
 }
 
 

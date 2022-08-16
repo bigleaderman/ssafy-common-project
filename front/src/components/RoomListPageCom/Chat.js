@@ -17,11 +17,9 @@ import { blueGrey } from "@mui/material/colors";
 const theme = createTheme({
   palette: {
     primary: {
-      // Purple and green play nicely together.
       main: blueGrey[50],
     },
     secondary: {
-      // This is green.A700 as hex.
       main: "#11cb5f",
     },
   },
@@ -96,15 +94,15 @@ function Chat({ Chats, sendChat }) {
             height: "145px",
             mb: 1,
             backgroundColor: "rgba(0,0,0,0)",
-            "&::WebkitScrollbar": {
-              width: 20,
+            "&::-webkit-scrollbar": {
+              width: 15,
             },
-            "&::WebkitScrollbarTrack": {
-              backgroundColor: "rgba(0,0,0,0.5)",
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: "black",
             },
-            "&::WebkitScrollbarThumb": {
-              backgroundColor: "rgba(255,255,255,0.8)",
-              borderRadius: "1px",
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "white",
+              borderRadius: '1px',
             },
           }}
         >
@@ -113,7 +111,14 @@ function Chat({ Chats, sendChat }) {
               {Chats &&
                 Chats.map((chat, index) => (
                   <TableRow key={index}>
-                    <TableCell sx={{ p: 0.5, color: "#ccc", border: "#000000 1px solid" }}>
+                    <TableCell
+                      sx={{
+                        fontSize: "20px",
+                        p: 0.5,
+                        color: "#ccc",
+                        border: "rgba(0,0,0,0) 1px solid",
+                      }}
+                    >
                       {chat.data.nickname} : {chat.data.message}
                     </TableCell>
                   </TableRow>

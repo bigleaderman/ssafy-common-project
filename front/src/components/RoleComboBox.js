@@ -28,7 +28,7 @@ const RoleComboBox = (props) => {
 
 const Box = styled.div`
   font-size: 14px;
-  width: 100%;
+  width: 320px;
   height: 40px;
   display: flex;
   justify-content: end;
@@ -47,13 +47,13 @@ const Box = styled.div`
     button {
       font-size: 14px;
       width: 50px;
-      color: #000000;
+      color: #ccc;
     }
   }
   #roleState {
     font-size: 14px;
     width: 50px;
-    color: #000000;
+    color: #ccc;
   }
   &:hover {
     li {

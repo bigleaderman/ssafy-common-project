@@ -130,7 +130,7 @@ function RoomList() {
                 sx: {
                   "& input": {
                     color: "#ccc",
-                  },
+                  },height:'35px'
                 },
               }}
               sx={{ border: "rgba(255,255,255) 1px solid", borderRadius: "4px",borderRadius: "2px"}}
@@ -150,7 +150,7 @@ function RoomList() {
 
             sx={{
               width: "15%",
-              minHeight: "42px",
+              minHeight: "30px",
               color: "rgba(255,255,255)",
               border: "rgba(255,255,255) 1px solid",
               borderRadius: "2px"
@@ -172,7 +172,7 @@ function RoomList() {
             }}
             sx={{
               width: "15%",
-              minHeight: "42px",
+              minHeight: "30px",
               color: "rgba(255,255,255)",
               border: "rgba(255,255,255) 1px solid",
               borderRadius: "2px"

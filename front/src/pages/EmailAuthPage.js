@@ -117,7 +117,7 @@ const SignUpPage = (props) => {
       </Modal>
       <Container>
         
-        <Card sx={{width:480, height:300, backgroundColor:'rgba(0, 0, 0, 0.3)', borderRadius:4, border:'solid 2px #b4b4b4'}}>
+        <Card sx={{width:480, height:300, backgroundColor:'rgba(0, 0, 0, 0.3)', borderRadius:2, border:'solid 2px #b4b4b4'}}>
             <h2 style={{marginBottom:10, marginTop:40, color:'#b4b4b4'}}>인증 코드 입력</h2>
             <h3 style={{marginBottom:10, marginTop:10, color:'#b4b4b4'}}>제공하신 이메일 주소로 인증 코드를 보냈습니다.</h3>
           <Grid sx={{marginTop:3}} container >

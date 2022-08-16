@@ -9,7 +9,7 @@ import { CenterFocusStrong } from "@mui/icons-material";
 
 
 const RankPage = (props) => {
-  const [rankData, setRankData] = useState([]); 
+  const [rankData, setRankData] = useState(null); 
 
   useEffect(() => {
     axios.get('/api/game/topRank',{

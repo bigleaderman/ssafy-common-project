@@ -5,7 +5,9 @@ import RequestedFriends from "../RequestedFriends";
 import { Paper, Tabs, Tab, Typography, Box } from "@mui/material";
 import PropTypes from "prop-types";
 
-
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import PersonIcon from '@mui/icons-material/Person';
 
 // 탭쓰기 위한 작업
 function TabPanel(props) {
@@ -57,9 +59,9 @@ function SideBar({ loginUser, friends, sendF, requestedList }) {
         }}
       >
         <Tabs TabIndicatorProps={{ style: { background: "rgba(255,255,255)" } }} value={value} onChange={handleChange} aria-label='basic tabs example' textColor="secondary">
-          <Tab sx={{ width: "30%" }} style={{color:"#ccc"}} label='All' {...a11yProps(0)} />
-          <Tab sx={{ width: "30%" }} style={{color:"#ccc"}} label='Friends' {...a11yProps(1)} />
-          <Tab sx={{ width: "30%" }} style={{color:"#ccc"}} label='Requested' {...a11yProps(2)} />
+          <Tab sx={{ width: "30%" }} style={{color:"#ccc"}} icon = {<PersonIcon/>} label='로그인' {...a11yProps(0)} />
+          <Tab sx={{ width: "30%" }} style={{color:"#ccc"}} icon = {<PeopleAltIcon/>} label='친구' {...a11yProps(1)} />
+          <Tab sx={{ width: "30%" }} style={{color:"#ccc"}} icon={<GroupAddIcon/>} label='친구신청' {...a11yProps(2)} />
         </Tabs>
       </Box>
       {value === 0 ? (

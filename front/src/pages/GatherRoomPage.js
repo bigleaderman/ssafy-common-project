@@ -19,6 +19,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import { styleButton, styleModal } from '../style.js';
 
 //socktjs
 import SockJS from "sockjs-client";
@@ -75,8 +76,11 @@ const GatherRoom = () => {
   const [stateTimer, setStateTimer] = useState(0);
   const timer = useRef();
   const [roleList, setRoleList] = useState([]);
-  const [turn, setTurn] = useState(false);
+  const [turn, setTurn] = useState('');
   const [dead, setDead] = useState([]);
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalOpen, setModalOpen] = useState(false);
+  let isActResult = "";
   const client = useMemo(
     () =>
       new StompJs.Client({
@@ -95,6 +99,14 @@ const GatherRoom = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const handleModalOpen = (message) => {
+    setModalMessage(message);
+    setModalOpen(true);
+  };
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
 
   client.webSocketFactory = () => {
     return new SockJS("https://i7d106.p.ssafy.io:8080/ws");
@@ -116,7 +128,77 @@ const GatherRoom = () => {
     setIsGameStart(false);
   };
 
+  const roleClientPublish = () => {
+    client.publish({
+      destination: pubGameAddr,
+      headers: { token: token, "content-type": "application/json" },
+      body: JSON.stringify({
+        type: "role",
+        data: {
+          role: myRole,
+        },
+      }),
+      skipContentLengthHeader: true,
+    });
+  }
+
+  const talkEndClientPublish = () => {
+    client.publish({
+      destination: pubGameAddr,
+      headers: { token: token, "content-type": "application/json" },
+      body: JSON.stringify({
+        type: "talk-end",
+      }),
+      skipContentLengthHeader: true,
+    });
+  }
+
+  const voteResultClientPublish = () => {
+    client.publish({
+      destination: pubGameAddr,
+      headers: { token: token, "content-type": "application/json" },
+      body: JSON.stringify({
+        type: "vote-result",
+      }),
+      skipContentLengthHeader: true,
+    });
+  }
+
+  const nightResultClientPublish = () => {
+    client.publish({
+      destination: pubGameAddr,
+      headers: { token: token, "content-type": "application/json" },
+      body: JSON.stringify({
+        type: "night-result",
+      }),
+      skipContentLengthHeader: true,
+    });
+  }
+
+  const nightCheckClientPublish = () => {
+    client.publish({
+      destination: pubGameAddr,
+      headers: { token: token, "content-type": "application/json" },
+      body: JSON.stringify({
+        type: "night-check",
+      }),
+      skipContentLengthHeader: true,
+    });
+  }
+
+  const voteCheckClientPublish = () => {
+    client.publish({
+      destination: pubGameAddr,
+      headers: { token: token, "content-type": "application/json" },
+      body: JSON.stringify({
+        type: "vote-check",
+      }),
+      skipContentLengthHeader: true,
+    });
+  }
+
   const onMessageReceived = (payload) => {
+    // handleModalClose();
     console.log(payload);
     let parsedData = "";
     try {
@@ -151,18 +233,10 @@ const GatherRoom = () => {
 
       //5초 뒤 역할 확인 소켓 전홍
       setTimeout(() => {
+        setTimeout(roleClientPublish, 0);
+        setTimeout(roleClientPublish, 2000);
+        setTimeout(roleClientPublish, 4000);
         // clearInterval(intTimer1);
-        client.publish({
-          destination: pubGameAddr,
-          headers: { token: token, "content-type": "application/json" },
-          body: JSON.stringify({
-            type: "role",
-            data: {
-              role: myRole,
-            },
-          }),
-          skipContentLengthHeader: true,
-        });
       }, debugTime * 1000);
       setCurrentGameState("자신의 역할 확인 중");
     }
@@ -176,14 +250,9 @@ const GatherRoom = () => {
       setTimeout(() => {
         // clearInterval(intTimer);
         //낮 시간 종료 신호 전송
-        client.publish({
-          destination: pubGameAddr,
-          headers: { token: token, "content-type": "application/json" },
-          body: JSON.stringify({
-            type: "talk-end",
-          }),
-          skipContentLengthHeader: true,
-        });
+        setTimeout(talkEndClientPublish, 0);
+        setTimeout(talkEndClientPublish, 2000);
+        setTimeout(talkEndClientPublish, 4000);
       }, debugTime * 1000);
     }
     //
@@ -196,14 +265,10 @@ const GatherRoom = () => {
       setTurn("vote");
       //투표 종료 신호 전송
       setTimeout(() => {
-        client.publish({
-          destination: pubGameAddr,
-          headers: { token: token, "content-type": "application/json" },
-          body: JSON.stringify({
-            type: "vote-result",
-          }),
-          skipContentLengthHeader: true,
-        });
+        setTurn("");
+        setTimeout(voteResultClientPublish, 0);
+        setTimeout(voteResultClientPublish, 2000);
+        setTimeout(voteResultClientPublish, 4000);
       }, 11 * 1000);
     }
     //투표 종료, 투표 결과 공개
@@ -221,16 +286,10 @@ const GatherRoom = () => {
         // console.log("죽은 사람: ", parsedData.data.dead);
         // console.log("죽은 사람 직업: ", parsedData.data.role);
       }
-
       setTimeout(() => {
-        client.publish({
-          destination: pubGameAddr,
-          headers: { token: token, "content-type": "application/json" },
-          body: JSON.stringify({
-            type: "vote-check",
-          }),
-          skipContentLengthHeader: true,
-        });
+        setTimeout(voteCheckClientPublish, 0);
+        setTimeout(voteCheckClientPublish, 2000);
+        setTimeout(voteCheckClientPublish, 4000);
       }, debugTime * 1000);
     }
     //밤 시작
@@ -238,26 +297,35 @@ const GatherRoom = () => {
       console.log("↑밤 시작");
       setCurrentGameState("밤이 시작되었습니다.");
       // setStateTimer(parsedData.data.time);
-      setStateTimer(debugTime);
+      // setStateTimer(debugTime);
       setTurn("night");
       setStateTimer(11);
       setTimeout(() => {
-        client.publish({
-          destination: pubGameAddr,
-          headers: { token: token, "content-type": "application/json" },
-          body: JSON.stringify({
-            type: "night-result",
-          }),
-          skipContentLengthHeader: true,
-        });
+        setTimeout(nightResultClientPublish, 0);
+        setTimeout(nightResultClientPublish, 2000);
+        setTimeout(nightResultClientPublish, 4000);
       }, 11 * 1000);
     }
     // 경찰 활동 결과 데이터
     else if (parsedData.type === "act-result") {
-      console.log(parsedData.data.target + "은 " + parsedData.data.role + "입니다");
+      if (parsedData.type !== isActResult) {
+        isActResult = parsedData.type
+        let roleData = '시민';
+        if (parsedData.data.role === 'mafia') {
+          roleData = '마피아'
+        } else if (parsedData.data.role === 'doctor') {
+          roleData = '의사'
+        } else if (parsedData.data.role === 'police') {
+          roleData = '경찰'
+        }
+        handleModalOpen(parsedData.data.target + "은 " + roleData + "입니다.");
+        console.log(parsedData.data.target + "은 " + roleData + "입니다");
+      }
     }
     //밤 투표 결과 데이터
     else if (parsedData.type === "night-result") {
+      isActResult = parsedData.type
+      handleModalClose()
       console.log("밤 투표 결과");
       setDead((currentDead) => [...currentDead, parsedData.data.dead]);
       setStateTimer(debugTime);
@@ -269,27 +337,9 @@ const GatherRoom = () => {
       // }
 
       setTimeout(() => {
-        client.publish({
-          destination: pubGameAddr,
-          headers: { token: token, "content-type": "application/json" },
-          body: JSON.stringify({
-            type: "night-check",
-          }),
-          skipContentLengthHeader: true,
-        });
-        client.publish({
-          destination: pubGameAddr,
-          headers: { token: token, "content-type": "application/json" },
-          body: JSON.stringify({
-            type: "night-act",
-            data: {
-              nickname: "닉네임",
-              role: "자신의 역할",
-              target: "목표 닉네임",
-            },
-          }),
-          skipContentLengthHeader: true,
-        });
+        setTimeout(nightCheckClientPublish, 0);
+        setTimeout(nightCheckClientPublish, 2000);
+        setTimeout(nightCheckClientPublish, 4000);
       }, debugTime * 1000);
 
       if (parsedData.data.dead.length !== 0) {
@@ -336,12 +386,13 @@ const GatherRoom = () => {
     //직업 전용 메세지 소켓 수신
     client.subscribe(`${subAddr}/game/${myNickName}`, onMessageReceived);
   };
+
   client.activate();
+
   useEffect(() => {
     //소켓 연결 코드는 한번만 랜더링
 
-    // dispatch(setClient(client));
-    let unloadEventLeave = window.addEventListener("unload", () => {
+    return () => {
       client.publish({
         destination: pubAddr,
         headers: { token: token, "content-type": "application/json" },
@@ -355,11 +406,9 @@ const GatherRoom = () => {
         }),
         skipContentLengthHeader: true,
       });
-    });
-    return () => {
-      window.removeEventListener("unload", unloadEventLeave);
     };
   }, []);
+
   const MafList = () => {
     return roleList
       .filter((user) => user.role === "mafia")
@@ -367,120 +416,130 @@ const GatherRoom = () => {
         return <span key={data.nickname}>{data.nickname}</span>;
       });
   };
-  const handleCloseBtn = () => {
-    handleClose();
-  };
+  
   return (
-    <Container sx={{ height: "100vh", display: "flex", alignItems: "center", minWidth: "1500px" }}>
-      <Grid container spacing={3}>
-        <Grid item xs={9}>
-          <Grid sx={{ marginTop: "0px" }}>
-            <Paper
-              elevation={3}
-              sx={{
-                maxHeight: "120px",
-                minHeight: "120px",
-                backgroundColor: "rgba(0,0,0,0.5)",
-                border:'rgba(0,0,0) 1px solid',borderRadius: "2px"
-              }}
-            >
-              {/* 좌상 */}
-              <MainBar
-                currentGameState={currentGameState}
-                myRole={myRole}
-                timer={timer}
-                stateTimer={stateTimer}
-              />
-            </Paper>
-          </Grid>
-          <Grid sx={{ marginTop: "25px" }}>
-            {/* 좌하 */}
-            <Paper elevation={3} sx={{ minHeight: "650px", maxHeight: "650px", backgroundColor: "rgba(0,0,0,0.5)", border:'rgba(0,0,0) 1px solid',borderRadius: "2px" }}>
-              {IsGameStart ? (
-                <AllCam
-                  inCamHandler={inCamHandler}
-                  setCurrentGameState={setCurrentGameState}
-                  turn={turn}
-                  role={myRole}
-                  client={client}
-                  dead={dead}
+    <>
+      <Container sx={{ height: "100vh", display: "flex", alignItems: "center", minWidth: "1500px" }}>
+        <Modal
+          open={modalOpen}
+          onClose={handleModalClose}
+          aria-labelledby="modal-title"
+        >
+          <Box sx={{ ...styleModal, width: 400, backgroundColor:'rgba(30,30,30,0.9)',  border: '3px solid #999' }}>
+            <h2 id="modal-title">{modalMessage}</h2>
+            <Button sx={{...styleButton, width:35, position:'relative', left:125, top:10}} onClick={handleModalClose}>확인</Button>
+          </Box>
+        </Modal>
+        <Grid container spacing={3}>
+          <Grid item xs={9}>
+            <Grid sx={{ marginTop: "0px" }}>
+              <Paper
+                elevation={3}
+                sx={{
+                  maxHeight: "120px",
+                  minHeight: "120px",
+                  backgroundColor: "rgba(0,0,0,0.5)",
+                  border:'rgba(0,0,0) 1px solid',borderRadius: "2px"
+                }}
+              >
+                {/* 좌상 */}
+                <MainBar
+                  currentGameState={currentGameState}
+                  myRole={myRole}
+                  timer={timer}
+                  stateTimer={stateTimer}
                 />
-              ) : (
-                <PlayMap />
-              )}
-            </Paper>
+              </Paper>
+            </Grid>
+            <Grid sx={{ marginTop: "25px" }}>
+              {/* 좌하 */}
+              <Paper elevation={3} sx={{ minHeight: "650px", maxHeight: "650px", backgroundColor: "rgba(0,0,0,0.5)", border:'rgba(0,0,0) 1px solid',borderRadius: "2px" }}>
+                {IsGameStart ? (
+                  <AllCam
+                    inCamHandler={inCamHandler}
+                    setCurrentGameState={setCurrentGameState}
+                    turn={turn}
+                    role={myRole}
+                    client={client}
+                    dead={dead}
+                  />
+                ) : (
+                  <PlayMap />
+                )}
+              </Paper>
+            </Grid>
+          </Grid>
+          <Grid item xs={3}>
+            <Grid>
+              <Paper
+                elevation={3}
+                sx={{ minHeight: "120px", backgroundColor: "rgba(0,0,0,0.5)",border:'rgba(0,0,0) 1px solid',borderRadius: "2px" }}
+              >
+                {/* 우상 */}
+                <NaviBar2
+                  ref={NaviBarComRef}
+                  IsGameStart={IsGameStart}
+                  setIsGameStart={setIsGameStart}
+                  client={client}
+                />
+              </Paper>
+            </Grid>
+            <Grid sx={{ marginTop: "25px", height: "100%" }}>
+              {/* 우하 */}
+              <Paper
+                elevation={3}
+                sx={{ minHeight: "650px", maxHeight: "650px", backgroundColor: "rgba(0,0,0,0.5)",border:'rgba(0,0,0) 1px solid',borderRadius: "2px" }}
+              >
+                <SideBar ref={sideComponentRef} client={client} />
+              </Paper>
+            </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={3}>
-          <Grid>
-            <Paper
-              elevation={3}
-              sx={{ minHeight: "120px", backgroundColor: "rgba(0,0,0,0.5)",border:'rgba(0,0,0) 1px solid',borderRadius: "2px" }}
-            >
-              {/* 우상 */}
-              <NaviBar2
-                ref={NaviBarComRef}
-                IsGameStart={IsGameStart}
-                setIsGameStart={setIsGameStart}
-                client={client}
-              />
-            </Paper>
-          </Grid>
-          <Grid sx={{ marginTop: "25px", height: "100%" }}>
-            {/* 우하 */}
-            <Paper
-              elevation={3}
-              sx={{ minHeight: "650px", maxHeight: "650px", backgroundColor: "rgba(0,0,0,0.5)",border:'rgba(0,0,0) 1px solid',borderRadius: "2px" }}
-            >
-              <SideBar ref={sideComponentRef} client={client} />
-            </Paper>
-          </Grid>
-        </Grid>
-      </Grid>
-      {/* 간단 정보 포함 */}
-      <Modal
-        open={open}
-        onClose={finishGame}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-      >
-        <Box sx={style}>
-          <Typography id='modal-modal-title' variant='h6' component='h2'>
-            {currentGameState}
-          </Typography>
-          <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-            마피아는
-            <MafList />
-            입니다.
-          </Typography>
-          {/* 확인 시 모달 닫기 && 세션 종료 && 대기방 복귀 */}
-          <Button onClick={finishGame}>확인</Button>
-          {/* 중첩 모달창 생성 */}
-          <Button>자세히</Button>
-        </Box>
-      </Modal>
-      <Modal
-        open={open}
-        onClose={finishGame}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-      >
-        <Box sx={style}>
-          <Typography id='modal-modal-title' variant='h6' component='h2'>
-            {currentGameState}
-          </Typography>
-          <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-            마피아는
-            <MafList />
-            입니다.
-          </Typography>
-          {/* 확인 시 모달 닫기 && 세션 종료 && 대기방 복귀 */}
-          <Button onClick={finishGame}>확인</Button>
-          {/* 중첩 모달창 생성 */}
-          <Button>자세히</Button>
-        </Box>
-      </Modal>
-    </Container>
+        {/* 간단 정보 포함 */}
+        <Modal
+          open={open}
+          onClose={finishGame}
+          aria-labelledby='modal-modal-title'
+          aria-describedby='modal-modal-description'
+        >
+          <Box sx={style}>
+            <Typography id='modal-modal-title' variant='h6' component='h2'>
+              {currentGameState}
+            </Typography>
+            <Typography id='modal-modal-description' sx={{ mt: 2 }}>
+              마피아는
+              <MafList />
+              입니다.
+            </Typography>
+            {/* 확인 시 모달 닫기 && 세션 종료 && 대기방 복귀 */}
+            <Button onClick={finishGame}>확인</Button>
+            {/* 중첩 모달창 생성 */}
+            <Button>자세히</Button>
+          </Box>
+        </Modal>
+        <Modal
+          open={open}
+          onClose={finishGame}
+          aria-labelledby='modal-modal-title'
+          aria-describedby='modal-modal-description'
+        >
+          <Box sx={style}>
+            <Typography id='modal-modal-title' variant='h6' component='h2'>
+              {currentGameState}
+            </Typography>
+            <Typography id='modal-modal-description' sx={{ mt: 2 }}>
+              마피아는
+              <MafList />
+              입니다.
+            </Typography>
+            {/* 확인 시 모달 닫기 && 세션 종료 && 대기방 복귀 */}
+            <Button onClick={finishGame}>확인</Button>
+            {/* 중첩 모달창 생성 */}
+            <Button>자세히</Button>
+          </Box>
+        </Modal>
+      </Container>
+    </>
   );
 };
 

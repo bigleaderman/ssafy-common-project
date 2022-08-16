@@ -183,92 +183,117 @@ const AllCam = (props) => {
     }
   };
 
+  const voteClientPublish = (targetNickname) => {
+  console.log('투표 보냄!')
+    props.client.publish({
+      destination: pubGameAddr,
+      headers: { token: token, "content-type": "application/json" },
+      body: JSON.stringify({
+        type: "vote",
+        data: {
+          target: targetNickname,
+        },
+      }),
+      skipContentLengthHeader: true,
+    });
+  }
+
+  const nightActClientPublish = (targetNickname, roleName) => {
+    console.log('역할 수행!')
+    props.client.publish({
+      destination: pubGameAddr,
+      headers: { token: token, "content-type": "application/json" },
+      body: JSON.stringify({
+        type: "night-act",
+        data: {
+          nickname: currentUser.nickname,
+          role: roleName,
+          target: targetNickname,
+        },
+      }),
+      skipContentLengthHeader: true,
+    });
+  }
+
   const handleVote = (index) => {
+    let targetNickname = '';
+    setVoteIndex(index);
+    if (index < 0) {
+      targetNickname = currentUser.nickname;
+    } else {
+      targetNickname = JSON.parse(subscribers[index].stream.connection.data).clientData;
+    }
+
+    console.log(targetNickname, "를 지목함");
     if (props.turn === "vote") {
-      setVoteIndex(index);
-      console.log(JSON.parse(subscribers[index].stream.connection.data).clientData, "를 지목함");
-
-      // 소켓 전송
-
-      props.client.publish({
-        destination: pubGameAddr,
-        headers: { token: token, "content-type": "application/json" },
-        body: JSON.stringify({
-          type: "vote",
-          data: {
-            target: JSON.parse(subscribers[index].stream.connection.data).clientData,
-          },
-        }),
-        skipContentLengthHeader: true,
-      });
+      setTimeout(() => voteClientPublish(targetNickname), 0);
+      setTimeout(() => voteClientPublish(targetNickname), 2000);
+      setTimeout(() => voteClientPublish(targetNickname), 4000);
+      // props.client.publish({
+      //   destination: pubGameAddr,
+      //   headers: { token: token, "content-type": "application/json" },
+      //   body: JSON.stringify({
+      //     type: "vote",
+      //     data: {
+      //       target: targetNickname,
+      //     },
+      //   }),
+      //   skipContentLengthHeader: true,
+      // });
     } else if (props.turn === "night") {
       if (props.role === "mafia") {
-        setVoteIndex(index);
-        console.log(JSON.parse(subscribers[index].stream.connection.data).clientData, "를 지목함");
-
-        // 소켓 전송
-
-        props.client.publish({
-          destination: pubGameAddr,
-          headers: { token: token, "content-type": "application/json" },
-          body: JSON.stringify({
-            type: "night-act",
-            data: {
-              nickname: currentUser.nickname,
-              role: "mafia",
-              target: JSON.parse(subscribers[index].stream.connection.data).clientData,
-            },
-          }),
-          skipContentLengthHeader: true,
-        });
+        setTimeout(() => nightActClientPublish(targetNickname, "mafia"), 0);
+        setTimeout(() => nightActClientPublish(targetNickname, "mafia"), 2000);
+        setTimeout(() => nightActClientPublish(targetNickname, "mafia"), 4000);
+        // props.client.publish({
+        //   destination: pubGameAddr,
+        //   headers: { token: token, "content-type": "application/json" },
+        //   body: JSON.stringify({
+        //     type: "night-act",
+        //     data: {
+        //       nickname: currentUser.nickname,
+        //       role: "mafia",
+        //       target: targetNickname,
+        //     },
+        //   }),
+        //   skipContentLengthHeader: true,
+        // });
       } else if (props.role === "police") {
-        setVoteIndex(index);
-        console.log(JSON.parse(subscribers[index].stream.connection.data).clientData, "를 지목함");
-
-        // 소켓 전송
-
-        props.client.publish({
-          destination: pubGameAddr,
-          headers: { token: token, "content-type": "application/json" },
-          body: JSON.stringify({
-            type: "night-act",
-            data: {
-              nickname: currentUser.nickname,
-              role: "police",
-              target: JSON.parse(subscribers[index].stream.connection.data).clientData,
-            },
-          }),
-          skipContentLengthHeader: true,
-        });
+        setTimeout(() => nightActClientPublish(targetNickname, "police"), 0);
+        setTimeout(() => nightActClientPublish(targetNickname, "police"), 2000);
+        setTimeout(() => nightActClientPublish(targetNickname, "police"), 4000);
+        // for (let i=0; i<3; i++) {
+          // props.client.publish({
+          //   destination: pubGameAddr,
+          //   headers: { token: token, "content-type": "application/json" },
+          //   body: JSON.stringify({
+          //     type: "night-act",
+          //     data: {
+          //       nickname: currentUser.nickname,
+          //       role: "police",
+          //       target: targetNickname,
+          //     },
+          //   }),
+          //   skipContentLengthHeader: true,
+          // });
+        // }
       } else if (props.role === "doctor") {
-        
-        setVoteIndex(index);
-        let targetNickname = '';
-        console.log(index, voteIndex)
-        if (index < 0) {
-          targetNickname = currentUser.nickname;
-          console.log('의사가 자기 살림!')
-        }
-        else {
-          targetNickname = JSON.parse(subscribers[index].stream.connection.data).clientData;
-        }
-        console.log(targetNickname, "를 지목함");
-
-        // 소켓 전송
-
-        props.client.publish({
-          destination: pubGameAddr,
-          headers: { token: token, "content-type": "application/json" },
-          body: JSON.stringify({
-            type: "night-act",
-            data: {
-              nickname: currentUser.nickname,
-              role: "doctor",
-              target: targetNickname,
-            },
-          }),
-          skipContentLengthHeader: true,
-        });
+        setTimeout(() => nightActClientPublish(targetNickname, "doctor"), 0);
+        setTimeout(() => nightActClientPublish(targetNickname, "doctor"), 2000);
+        setTimeout(() => nightActClientPublish(targetNickname, "doctor"), 4000);
+        // props.client.publish({
+        //   destination: pubGameAddr,
+        //   headers: { token: token, "content-type": "application/json" },
+        //   body: JSON.stringify({
+        //     type: "night-act",
+        //     data: {
+        //       nickname: currentUser.nickname,
+        //       role: "doctor",
+        //       target: targetNickname,
+        //     },
+        //   }),
+        //   skipContentLengthHeader: true,
+        // });
       }
     }
   };
@@ -298,15 +323,15 @@ const AllCam = (props) => {
           <Grid>
             {/* 1번 자리 내 캠 */}
             {publisher !== undefined ? (
-              <div
+              <div style={{ height: '240px' }}
                 onClick={() => {
-                  if (props.role === "doctor" && props.turn === "night" && voteIndex === null && !isDead(-1)) handleVote(-1);
+                  if (isPointer() && !isDead(-1) && (props.role !== "police" || props.turn === "vote")) handleVote(-1);
                 }}
               >
               <UserVideoComponent
                 streamManager={publisher}
                 self={true}
-                isPointer={props.role === "doctor" && props.turn === "night" && voteIndex === null && !isDead(-1)}
+                isPointer={isPointer() && !isDead(-1) && (props.role !== "police" || props.turn === "vote")}
                 isDead={isDead(-1)}
               />
               </div>
@@ -314,7 +339,7 @@ const AllCam = (props) => {
           </Grid>
           <Grid>
             {subscribers[2] !== undefined ? (
-              <>
+              <div style={{ height: '240px' }}>
                 <div
                   onClick={() => {
                     if (isPointer() && !isDead(2)) handleVote(2);
@@ -327,12 +352,12 @@ const AllCam = (props) => {
                   />
                 </div>
                 <RoleComboBox />
-              </>
+              </div>
             ) : null}
           </Grid>
           <Grid>
             {subscribers[4] !== undefined ? (
-              <>
+              <div style={{ height: '240px' }}>
                 <div
                   onClick={() => {
                     if (isPointer() && !isDead(4)) handleVote(4);
@@ -345,14 +370,14 @@ const AllCam = (props) => {
                   />
                 </div>
                 <RoleComboBox />
-              </>
+              </div>
             ) : null}
           </Grid>
         </Grid>
         <Grid item xs={4}>
           <Grid>
             {subscribers[0] !== undefined ? (
-              <>
+              <div style={{ height: '240px' }}>
                 <div
                   onClick={() => {
                     if (isPointer() && !isDead(0)) handleVote(0);
@@ -365,13 +390,13 @@ const AllCam = (props) => {
                   />
                 </div>
                 <RoleComboBox />
-              </>
+              </div>
             ) : null}
           </Grid>
           <Grid>empty</Grid>
           <Grid>
             {subscribers[5] !== undefined ? (
-              <>
+              <div style={{ height: '240px' }}>
                 <div
                   onClick={() => {
                     if (isPointer() && !isDead(5)) handleVote(5);
@@ -384,14 +409,14 @@ const AllCam = (props) => {
                   />
                 </div>
                 <RoleComboBox />
-              </>
+              </div>
             ) : null}
           </Grid>
         </Grid>
         <Grid item xs={4}>
           <Grid>
             {subscribers[1] !== undefined ? (
-              <>
+              <div style={{ height: '240px' }}>
                 <div
                   onClick={() => {
                     if (isPointer() && !isDead(1)) handleVote(1);
@@ -404,12 +429,12 @@ const AllCam = (props) => {
                   />
                 </div>
                 <RoleComboBox />
-              </>
+              </div>
             ) : null}
           </Grid>
           <Grid>
             {subscribers[3] !== undefined ? (
-              <>
+              <div style={{ height: '240px' }}>
                 <div
                   onClick={() => {
                     if (isPointer() && !isDead(3)) handleVote(3);
@@ -422,12 +447,12 @@ const AllCam = (props) => {
                   />
                 </div>
                 <RoleComboBox />
-              </>
+              </div>
             ) : null}
           </Grid>
           <Grid>
             {subscribers[6] !== undefined ? (
-              <>
+              <div style={{ height: '240px' }}>
                 <div
                   onClick={() => {
                     if (isPointer() && !isDead(6)) handleVote(6);
@@ -440,7 +465,7 @@ const AllCam = (props) => {
                   />
                 </div>
                 <RoleComboBox />
-              </>
+              </div>
             ) : null}
           </Grid>
         </Grid>

@@ -9,7 +9,11 @@ import {
   Stack,
   Link,
 } from "@mui/material";
-import HttpsIcon from "@mui/icons-material/Https";
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
+import VpnKeyOffIcon from '@mui/icons-material/VpnKeyOff';
+
 import { useNavigate } from "react-router-dom";
 import {middleButton} from "../../style.js"
 
@@ -40,12 +44,12 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: "background.paper",
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
   height:250,
   borderRadius: "2px",
+  bgcolor: "rgba(255, 255, 255)",
 };
 
 function RoomItem({ room }) {
@@ -126,11 +130,12 @@ function RoomItem({ room }) {
           goGame();
         }}
       > {room.title === '' ? null: 
-        <Paper sx={{ width: "440px", height: "60px", p: 0, ml: 4, backgroundColor:"rgba(255,255,255)", color:"black" ,borderRadius: "2px"}}>
+        <Paper sx={{ width: "500px", height: "63px", p: 0, ml: 4, backgroundColor:"rgba(255,255,255)", color:"black" ,borderRadius: "2px"}}>
           <Stack direction='row' justifyContent='space-around' alignItems='flex-end' sx={{pt:1}}>
-            <h1>{room.title}</h1>
-            {room.locked ? <HttpsIcon /> : null}
-            {room.participants}/{room.capacity}
+            <h3 style={{width:'60px'}}>{room.roomSeq}번</h3>
+            <h2 style={{width:'300px',textAlign:'left',verticalAlign: 'bottom' }}>{room.title}</h2>
+            <h3>{room.locked ? <VpnKeyIcon /> : <VpnKeyOffIcon/>}</h3>
+            <h4>{room.participants}/{room.capacity}</h4>
           </Stack>
         </Paper>}
       </Link>
