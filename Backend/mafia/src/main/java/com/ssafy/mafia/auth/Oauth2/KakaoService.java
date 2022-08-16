@@ -19,7 +19,7 @@ public class KakaoService {
     private final ObjectMapper objectMapper;
 
     private final String kakaoOauth2ClinetId = "9e9b8aade342d72cf01ce50e6136e7e1";
-    private final String frontendRedirectUrl = "http://localhost:3000";
+    private final String frontendRedirectUrl = "https://i7d106.p.ssafy.io:8080";
 
     //GetAccess Token 발급
     public String getAccessTokenByCode(String code) {
