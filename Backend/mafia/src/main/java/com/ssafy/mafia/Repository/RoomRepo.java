@@ -109,7 +109,6 @@ public class RoomRepo {
         addUserSock(roomSeq, user.getUserSeq(), dummy);
     }
 
-
     // 방 퇴장
     public void leavRoom(int roomSeq, int userSeq){
         map.get(roomSeq).removeUser(userSeq);
@@ -126,6 +125,18 @@ public class RoomRepo {
         return map.get(roomSeq).getUsers();
     }
 
+    // 게임 시작시 잠금
+    public void lock(int roomSeq){
+        map.get(roomSeq).setStarted(true);
+    }
+
+    public void unlock(int roomSeq){
+        map.get(roomSeq).setStarted(false);
+    }
+
+    public boolean locked(int roomSeq){
+        return map.get(roomSeq).isStarted();
+    }
 
     /*
     * ******************************* *

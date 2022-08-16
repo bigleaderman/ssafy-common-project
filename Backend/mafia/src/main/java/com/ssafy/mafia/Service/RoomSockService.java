@@ -29,6 +29,10 @@ public class RoomSockService {
 
     // 방 입장 메시지 처리
     public JsonObject joinRoom(int roomSeq, RoomDataDto message){
+        if(roomRepo.locked(roomSeq)){
+            return null;
+        }
+
         log.info("[Room] 입장 :: " + message.toString());
 
         User user = userService.getUserByNickname(message.getNickname());

@@ -17,6 +17,7 @@ public class RoomManager {
     private int seatCnt;
     private int roomSeq;
     private LinkedList<Integer> characters;
+    private boolean started = false;
 
     public RoomManager(){
         characters = new LinkedList<>();

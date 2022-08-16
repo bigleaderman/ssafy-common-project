@@ -2,6 +2,8 @@ package com.ssafy.mafia.Game;
 
 import com.google.gson.JsonObject;
 import com.ssafy.mafia.Model.RoomProtocol.GameProgressReq;
+import com.ssafy.mafia.Repository.RoomRepo;
+import com.ssafy.mafia.Service.RoomService;
 import com.ssafy.mafia.auth.jwt.TokenProvider;
 import com.ssafy.mafia.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
