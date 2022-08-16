@@ -29,7 +29,7 @@ const SignInPage = (props) => {
 
   const clickKakaoLogin = () => {
     console.log("kakao 로그인");
-    window.open('https://kauth.kakao.com/oauth/authorize?client_id=9e9b8aade342d72cf01ce50e6136e7e1&redirect_uri=https://i7d106.p.ssafy.io:8080/oauth/callback/kakao&response_type=code', '_self');
+    window.open('https://kauth.kakao.com/oauth/authorize?client_id=9e9b8aade342d72cf01ce50e6136e7e1&redirect_uri=https://i7d106.p.ssafy.io/oauth/callback/kakao&response_type=code', '_self');
   }
 
   const onClickLogin = () => {
