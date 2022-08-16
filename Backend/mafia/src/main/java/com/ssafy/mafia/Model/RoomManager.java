@@ -15,7 +15,6 @@ public class RoomManager {
     private Map<Integer, JsonObject> users;
     private int[] seatState;
     private int seatCnt;
-
     private int roomSeq;
     private LinkedList<Integer> characters;
 
@@ -40,12 +39,12 @@ public class RoomManager {
 
     public void addUser(int userSeq, RoomDataDto message){
         int character = 0;
-
         if(users.get(userSeq)!=null) {
             character = users.get(userSeq).get("character").getAsInt();
             users.remove(userSeq);
         }
         else{
+            log.info("[Room {}] 새로운 유저 추가", roomSeq);
             character = getCharacter();
         }
 
@@ -60,8 +59,10 @@ public class RoomManager {
     }
 
     public void removeUser(int userSeq){
-        if(users.get(userSeq) != null)
+        log.info("[Room {}] 유저 제거됨", roomSeq);
+        if(users.get(userSeq) != null){
             returnCharacter(users.get(userSeq).get("character").getAsInt());
+        }
         users.remove(userSeq);
     }
 
