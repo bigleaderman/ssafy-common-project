@@ -135,7 +135,7 @@ function Chat({ Chats, sendChat }) {
                 },
               },
             }}
-            sx={{ border: "rgba(255,255,255) 1px solid", borderRadius: "2px" }}
+            sx={{ border: "rgba(255,255,255) 1px solid", borderRadius: "2px"}}
             fullWidth
             id='outlined-basic'
             placeholder='Chat'
@@ -147,6 +147,7 @@ function Chat({ Chats, sendChat }) {
             onKeyPress={(e) => {
               handleOnKeyPress(e);
             }}
+
           />
           <Button
             variant='outlined'

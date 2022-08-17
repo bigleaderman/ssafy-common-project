@@ -37,9 +37,8 @@ import zIndex from "@mui/material/styles/zIndex";
 import KakaoLoginPage from "./pages/KakaoLoginPage";
 import Bgm1 from "./Sound/Bgm1.mp3";
 import { Howl, Howler } from "howler";
-import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import VolumeOffIcon from '@mui/icons-material/VolumeOff';
-
+import VolumeUpIcon from "@mui/icons-material/VolumeUp";
+import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 
 function App() {
   const token = useSelector((state) => state.user.accessToken);
@@ -88,36 +87,32 @@ function App() {
     $(".rain.back-row").append(backDrops);
   };
 
-
-
   useEffect(() => {
     makeItRain();
   }, []);
-
 
   const [temp, setTemp] = useState(true);
 
   const [sound, setSound] = useState(new Howl(
     {src: [Bgm1],
     loop: true,
-    volume:0.2,
+    volume:0.002,
     }
     ));
 
   sound.once("load", function () {
-    sound.play();
+    // sound.play();
   });
   // const id1 = sound.play();
 
   function stopMusic() {
     setTemp(false);
-    setSound(prev => prev.volume(0.0));
+    setSound((prev) => prev.volume(0.0));
   }
   function playMusic() {
     setTemp(true);
-    setSound(prev => prev.volume(0.2));
+    setSound((prev) => prev.volume(0.2));
   }
-
 
   // const {Howl, Howler} = require('howler');
   // var sound = new Howl({
@@ -127,14 +122,26 @@ function App() {
   //   volume:0.5,
   // });
   ChannelService.boot({
-    "pluginKey": "50cc437f-3944-4cda-b781-dfc4712e44bb" //please fill with your plugin key
+    pluginKey: "50cc437f-3944-4cda-b781-dfc4712e44bb", //please fill with your plugin key
   });
 
   return (
     <div className=' App'>
-
-      {temp ? <button style={{position:"absolute", top:"5px", right:"40px", width:20}} onClick={stopMusic}><VolumeUpIcon sx={{ fontSize: 40 }} /></button>
-      : <button style={{position:"absolute", top:"5px", right:"40px", width:20}} onClick={playMusic}><VolumeOffIcon sx={{ fontSize: 40 }} /></button> }
+      {temp ? (
+        <button
+          style={{ position: "absolute", top: "5px", right: "40px", width: 20 }}
+          onClick={stopMusic}
+        >
+          <VolumeUpIcon sx={{ fontSize: 40 }} />
+        </button>
+      ) : (
+        <button
+          style={{ position: "absolute", top: "5px", right: "40px", width: 20 }}
+          onClick={playMusic}
+        >
+          <VolumeOffIcon sx={{ fontSize: 40 }} />
+        </button>
+      )}
       <Router style={{ zIndex: 100 }}>
         <div className='rain front-row' style={{ zindex: -1, position: "absolute" }}></div>
         <div className='rain back-row' style={{ zindex: -1, position: "absolute" }}></div>

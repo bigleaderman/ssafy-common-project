@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import '../style.js';
 import '../color.css';
 
+
 const Footer = (props) => {
   return (
     <FooterContainer>
@@ -12,9 +13,9 @@ const Footer = (props) => {
 };
 
 const FooterContainer = styled.footer`
-    color:#cccccc;
+    color: #ccc;
     font-size:12px;
-    font-weght:300;
+    font-weight:300;
     position: fixed;
     width: 100%;
     bottom: 0px;

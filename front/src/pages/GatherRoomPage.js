@@ -9,7 +9,7 @@ import SideBar from "../components/GatherRoomPageCom/SideBar";
 import AllCam from "../components/GameRoomPageCom/AllCam";
 import NaviBar2 from "../components/GatherRoomPageCom/NaviBar2";
 import { selectUser } from "../redux/slice/UserSlice";
-import { setClient } from "../redux/slice/WsSlice";
+import { selectNightTime, selectTalkTime, selectVoteTime } from "../redux/slice/GameTimeSlice";
 
 //mui 컴포넌트
 import Grid from "@mui/material/Grid";
@@ -19,12 +19,20 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { styleButton, styleModal } from '../style.js';
+import { styleButton, styleModal } from "../style.js";
 
 //socktjs
 import SockJS from "sockjs-client";
 import { setInterval } from "stompjs";
 import { Navigate } from "react-router-dom";
+import styled from "styled-components";
+
+//howler.js
+import { Howl, Howler } from "howler";
+import Morning from "../Sound/Morning.mp3"
+import KillByMafia from "../Sound/KillByMafia.mp3";
+import Gavel from "../Sound/Gavel.mp3";
+
 
 var StompJs = require("@stomp/stompjs");
 
@@ -34,11 +42,22 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: "background.paper",
-  border: "2px solid #000",
+  bgcolor: "gray",
+  color: "#ccc",
+  border: "1px solid #000",
   boxShadow: 24,
-  p: 4,
 };
+
+const Logo = styled.a`
+  display: flex;
+  flex-direction: row;
+  cursor: pointer;
+  img {
+    display: block;
+    width: 30px;
+  }
+`;
+
 function useInterval(callback, delay) {
   const savedCallback = useRef();
 
@@ -62,6 +81,9 @@ function useInterval(callback, delay) {
 const GatherRoom = () => {
   console.log("GatherRoom 리랜더링 확인");
   const debugTime = 6;
+  const nightTime = useSelector(selectNightTime) + 1;
+  const talkTime = useSelector(selectTalkTime) + 1;
+  const voteTime = useSelector(selectVoteTime) + 1;
   const NaviBarComRef = useRef();
   const sideComponentRef = useRef();
   const token = useSelector((state) => state.user.accessToken);
@@ -70,15 +92,16 @@ const GatherRoom = () => {
   const subAddr = `/sub/room/${roomNum}`;
   const pubAddr = `/pub/room/${roomNum}`;
   const pubGameAddr = `${pubAddr}/game`;
-  const [currentGameState, setCurrentGameState] = useState("게임 준비 중...");
+  const [currentGameState, setCurrentGameState] = useState(["게임 준비 중...",'#ccc']);
   const [IsGameStart, setIsGameStart] = useState(false);
   const [myRole, setMyRole] = useState("");
   const [stateTimer, setStateTimer] = useState(0);
   const timer = useRef();
   const [roleList, setRoleList] = useState([]);
-  const [turn, setTurn] = useState('');
+  const [turn, setTurn] = useState("");
   const [dead, setDead] = useState([]);
-  const [modalMessage, setModalMessage] = useState('');
+  const [selectResult, setSelectResult] = useState();
+  const [modalMessage, setModalMessage] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   let isActResult = "";
   const client = useMemo(
@@ -140,7 +163,7 @@ const GatherRoom = () => {
       }),
       skipContentLengthHeader: true,
     });
-  }
+  };
 
   const talkEndClientPublish = () => {
     client.publish({
@@ -151,7 +174,7 @@ const GatherRoom = () => {
       }),
       skipContentLengthHeader: true,
     });
-  }
+  };
 
   const voteResultClientPublish = () => {
     client.publish({
@@ -162,7 +185,7 @@ const GatherRoom = () => {
       }),
       skipContentLengthHeader: true,
     });
-  }
+  };
 
   const nightResultClientPublish = () => {
     client.publish({
@@ -173,7 +196,7 @@ const GatherRoom = () => {
       }),
       skipContentLengthHeader: true,
     });
-  }
+  };
 
   const nightCheckClientPublish = () => {
     client.publish({
@@ -184,7 +207,7 @@ const GatherRoom = () => {
       }),
       skipContentLengthHeader: true,
     });
-  }
+  };
 
   const voteCheckClientPublish = () => {
     client.publish({
@@ -195,7 +218,7 @@ const GatherRoom = () => {
       }),
       skipContentLengthHeader: true,
     });
-  }
+  };
 
   const onMessageReceived = (payload) => {
     // handleModalClose();
@@ -214,21 +237,21 @@ const GatherRoom = () => {
     //게임 시작 신호 수신
     if (parsedData.type === "session-created") {
       console.log("↑세션 생성 완료");
-      setCurrentGameState("세션 생성 완료");
+      setCurrentGameState(["세션 생성 완료",'#ccc']);
       //게더맵 => 캠 화면 변경
       setIsGameStart(true);
     }
     //게임 시작 신호 수신
     else if (parsedData.type === "game-start") {
       setDead([]);
-      setCurrentGameState("↑게임 시작");
+      setCurrentGameState(["🏁 게임 시작",'rgba(255,255,255)']);
       //main bar에 낮 시작 문구 작성
     }
     //본인 역할 확인
     else if (parsedData.type === "role") {
       console.log("↑본인 역할 확인");
       // setStateTimer(5);
-      setStateTimer(debugTime);
+      setStateTimer(11);
       setMyRole(parsedData.data.role);
 
       //5초 뒤 역할 확인 소켓 전홍
@@ -238,14 +261,25 @@ const GatherRoom = () => {
         setTimeout(roleClientPublish, 4000);
         // clearInterval(intTimer1);
       }, debugTime * 1000);
-      setCurrentGameState("자신의 역할 확인 중");
+      setCurrentGameState(["🕵️‍♂️ 자신의 역할 확인 중",'rgba(255,255,255)']);
     }
     //낮 시간 시작
     else if (parsedData.type === "talk-start") {
       console.log("↑낮 시작");
-      setCurrentGameState("낮이 시작되었습니다.");
+      setCurrentGameState(["☀️ 낮이 시작되었습니다.",'rgba(255,255,255)']);
+      //**************************************** */
+      //1. 새소리는 낮 시작될 때마다 재생
+      //**************************************** */
+      const morningSound = new Howl(
+        {src: [Morning],
+        loop: false,
+        volume:0.3,
+        }
+        )
+        morningSound.play();
+
       // setStateTimer(parsedData.data.time);
-      setStateTimer(debugTime);
+      setStateTimer(talkTime);
 
       setTimeout(() => {
         // clearInterval(intTimer);
@@ -260,8 +294,8 @@ const GatherRoom = () => {
       console.log("↑투표 받는 중");
       //  let debugTime = parsedData.data.time;
       // setStateTimer(parsedData.data.time);
-      setStateTimer(11);
-      setCurrentGameState("처형할 인물에 투표하십시오.");
+      setStateTimer(voteTime);
+      setCurrentGameState(["🗳️ 처형할 인물에 투표하십시오.",'rgba(255,255,255)']);
       setTurn("vote");
       //투표 종료 신호 전송
       setTimeout(() => {
@@ -275,16 +309,26 @@ const GatherRoom = () => {
     else if (parsedData.type === "vote-result") {
       setTurn("");
       setDead((currentDead) => [...currentDead, parsedData.data?.dead]);
+      //**************************************** */
+      //2. 누군가 처형당했다면 땅땅땅 판사 두드리는 소리
+      //**************************************** */
+      if(parsedData.data?.dead){
+        const GavelSound = new Howl(
+          {src: [Gavel],
+          loop: false,
+          volume:0.3,
+          }
+          )
+          GavelSound.play();
+      }
       setStateTimer(debugTime);
-      setCurrentGameState("투표가 종료되었습니다.");
+      setCurrentGameState(["⏱️ 투표가 종료되었습니다.",'rgba(255,255,255)']);
       console.log(parsedData.data);
       //아무도 투표하지 않았다면
       if (parsedData.data === undefined) {
         console.log("아무도 투표하지 않았습니다.");
       } else {
-        // console.log("죽은 사람 목록: ", parsedData.data.list);
-        // console.log("죽은 사람: ", parsedData.data.dead);
-        // console.log("죽은 사람 직업: ", parsedData.data.role);
+        setSelectResult(parsedData);
       }
       setTimeout(() => {
         setTimeout(voteCheckClientPublish, 0);
@@ -295,7 +339,7 @@ const GatherRoom = () => {
     //밤 시작
     else if (parsedData.type === "night") {
       console.log("↑밤 시작");
-      setCurrentGameState("밤이 시작되었습니다.");
+      setCurrentGameState(["🌙 밤이 시작되었습니다.",'rgba(	255, 255, 255)']);
       // setStateTimer(parsedData.data.time);
       // setStateTimer(debugTime);
       setTurn("night");
@@ -309,14 +353,14 @@ const GatherRoom = () => {
     // 경찰 활동 결과 데이터
     else if (parsedData.type === "act-result") {
       if (parsedData.type !== isActResult) {
-        isActResult = parsedData.type
-        let roleData = '시민';
-        if (parsedData.data.role === 'mafia') {
-          roleData = '마피아'
-        } else if (parsedData.data.role === 'doctor') {
-          roleData = '의사'
-        } else if (parsedData.data.role === 'police') {
-          roleData = '경찰'
+        isActResult = parsedData.type;
+        let roleData = "시민";
+        if (parsedData.data.role === "mafia") {
+          roleData = "마피아";
+        } else if (parsedData.data.role === "doctor") {
+          roleData = "의사";
+        } else if (parsedData.data.role === "police") {
+          roleData = "경찰";
         }
         handleModalOpen(parsedData.data.target + "은 " + roleData + "입니다.");
         console.log(parsedData.data.target + "은 " + roleData + "입니다");
@@ -324,13 +368,25 @@ const GatherRoom = () => {
     }
     //밤 투표 결과 데이터
     else if (parsedData.type === "night-result") {
-      isActResult = parsedData.type
-      handleModalClose()
+      isActResult = parsedData.type;
+      handleModalClose();
       console.log("밤 투표 결과");
       setDead((currentDead) => [...currentDead, parsedData.data.dead]);
+      //**************************************** */
+      //3. 마피아가 살해에 성공했다면 탕, 총 소리
+      //**************************************** */
+      // if(parsedData.data?.dead){
+      //   const KillSound = new Howl(
+      //     {src: [KillByMafia],
+      //     loop: false,
+      //     volume:0.2,
+      //     }
+      //     )
+      //     KillSound.play();
+      // }
       setStateTimer(debugTime);
       setTurn("");
-      console.log("밤 투표 결과 데이터: ");
+      console.log("밤 선택 결과 데이터: ");
       // log
       // if(parsedData.data.dead === ){
       //   console.log();
@@ -344,9 +400,16 @@ const GatherRoom = () => {
 
       if (parsedData.data.dead.length !== 0) {
         setCurrentGameState(
-          `날이 밝았습니다. ${parsedData.data.dead[0]}이 마피아에 의해 살해당했습니다.`
+          [`🔪 날이 밝았습니다. ${parsedData.data.dead[0]}이 마피아에 의해 살해당했습니다.`,'rgba(255,255,255)']
         );
       } else {
+        const KillSound = new Howl(
+          {src: [KillByMafia],
+          loop: false,
+          volume:0.2,
+          }
+          )
+          KillSound.play();
         setCurrentGameState(`날이 밝았습니다. 아무도 죽지 않았습니다.`);
       }
     }
@@ -354,7 +417,7 @@ const GatherRoom = () => {
     else if (parsedData.type === "gameover") {
       console.log("↑게임 종료");
       setStateTimer(0);
-      setCurrentGameState(`${parsedData.data.winner} 승리!`);
+      setCurrentGameState([`👑 ${parsedData.data.winner} 승리!`,'rgba(255,255,255)']);
       setRoleList(parsedData.data.roleInfo);
       handleOpen();
       //게임 종료 후 복귀
@@ -406,6 +469,7 @@ const GatherRoom = () => {
         }),
         skipContentLengthHeader: true,
       });
+      client.deactivate();
     };
   }, []);
 
@@ -416,18 +480,28 @@ const GatherRoom = () => {
         return <span key={data.nickname}>{data.nickname}</span>;
       });
   };
-  
+
   return (
     <>
-      <Container sx={{ height: "100vh", display: "flex", alignItems: "center", minWidth: "1500px" }}>
-        <Modal
-          open={modalOpen}
-          onClose={handleModalClose}
-          aria-labelledby="modal-title"
-        >
-          <Box sx={{ ...styleModal, width: 400, backgroundColor:'rgba(30,30,30,0.9)',  border: '3px solid #999' }}>
-            <h2 id="modal-title">{modalMessage}</h2>
-            <Button sx={{...styleButton, width:35, position:'relative', left:125, top:10}} onClick={handleModalClose}>확인</Button>
+      <Container
+        sx={{ height: "100vh", display: "flex", alignItems: "center", minWidth: "1500px" }}
+      >
+        <Modal open={modalOpen} onClose={handleModalClose} aria-labelledby='modal-title'>
+          <Box
+            sx={{
+              ...styleModal,
+              width: 400,
+              backgroundColor: "rgba(30,30,30,0.9)",
+              border: "3px solid #999",
+            }}
+          >
+            <h2 id='modal-title'>{modalMessage}</h2>
+            <Button
+              sx={{ ...styleButton, width: 35, position: "relative", left: 125, top: 10 }}
+              onClick={handleModalClose}
+            >
+              확인
+            </Button>
           </Box>
         </Modal>
         <Grid container spacing={3}>
@@ -439,7 +513,8 @@ const GatherRoom = () => {
                   maxHeight: "120px",
                   minHeight: "120px",
                   backgroundColor: "rgba(0,0,0,0.5)",
-                  border:'rgba(0,0,0) 1px solid',borderRadius: "2px"
+                  border: "rgba(0,0,0) 1px solid",
+                  borderRadius: "2px",
                 }}
               >
                 {/* 좌상 */}
@@ -453,7 +528,16 @@ const GatherRoom = () => {
             </Grid>
             <Grid sx={{ marginTop: "25px" }}>
               {/* 좌하 */}
-              <Paper elevation={3} sx={{ minHeight: "650px", maxHeight: "650px", backgroundColor: "rgba(0,0,0,0.5)", border:'rgba(0,0,0) 1px solid',borderRadius: "2px" }}>
+              <Paper
+                elevation={3}
+                sx={{
+                  minHeight: "650px",
+                  maxHeight: "650px",
+                  backgroundColor: "rgba(0,0,0,0.5)",
+                  border: "rgba(0,0,0) 1px solid",
+                  borderRadius: "2px",
+                }}
+              >
                 {IsGameStart ? (
                   <AllCam
                     inCamHandler={inCamHandler}
@@ -473,7 +557,12 @@ const GatherRoom = () => {
             <Grid>
               <Paper
                 elevation={3}
-                sx={{ minHeight: "120px", backgroundColor: "rgba(0,0,0,0.5)",border:'rgba(0,0,0) 1px solid',borderRadius: "2px" }}
+                sx={{
+                  minHeight: "120px",
+                  backgroundColor: "rgba(0,0,0,0.5)",
+                  border: "rgba(0,0,0) 1px solid",
+                  borderRadius: "2px",
+                }}
               >
                 {/* 우상 */}
                 <NaviBar2
@@ -488,7 +577,13 @@ const GatherRoom = () => {
               {/* 우하 */}
               <Paper
                 elevation={3}
-                sx={{ minHeight: "650px", maxHeight: "650px", backgroundColor: "rgba(0,0,0,0.5)",border:'rgba(0,0,0) 1px solid',borderRadius: "2px" }}
+                sx={{
+                  minHeight: "650px",
+                  maxHeight: "650px",
+                  backgroundColor: "rgba(0,0,0,0.5)",
+                  border: "rgba(0,0,0) 1px solid",
+                  borderRadius: "2px",
+                }}
               >
                 <SideBar ref={sideComponentRef} client={client} />
               </Paper>
@@ -503,39 +598,77 @@ const GatherRoom = () => {
           aria-describedby='modal-modal-description'
         >
           <Box sx={style}>
-            <Typography id='modal-modal-title' variant='h6' component='h2'>
-              {currentGameState}
-            </Typography>
-            <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-              마피아는
-              <MafList />
-              입니다.
-            </Typography>
-            {/* 확인 시 모달 닫기 && 세션 종료 && 대기방 복귀 */}
-            <Button onClick={finishGame}>확인</Button>
-            {/* 중첩 모달창 생성 */}
-            <Button>자세히</Button>
-          </Box>
-        </Modal>
-        <Modal
-          open={open}
-          onClose={finishGame}
-          aria-labelledby='modal-modal-title'
-          aria-describedby='modal-modal-description'
-        >
-          <Box sx={style}>
-            <Typography id='modal-modal-title' variant='h6' component='h2'>
-              {currentGameState}
-            </Typography>
-            <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-              마피아는
-              <MafList />
-              입니다.
-            </Typography>
-            {/* 확인 시 모달 닫기 && 세션 종료 && 대기방 복귀 */}
-            <Button onClick={finishGame}>확인</Button>
-            {/* 중첩 모달창 생성 */}
-            <Button>자세히</Button>
+            <Box
+              sx={{
+                width: 400,
+                height: 35,
+                backgroundColor: "var(--color-5);",
+                borderTopLeftRadius: "2px",
+                borderTopRightRadius: "2px",
+              }}
+            >
+              <Logo>
+                <img src='logo.svg' alt='logo' />
+              </Logo>
+            </Box>
+            <Container style={{ backgroundColor: "#ccc" }}>
+              <Typography
+                id='modal-modal-title'
+                variant='h6'
+                component='h2'
+                sx={{ color: "black" }}
+              >
+                {currentGameState}
+              </Typography>
+              <Typography
+                id='modal-modal-description'
+                sx={{ mt: 2, color: "black", textAlign: "center" }}
+              >
+                마피아는 &nbsp;
+                <MafList /> &nbsp; 입니다.
+              </Typography>
+              {/* 확인 시 모달 닫기 && 세션 종료 && 대기방 복귀 */}
+              <Button
+                style={{
+                  marginLeft: 40,
+                  border: "solid 2px var(--color-2)",
+                  color: "var(--color-2)",
+                  backgroundColor: "var(--color-5)",
+                  margin: "20px 35px",
+                  padding: "2px 10px",
+                  borderRadius: "2px",
+                  fontSize: "16px",
+                  marginLeft: "10px",
+                  cursor: "pointer",
+                  textDecoration: "none",
+                  width: "100px",
+                  height: "40px",
+                }}
+                onClick={finishGame}
+              >
+                확인
+              </Button>
+              {/* 중첩 모달창 생성 */}
+              <Button
+                style={{
+                  marginLeft: 40,
+                  border: "solid 2px var(--color-2)",
+                  color: "var(--color-2)",
+                  backgroundColor: "var(--color-5)",
+                  margin: "20px 35px",
+                  padding: "2px 10px",
+                  borderRadius: "2px",
+                  fontSize: "16px",
+                  marginLeft: "10px",
+                  cursor: "pointer",
+                  textDecoration: "none",
+                  width: "100px",
+                  height: "40px",
+                }}
+              >
+                자세히
+              </Button>
+            </Container>
           </Box>
         </Modal>
       </Container>

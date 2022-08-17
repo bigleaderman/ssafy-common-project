@@ -14,60 +14,145 @@ import { setMaf } from "../../redux/slice/CntMafSlice";
 import { setNightTime, setTalkTime, setVoteTime } from "../../redux/slice/GameTimeSlice";
 //리로딩되었는지 검사
 // import { selectChkRL, setChkRL } from "../../redux/slice/CheckReloadSlice";
-// import { selectCntCon, increCon, decreCon, setCon } from "../../redux/slice/CntConSlice";
 //방 번호 필요
 
 //socktjs
 import SockJS from "sockjs-client";
-import { decreCon, increCon } from "../../redux/slice/CntConSlice";
+import { decreCon, increCon, setCon } from "../../redux/slice/CntConSlice";
 
-//img
-import DLS from "../../img/character/dino/dinoLeftStand.gif";
-import DLW from "../../img/character/dino/dinoLeftWalk.gif";
-import DRW from "../../img/character/dino/dinoRightWalk.gif";
-import DRS from "../../img/character/dino/dinoRightStand.gif";
-import BG from "../../img/character/dino/background.png";
+import {
+  //배경
+  BG,
+  BG2,
+  //1. 파랑 공룡
+  DLS,
+  DLW,
+  DRS,
+  DRW,
+  //2. 개구리
+  FLS,
+  FLW,
+  FRS,
+  FRW,
+  //3. 파랑 공룡
+  GDLR,
+  GDLS,
+  GDLW,
+  GDRR,
+  GDRS,
+  GDRW,
+  //4. 핑크 몬스터
+  PMLS,
+  PMLW,
+  PMRS,
+  PMRW,
+  //5. 빨간 공룡
+  RDLS,
+  RDLW,
+  RDRS,
+  RDRW,
+  //6. 화이트 몬스터
+  WMLS,
+  WMLW,
+  WMRS,
+  WMRW,
+  //7. 노랑 공룡
+  YDLS,
+  YDLW,
+  YDRS,
+  YDRW,
+  //8. 젤다
+  ZeldaBS,
+  ZeldaBW,
+  ZeldaFS,
+  ZeldaFW,
+  ZeldaLS,
+  ZeldaLW,
+  ZeldaRS,
+  ZeldaRW,
+} from "../../img/ExportImg";
+
 var StompJs = require("@stomp/stompjs");
 export default function PlayMap() {
   //리로드 확인
   useBeforeunload((event) => {
     if (true) {
+      client.publish({
+        destination: pubAddr,
+        headers: { token: acToken, "content-type": "application/json" },
+        body: JSON.stringify({
+          header: {
+            type: "leave",
+          },
+          data: {
+            nickname: myNickName,
+          },
+        }),
+        skipContentLengthHeader: true,
+      });
       event.preventDefault();
-      dispatch(setX(pX.current));
-      dispatch(setY(pY.current));
     }
   });
 
   const mapSize = 1083;
   //맵 출력 테이블 위치, 사이즈
   const table = {
-    tbTop: 150,
-    tbLeft: 470,
+    tbTop: 240,
+    tbLeft: 440,
     width: 200,
-    height: 300,
+    height: 120,
   };
+
   const chairs = [
-    [110, 500], // 위
-    [110, 620], // 위
-    [180, 700], // 오
-    [400, 700], // 오
-    [470, 500], // 아
-    [470, 620], // 아
-    [180, 420], // 왼
-    [400, 420], // 왼
+    [180, 450], // 상1
+    [180, 520], // 상2
+    [180, 590], // 상3
+    [280, 390], // 왼
+    [280, 650], // 오
+    [390, 450], // 왼
+    [390, 510], // 아
+    [390, 600], // 아
   ];
+
   let chairSeatState = { 1: false, 2: false, 3: false, 4: false, 5: false, 6: false, 7: false };
   const charSize = 50;
-  const chairSize = 20;
+  const chairSize = 40;
+  //y, x
+  const objectSize = {
+    wall: [60, 520],
+    wallRight: [60, 460],
+    pcTable: [230, 50],
+    bar: [400, 80],
+    table: [65, 135],
+    chair: [30, 30],
+  };
+  const object = {
+    wall_1: [0, 0],
+    wallRight_2: [0, 610],
+    wall_3: [567, 50],
+    wallRight_4: [567, 610],
+    table_1: [265, 480],
+    pcTable_1: [157, 45],
+    bar_1: [225, 960],
+    chair_1: [220, 480], // 상1
+    chair_2: [220, 530], // 상2
+    chair_3: [220, 580], // 상3
+    chair_4: [285, 440], // 왼
+    chair_5: [285, 630], // 오
+    chair_6: [360, 480], // 하1
+    chair_7: [360, 533], // 하2
+    chair_8: [360, 585], // 하3,
+  };
   const dispatch = useDispatch();
   let startYX = { y: 600, x: 300 };
   const roomNum = useSelector((state) => state.roomNum);
   let subGatherRoom = null;
   const acToken = useSelector(selectUser).accessToken;
   const myNickName = useSelector(selectUser).nickname;
+  const myCharNum = useRef();
   let myColor = "#" + Math.round(Math.random() * 0xffffff).toString(16);
 
-  let seatNum, seatChange, seatCnt, seatNothing;
+  let seatNum, seatChange, seatNothing;
 
   //맵에 출력할 의자 위치 (top, left)
 
@@ -81,7 +166,7 @@ export default function PlayMap() {
   //키 입력 시 값 저장 배열, 움직였을 때 위치 저장, 속도
   let keyPress = {},
     pX = useRef(350),
-    pY = useRef(550),
+    pY = useRef(490),
     speed = 3;
 
   //타 유저의 데이터 저장
@@ -129,7 +214,6 @@ export default function PlayMap() {
   };
 
   const userJoin = () => {
-    console.log("when send join color, x, y:", myColor + " " + pX.current + " " + pY.current);
     client.publish({
       destination: pubAddr,
       headers: { token: acToken },
@@ -148,28 +232,213 @@ export default function PlayMap() {
     });
   };
 
+  const charMove = (imgSrc, characterNum, dir) => {
+    console.log("imgSrc: ", imgSrc);
+    console.log("characterNum: ", characterNum);
+    console.log("dir: ", dir);
+    if (dir === undefined || dir === null) {
+      console.log("character set");
+      if (characterNum === 1) {
+        imgSrc.children[0].src = DRS;
+        console.log(imgSrc.children[0].src);
+      } else if (characterNum === 2) {
+        imgSrc.children[0].src = FRS;
+      } else if (characterNum === 3) {
+        imgSrc.children[0].src = GDRS;
+      } else if (characterNum === 4) {
+        imgSrc.children[0].src = PMRS;
+      } else if (characterNum === 5) {
+        imgSrc.children[0].src = RDRS;
+      } else if (characterNum === 6) {
+        imgSrc.children[0].src = WMRS;
+      } else if (characterNum === 7) {
+        imgSrc.children[0].src = YDRS;
+      } else if (characterNum === 8) {
+        imgSrc.children[0].src = ZeldaFS;
+      }
+      return;
+    } else {
+      //Blue Dino
+      if (characterNum === 1) {
+        //왼쪽 이동이면서 누르면서 이전 모션이 왼쪽 무빙이 아닐 때
+        if (dir === "a" && imgSrc.children[0].src !== DLW) {
+          imgSrc.children[0].src = DLW;
+        }
+        //오른쪽 이동이면서 이전 모션이 오른쪽 무빙이 아닐 때
+        else if (dir === "d" && imgSrc.children[0].src !== DRW) {
+          imgSrc.children[0].src = DRW;
+        }
+        //상, 하 입력일 때 왼쪽으로 서있었다면 왼쪽 이동 모션
+        else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === DLS) {
+          imgSrc.children[0].src = DLW;
+        }
+        //상, 하 입력일 때 오른쪽 스탠딩이면 오른쪽 이동 모션
+        else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === DRS) {
+          imgSrc.children[0].src = DRW;
+        }
+        //멈춰섰을 때
+        if (dir === "p") {
+          if (imgSrc.children[0].src === DRW) {
+            imgSrc.children[0].src = DRS;
+          } else if (imgSrc.children[0].src === DLW) {
+            imgSrc.children[0].src = DLS;
+          }
+        }
+      }
+      //2번 개구리
+      else if (characterNum === 2) {
+        //왼쪽 이동이면서 누르면서 이전 모션이 왼쪽 무빙이 아닐 때
+        if (dir === "a" && imgSrc.children[0].src !== FLW) {
+          imgSrc.children[0].src = FLW;
+        }
+        //오른쪽 이동이면서 이전 모션이 오른쪽 무빙이 아닐 때
+        else if (dir === "d" && imgSrc.children[0].src !== FRW) {
+          imgSrc.children[0].src = FRW;
+        }
+        //상, 하 입력일 때 왼쪽으로 서있었다면 왼쪽 이동 모션
+        else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === FLS) {
+          imgSrc.children[0].src = FLW;
+        }
+        //상, 하 입력일 때 오른쪽 스탠딩이면 오른쪽 이동 모션
+        else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === FRS) {
+          imgSrc.children[0].src = FRW;
+        }
+        //멈춰섰을 때
+        if (dir === "p") {
+          if (imgSrc.children[0].src === FRW) {
+            imgSrc.children[0].src = FRS;
+          } else if (imgSrc.children[0].src === FLW) {
+            imgSrc.children[0].src = FLS;
+          }
+        }
+      }
+      //Yellow dino
+      else if (characterNum === 3) {
+        if (dir === "a" && imgSrc.children[0].src !== GDLW) imgSrc.children[0].src = GDLW;
+        else if (dir === "d" && imgSrc.children[0].src !== GDRW) imgSrc.children[0].src = GDRW;
+        else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === GDLS)
+          imgSrc.children[0].src = GDLW;
+        else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === GDRS)
+          imgSrc.children[0].src = GDRW;
+
+        if (dir === "p") {
+          if (imgSrc.children[0].src === GDRW) imgSrc.children[0].src = GDRS;
+          else if (imgSrc.children[0].src === GDLW) imgSrc.children[0].src = GDLS;
+        }
+      }
+      //pink monster
+      else if (characterNum === 4) {
+        if (dir === "a" && imgSrc.children[0].src !== PMLW) imgSrc.children[0].src = PMLW;
+        else if (dir === "d" && imgSrc.children[0].src !== PMRW) imgSrc.children[0].src = PMRW;
+        else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === PMLS)
+          imgSrc.children[0].src = PMLW;
+        else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === PMRS)
+          imgSrc.children[0].src = PMRW;
+
+        if (dir === "p") {
+          if (imgSrc.children[0].src === PMRW) imgSrc.children[0].src = PMRS;
+          else if (imgSrc.children[0].src === PMLW) imgSrc.children[0].src = PMLS;
+        }
+      }
+      //red dino
+      else if (characterNum === 5) {
+        if (dir === "a" && imgSrc.children[0].src !== RDLW) imgSrc.children[0].src = RDLW;
+        else if (dir === "d" && imgSrc.children[0].src !== RDRW) imgSrc.children[0].src = RDRW;
+        else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === RDLS)
+          imgSrc.children[0].src = RDLW;
+        else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === RDRS)
+          imgSrc.children[0].src = RDRW; 
+
+        if (dir === "p") {
+          if (imgSrc.children[0].src === RDRW) imgSrc.children[0].src = RDRS;
+          else if (imgSrc.children[0].src === RDLW) imgSrc.children[0].src = RDLS;
+        }
+      }
+      //white monster
+      else if (characterNum === 6) {
+        if (dir === "a" && imgSrc.children[0].src !== WMLW) imgSrc.children[0].src = WMLW;
+        else if (dir === "d" && imgSrc.children[0].src !== WMRW) imgSrc.children[0].src = WMRW;
+        else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === WMLS)
+          imgSrc.children[0].src = WMLW;
+        else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === WMRS)
+          imgSrc.children[0].src = WMRW;
+
+        if (dir === "p") {
+          if (imgSrc.children[0].src === WMRW) imgSrc.children[0].src = WMRS;
+          else if (imgSrc.children[0].src === WMLW) imgSrc.children[0].src = WMLS;
+        }
+      }
+      //yellow
+      else if (characterNum === 7) {
+        if (dir === "a" && imgSrc.children[0].src !== YDLW) imgSrc.children[0].src = YDLW;
+        else if (dir === "d" && imgSrc.children[0].src !== YDRW) imgSrc.children[0].src = YDRW;
+        else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === YDLS)
+          imgSrc.children[0].src = YDLW;
+        else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === YDRS)
+          imgSrc.children[0].src = YDRW;
+
+        if (dir === "p") {
+          if (imgSrc.children[0].src === YDRW) imgSrc.children[0].src = YDRS;
+          else if (imgSrc.children[0].src === YDLW) imgSrc.children[0].src = YDLS;
+        }
+      }
+      //가만히 있는데 걸음
+      else if (characterNum === 8) {
+        if (dir === "a" && !imgSrc.children[0].src.includes("ZLW."))
+          imgSrc.children[0].src = ZeldaLW;
+        if (dir === "d" && !imgSrc.children[0].src.includes("ZRW."))
+          imgSrc.children[0].src = ZeldaRW;
+        if (dir === "w" && !imgSrc.children[0].src.includes("ZBW."))
+          imgSrc.children[0].src = ZeldaBW;
+        if (dir === "s" && !imgSrc.children[0].src.includes("ZFW."))
+          imgSrc.children[0].src = ZeldaFW;
+
+        if (dir === "p") {
+          if (imgSrc.children[0].src.includes("ZLW.")) {
+            imgSrc.children[0].src = ZeldaLS;
+          } else if (imgSrc.children[0].src.includes("ZRW.")) {
+            imgSrc.children[0].src = ZeldaRS;
+          } else if (imgSrc.children[0].src.includes("ZFW.")) {
+            imgSrc.children[0].src = ZeldaFS;
+          } else if (imgSrc.children[0].src.includes("ZBW.")) {
+            imgSrc.children[0].src = ZeldaBS;
+          }
+        }
+      }
+    }
+  };
   //소켓으로 정보를 받았을 때 처리 함수
   const onMessageReceived = (payload) => {
     var payloadData = JSON.parse(payload.body);
-    console.log("payloadData: ", payloadData);
+    console.log("PlayMap onMR: ", payloadData);
 
-    //다른 유저의 입장 신호 수신 시
+    //자신 포함 모든 유저의 입장 신호 수신 시
     if (payloadData.header.type === "join") {
       //본인 전송 join 무시 필요
-      if (payloadData.data.nickname === myNickName) return;
+      if (payloadData.data.nickname === myNickName) {
+        console.log("↑↑↑↑myData↑↑↑↑");
+        //내 캐릭터만 지정받고 종료
+        myCharNum.current = payloadData.data.character;
+        charMove(myChar.current, payloadData.data.character);
+        return;
+      }
 
       //이미 방에 접속해있는 유저인 경우 처리해주지 않음
       if (otherUserData[payloadData.data.nickname]) return;
-      dispatch(increCon());
       //새로 접속해온 경우 남아있는 자리를 확인 후 입력
       for (let i in remainNum) {
         if (!remainNum[i]) {
           remainNum[i] = true;
-          console.log("undefined user: " + payloadData);
-          otherUserData[payloadData.data.nickname] = { color: payloadData.data.color, num: i };
-          document.getElementById(`char${i}`).style.left = payloadData.data.x;
-          document.getElementById(`char${i}`).style.top = payloadData.data.y;
-          document.getElementById(`char${i}`).style.background = payloadData.data.color;
+
+          otherUserData[payloadData.data.nickname] = {
+            color: payloadData.data.color,
+            num: i,
+            character: payloadData.data.character,
+          };
+          charMove(document.getElementById(`char${i}`), payloadData.data.character);
+
+          document.getElementById(`char${i}`).style.left = payloadData.data.x + "px";
+          document.getElementById(`char${i}`).style.top = payloadData.data.y + "px";
           document.getElementById(`char${i}Name`).innerText = payloadData.data.nickname;
           document.getElementById(`char${i}`).style.display = "block";
           break;
@@ -180,11 +449,17 @@ export default function PlayMap() {
     else if (payloadData.header.type === "list") {
       let data = payloadData.data.users;
       console.log("PlayMap user list: ", data);
+      dispatch(setCon(data.length));
+
       //저장된 유저의 정보를 입력
       for (let i = 0; i < data.length; i++) {
-        //본인 닉네임 제외
-        if (data[i].nickname === myNickName || otherUserData[data[i].nickname]) {
-          console.log(i + " 번째, returned data.users: ", data[i]);
+        //본인 닉네임,이미 포함된 유저 제외
+        if (data[i].nickname === myNickName) {
+          continue;
+        }
+        //이미 존재하는 유저는 제외
+        if (otherUserData[data[i].nickname]) {
+          console.log("PlayMap " + i + " 번째, already exist data.users: ", data[i]);
           continue;
         }
         //다른 유저의 정보를 모두 저장
@@ -196,11 +471,15 @@ export default function PlayMap() {
               //해당 자리 할당
               remainNum[j] = true;
               //해당 유저의 구분값, 번호 저장
-              otherUserData[data[i].nickname] = { color: data[i].color, num: j };
+              otherUserData[data[i].nickname] = {
+                color: data[i].color,
+                num: j,
+                character: data[i].character,
+              };
+              charMove(document.getElementById(`char${j}`), data[i].character);
               //해당 번호의 캐릭터에 값 입력
               document.getElementById(`char${j}`).style.left = data[i].x + "px";
               document.getElementById(`char${j}`).style.top = data[i].y + "px";
-              document.getElementById(`char${j}`).style.background = data[i].color;
               document.getElementById(`char${j}Name`).innerText = data[i].nickname;
               document.getElementById(`char${j}`).style.display = "block";
               break;
@@ -209,9 +488,9 @@ export default function PlayMap() {
         }
       }
     }
+
     //유저 방 퇴장
     else if (payloadData.header.type === "leave") {
-      dispatch(decreCon());
       let userNum = otherUserData[payloadData.data.nickname].num;
       remainNum[userNum] = false;
       document.getElementById(`char${userNum}`).style.display = "none";
@@ -223,14 +502,16 @@ export default function PlayMap() {
     }
     //상호작용
     else if (payloadData.header.type === "interact") {
-      // console.log("interact, payloadData:", payloadData.data);
+      console.log("PM ↑↑interact↑↑");
+      let eachUser = otherUserData[payloadData.data.nickname];
       //본인 움직임은 제외
-      if (
-        payloadData.data.nickname === myNickName ||
-        otherUserData[payloadData.data.nickname] === undefined
-      )
-        return;
+      if (payloadData.data.nickname === myNickName || eachUser === undefined) return;
 
+      charMove(
+        document.getElementById(`char${eachUser.num}`),
+        eachUser.character,
+        payloadData.data.dir
+      );
       document.getElementById(`char${otherUserData[payloadData.data.nickname].num}`).style.left =
         payloadData.data.x + "px";
       document.getElementById(`char${otherUserData[payloadData.data.nickname].num}`).style.top =
@@ -264,6 +545,8 @@ export default function PlayMap() {
     }
   };
 
+  window.onbeforeunload = function () {};
+
   //웹소켓 코드 끝
 
   //첫 렌더링될 때만 입력받는 input태그로 focus
@@ -275,12 +558,25 @@ export default function PlayMap() {
 
     //랜더링 종료 시 인터벌 종료
     return () => {
-      client.deactivate();
+      otherUserData = {};
+      client.publish({
+        destination: pubAddr,
+        headers: { token: acToken, "content-type": "application/json" },
+        body: JSON.stringify({
+          header: {
+            type: "leave",
+          },
+          data: {
+            nickname: myNickName,
+          },
+        }),
+        skipContentLengthHeader: true,
+      });
+
+      // client.deactivate();
       //랜더링 종료될 때 leave 신호 전송
       clearInterval(inputCheck);
       clearInterval(sendMyPos);
-      dispatch(setX(pX.current));
-      dispatch(setY(pY.current));
     };
   }, [myColor, myChar]);
 
@@ -289,6 +585,13 @@ export default function PlayMap() {
     if (client) {
       //w, s, a, d
       if (keyPress[87] || keyPress[83] || keyPress[65] || keyPress[68]) {
+        let dir = "";
+        if (keyPress[87]) dir = "w";
+        if (keyPress[83]) dir = "s";
+        if (keyPress[65]) dir = "a";
+        if (keyPress[68]) dir = "d";
+
+        charMove(myChar.current, myCharNum.current, dir);
         client.publish({
           destination: pubAddr,
           headers: { "content-type": "application/json", token: acToken },
@@ -303,23 +606,15 @@ export default function PlayMap() {
               x: pX.current,
               y: pY.current,
               color: myColor,
+              dir: dir,
             },
           }),
           skipContentLengthHeader: true,
         });
-        if (keyPress[65] && myChar.current.children[0].src !== DLW) {
-          myChar.current.children[0].src = DLW;
-        } else if (keyPress[68] && myChar.current.children[0].src !== DRW) {
-          myChar.current.children[0].src = DRW;
-        } else if ((keyPress[87] || keyPress[83]) && myChar.current.children[0].src === DLS) {
-          myChar.current.children[0].src = DLW;
-        } else if ((keyPress[87] || keyPress[83]) && myChar.current.children[0].src === DRS) {
-          myChar.current.children[0].src = DRW;
-        }
       }
     }
   }, 16);
-
+  let objName, objNum;
   //부드러운 움직임을 위한 변수 선언
   //일정 초마다 키 입력 확인
   const inputCheck = setInterval(() => {
@@ -328,59 +623,64 @@ export default function PlayMap() {
     if (keyPress[65]) pX.current -= speed; // left - a
     if (keyPress[68]) pX.current += speed;
 
-    //테이블 충돌 감지
-    if (
-      pX.current < table.tbLeft + table.width &&
-      pX.current + charSize > table.tbLeft &&
-      pY.current < table.tbTop + table.height &&
-      charSize + pY.current > table.tbTop
-    ) {
-      if (keyPress[87]) pY.current += speed;
-      if (keyPress[83]) pY.current -= speed; // down - s
-      if (keyPress[65]) pX.current += speed; // left - a
-      if (keyPress[68]) pX.current -= speed;
-    }
-
+    // 모든 벽에 대한 충돌 감지
     seatNum = -1;
-    //의자 충돌 감지
-    for (let i = 0; i < 8; i++) {
-      if (
-        chairs[i][1] < pX.current + charSize &&
-        chairs[i][1] + chairSize > pX.current &&
-        chairs[i][0] < charSize + pY.current &&
-        chairs[i][0] + chairSize > pY.current
-      ) {
-        seatNum = i;
-        //자리에 앉았을 시 소켓으로 준비 완료 전송
-        if (seatNum !== seatChange) {
-          seatNothing = true;
-          seatChange = i;
+    for (const key in object) {
+      //object명
+      objName = key.slice(0, key.indexOf("_"));
+      objNum = key.substring(key.indexOf("_") + 1);
 
-          client.publish({
-            destination: pubAddr,
-            headers: { "content-type": "application/json", token: acToken },
-            body: JSON.stringify({
-              header: {
-                type: "interact",
-              },
-              data: {
-                nickname: myNickName,
-                status: "ready",
-                chairNum: seatChange,
-                y: pY.current,
-                x: pX.current,
-                color: myColor,
-              },
-            }),
-            skipContentLengthHeader: true,
-          });
+      //의자 일 때
+      if (objName === "chair") {
+        if (
+          object[key][1] < objectSize[objName][1] + pX.current &&
+          object[key][1] + objectSize[objName][1] > pX.current &&
+          object[key][0] < objectSize[objName][0] + pY.current &&
+          object[key][0] + objectSize[objName][0] > pY.current
+        ) {
+          seatNum = objNum;
+          if (seatNum !== seatChange) {
+            seatNothing = true;
+            seatChange = objNum;
+
+            client.publish({
+              destination: pubAddr,
+              headers: { "content-type": "application/json", token: acToken },
+              body: JSON.stringify({
+                header: {
+                  type: "interact",
+                },
+                data: {
+                  nickname: myNickName,
+                  status: "ready",
+                  chairNum: seatChange,
+                  y: pY.current,
+                  x: pX.current,
+                  color: myColor,
+                  dir: null,
+                },
+              }),
+              skipContentLengthHeader: true,
+            });
+          }
         }
-        //자리와 이전 자리가 같을 시
+      }
+      //의자 외
+      else {
+        if(pX.current < object[key][1] + objectSize[objName][1] &&
+          pX.current + charSize > object[key][1] &&
+          pY.current < object[key][0] + objectSize[objName][0] &&
+          charSize + pY.current > object[key][0]){
+          if (keyPress[87]) pY.current += speed;
+          if (keyPress[83]) pY.current -= speed; // down - s
+          if (keyPress[65]) pX.current += speed; // left - a
+          if (keyPress[68]) pX.current -= speed;
+          }
       }
     }
+
     //자리에서 벗어났을 시 소켓으로 준비 완료 해제 전송
     if (seatNum === -1 && seatNothing === true) {
-      seatCnt = 0;
       seatNothing = false;
 
       client.publish({
@@ -397,16 +697,17 @@ export default function PlayMap() {
             color: myColor,
             y: pY.current,
             x: pX.current,
+            dir: null,
           },
         }),
         skipContentLengthHeader: true,
       });
     }
     //외부 벽 충돌 감지
-    if (pY.current < 30) pY.current = 30;
-    if (pY.current >= 650 - charSize - 30) pY.current = 650 - charSize - 30;
-    if (pX.current < 30) pX.current = 30;
-    if (pX.current >= mapSize - charSize - 30) pX.current = mapSize - charSize - 30;
+    if (pY.current < 10) pY.current = 10;
+    if (pY.current >= 650 - charSize - 10) pY.current = 650 - charSize - 10;
+    if (pX.current < 33) pX.current = 33;
+    if (pX.current >= mapSize - charSize - 33) pX.current = mapSize - charSize - 33;
 
     //캐릭터 좌표 최신화
     myChar.current.style.left = pX.current + "px";
@@ -440,15 +741,12 @@ export default function PlayMap() {
           x: pX.current,
           y: pY.current,
           color: myColor,
+          dir: "p",
         },
       }),
       skipContentLengthHeader: true,
     });
-    if (myChar.current.children[0].src === DRW) {
-      myChar.current.children[0].src = DRS;
-    } else if (myChar.current.children[0].src === DLW) {
-      myChar.current.children[0].src = DLS;
-    }
+    charMove(myChar.current, myCharNum.current, "p");
   };
 
   client.activate();
@@ -460,6 +758,7 @@ export default function PlayMap() {
         height: "100%",
       }}
     >
+      {/* 맵 사이즈 */}
       <div
         id='map'
         onClick={changeFocus}
@@ -471,32 +770,26 @@ export default function PlayMap() {
           top: 0,
         }}
       >
-        <img src={BG} alt='BackgroundImg' style={{ width: "100%", height: "100%" }} />
-        <div
-          id='table'
-          style={{
-            width: table.width,
-            height: table.height,
-            left: table.tbLeft,
-            top: table.tbTop,
-            background: "green",
-            position: "absolute",
-          }}
-        >
-          이미지와 사이즈 맞추기 위해 일단 삽입
-        </div>
-
-        {chairs.map((e, idx) => {
+        {/* 배경 이미지 출력 */}
+        <img src={BG2} alt='BackgroundImg' style={{ width: "100%", height: "100%" }} />
+        
+        {/* 모든 충돌감지 오브젝트 출력 */}
+        {Object.entries(object).map((entrie, idx) => {
+          console.log("entrie: " + entrie[0]);
+          console.log("entrie[0].indexOf('_'): " + entrie[0].slice(0, entrie[0].indexOf("_")));
+          console.log(
+            "objectSize[entrie[0].indexOf('_')][0]: " +
+              objectSize[entrie[0].slice(0, entrie[0].indexOf("_"))][0]
+          );
           return (
             <div
-              key={idx}
-              id={"chair" + idx}
+              key={entrie[0]}
+              id={entrie[0]}
               style={{
-                top: e[0],
-                left: e[1],
-                height: chairSize,
-                width: chairSize,
-                background: "blue",
+                height: objectSize[entrie[0].slice(0, entrie[0].indexOf("_"))][0],
+                width: objectSize[entrie[0].slice(0, entrie[0].indexOf("_"))][1],
+                top: entrie[1][0],
+                left: entrie[1][1],
                 position: "absolute",
               }}
             ></div>
@@ -512,7 +805,7 @@ export default function PlayMap() {
             display: "none",
           }}
         >
-          <img src={DLS} alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
+          <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
           <div style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}>
             {myNickName !== undefined ? myNickName : "need login"}
           </div>
@@ -525,13 +818,11 @@ export default function PlayMap() {
             margin: `0px`,
             width: charSize,
             height: charSize,
-            background: "red",
             position: "absolute",
             display: "none",
-            left: startYX.x,
-            top: startYX.y,
           }}
         >
+          <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
           <div
             id='char1Name'
             style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}
@@ -543,13 +834,11 @@ export default function PlayMap() {
             margin: `0px`,
             width: charSize,
             height: charSize,
-            background: "red",
             position: "absolute",
             display: "none",
-            left: startYX.x,
-            top: startYX.y,
           }}
         >
+          <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
           <div
             id='char2Name'
             style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}
@@ -561,13 +850,11 @@ export default function PlayMap() {
             margin: `0px`,
             width: charSize,
             height: charSize,
-            background: "red",
             position: "absolute",
             display: "none",
-            left: startYX.x,
-            top: startYX.y,
           }}
         >
+          <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
           <div
             id='char3Name'
             style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}
@@ -579,13 +866,11 @@ export default function PlayMap() {
             margin: `0px`,
             width: charSize,
             height: charSize,
-            // background: "red",
             position: "absolute",
             display: "none",
-            left: startYX.x,
-            top: startYX.y,
           }}
         >
+          <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
           <div
             id='char4Name'
             style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}
@@ -597,13 +882,11 @@ export default function PlayMap() {
             margin: `0px`,
             width: charSize,
             height: charSize,
-            background: "red",
             position: "absolute",
             display: "none",
-            left: startYX.x,
-            top: startYX.y,
           }}
         >
+          <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
           <div
             id='char5Name'
             style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}
@@ -615,13 +898,11 @@ export default function PlayMap() {
             margin: `0px`,
             width: charSize,
             height: charSize,
-            background: "red",
             position: "absolute",
             display: "none",
-            left: startYX.x,
-            top: startYX.y,
           }}
         >
+          <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
           <div
             id='char6Name'
             style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}
@@ -633,13 +914,11 @@ export default function PlayMap() {
             margin: `0px`,
             width: charSize,
             height: charSize,
-            background: "red",
             position: "absolute",
             display: "none",
-            left: startYX.x,
-            top: startYX.y,
           }}
         >
+          <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
           <div
             id='char7Name'
             style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}

@@ -1,0 +1,51 @@
+## 파일 구조
+
+- pages
+  - MainPage.js
+    - 메인페이지
+  - LogInPage.js
+    - 로그인 페이지
+  - LogOutPage.js
+    - 로그아웃 페이지
+  - SignUpPage.js
+    - 회원가입 페이지
+  - FindPasswordPage.js
+    - 비밀번호 찾기 페이지
+  - MyPage.js
+    - 마이페이지
+  - NoticeListPage.js
+    - 공지사항 목록 페이지
+  - NoticeDetailPage.js
+    - 공지사항 상세 페이지
+  - UserListPage.js
+    - 유저 목록 페이지(관리자)
+  - UserDetailPage.js
+    - 유저 상세 페이지(관리자)
+  - CreateNoticePage.js
+    - 공지사항 작성 페이지(관리자)
+  - UpdateNoticePage.js
+    - 공지사항 수정 페이지(관리자)
+  - RoomListPage.js
+    - 방 목록 페이지(대기실)
+  - RoomPage.js
+    - 대기방 페이지
+  - GameRoomPage.js
+    - 게임방 페이지
+  - PageNotFoundPage.js
+    - 404 페이지
+  - VedooRoomPage.js
+    - 비디오 룸 페이지(비디오 테스트용)
+- components
+  - Header.js
+    - 내비게이션 바
+  - Footer.js
+    - 푸터
+  - ConfirmWithdrawalModal.js
+    - 탈퇴 확인 모달
+  - UserVideo.js
+    - 비디오 캠
+  - OvVideo.js
+    - 비디오 캠 바디
+  - RoomList.js
+    - 대기방 목록
+

@@ -38,7 +38,7 @@ export function MainBar(props) {
   };
   return (
     <Grid container spacing={2} sx={{ p: 1 }}>
-      <Grid item xs={4} sx={{ pt: 0 }}>
+      <Grid item xs={3} sx={{ pt: 0 }}>
         <h4 style={{ textAlign: "left", color: "#ccc" }}>
           방 번호 : {roomNum} / 방 제목 : {useSelector(selectRoomTitle)}
         </h4>
@@ -46,8 +46,9 @@ export function MainBar(props) {
           제한시간: {props.timer.current}
         </h3>
       </Grid>
-      <Grid item xs={4}>
-        <h2 style={{ color: "#ccc" }}>{props.currentGameState}</h2>
+      <Grid item xs={5}>
+        {console.log('props,',props.currentGameState)}
+        <h2 style={{ color: props.currentGameState[1] }}>{props.currentGameState[0]}</h2>
         {props.myRole !== "" ? (
           <h5 style={{ color: "#ccc", marginTop: 45 }}>당신의 역할 :{props.myRole}</h5>
         ) : null}

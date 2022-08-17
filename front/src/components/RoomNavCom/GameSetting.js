@@ -116,7 +116,7 @@ export const GameSetting = (props) => {
     props.setOpen(false);
   };
   return (
-    <div style={{ borderRadius: '2px', height: 580, width: 600, paddingTop: 10,backgroundColor:'#ffffff' }}>
+    <div style={{ borderRadius: '2px', height: '630px', width: 600, paddingTop: 10,backgroundColor:'#ffffff' }}>
       <Stack direction='column' spacing={2} justifyContent='center' alignItems='center'>
         <Stack direction='row' spacing={2}>
           {/* 방 제목 변경  */}

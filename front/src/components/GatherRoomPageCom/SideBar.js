@@ -238,6 +238,8 @@ const ChatBar = (props) => {
           height: "40px",
           border: "rgba(255,255,255) 1px solid",
           borderRadius: "2px",
+          textAlign:'left',
+          paddingLeft:'2px'
         }}
       />
     </Box>
@@ -296,6 +298,7 @@ const UserBar = (props) => {
   };
   // 3. 친구신청
   const sendFriend = () => {
+    console.log('친구친구',ff)
     axios({
       method: "post",
       url: "/api/user/friend/request",
@@ -303,7 +306,7 @@ const UserBar = (props) => {
         "Content-Type": "text/plain",
         Authorization: `Bearer ${me.accessToken}`,
       },
-      data: ff.useSeq,
+      data: ff.userSeq,
     }).then((res) => console.log("친구 신청 성공"));
   };
   return (

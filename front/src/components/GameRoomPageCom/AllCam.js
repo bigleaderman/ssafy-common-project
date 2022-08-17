@@ -5,7 +5,6 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../redux/slice/UserSlice";
 import { Grid } from "@mui/material";
 import UserVideoComponent from "./UserVideoComponent";
-import RoleComboBox from "../RoleComboBox";
 
 
 //게임 방 번호 가져옴
@@ -229,71 +228,19 @@ const AllCam = (props) => {
       setTimeout(() => voteClientPublish(targetNickname), 0);
       setTimeout(() => voteClientPublish(targetNickname), 2000);
       setTimeout(() => voteClientPublish(targetNickname), 4000);
-      // props.client.publish({
-      //   destination: pubGameAddr,
-      //   headers: { token: token, "content-type": "application/json" },
-      //   body: JSON.stringify({
-      //     type: "vote",
-      //     data: {
-      //       target: targetNickname,
-      //     },
-      //   }),
-      //   skipContentLengthHeader: true,
-      // });
     } else if (props.turn === "night") {
       if (props.role === "mafia") {
         setTimeout(() => nightActClientPublish(targetNickname, "mafia"), 0);
         setTimeout(() => nightActClientPublish(targetNickname, "mafia"), 2000);
         setTimeout(() => nightActClientPublish(targetNickname, "mafia"), 4000);
-        // props.client.publish({
-        //   destination: pubGameAddr,
-        //   headers: { token: token, "content-type": "application/json" },
-        //   body: JSON.stringify({
-        //     type: "night-act",
-        //     data: {
-        //       nickname: currentUser.nickname,
-        //       role: "mafia",
-        //       target: targetNickname,
-        //     },
-        //   }),
-        //   skipContentLengthHeader: true,
-        // });
       } else if (props.role === "police") {
         setTimeout(() => nightActClientPublish(targetNickname, "police"), 0);
         setTimeout(() => nightActClientPublish(targetNickname, "police"), 2000);
         setTimeout(() => nightActClientPublish(targetNickname, "police"), 4000);
-        // for (let i=0; i<3; i++) {
-          // props.client.publish({
-          //   destination: pubGameAddr,
-          //   headers: { token: token, "content-type": "application/json" },
-          //   body: JSON.stringify({
-          //     type: "night-act",
-          //     data: {
-          //       nickname: currentUser.nickname,
-          //       role: "police",
-          //       target: targetNickname,
-          //     },
-          //   }),
-          //   skipContentLengthHeader: true,
-          // });
-        // }
       } else if (props.role === "doctor") {
         setTimeout(() => nightActClientPublish(targetNickname, "doctor"), 0);
         setTimeout(() => nightActClientPublish(targetNickname, "doctor"), 2000);
         setTimeout(() => nightActClientPublish(targetNickname, "doctor"), 4000);
-        // props.client.publish({
-        //   destination: pubGameAddr,
-        //   headers: { token: token, "content-type": "application/json" },
-        //   body: JSON.stringify({
-        //     type: "night-act",
-        //     data: {
-        //       nickname: currentUser.nickname,
-        //       role: "doctor",
-        //       target: targetNickname,
-        //     },
-        //   }),
-        //   skipContentLengthHeader: true,
-        // });
       }
     }
   };
@@ -317,13 +264,12 @@ const AllCam = (props) => {
 
   return (
     <div>
-      <button>클릭 시 연결</button>
-      <Grid container spacing={2} style={{ height: 500 }}>
+      <Grid container spacing={2} style={{ height: "500px", padding: "16px" }}>
         <Grid item xs={4}>
-          <Grid>
+          <Grid style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "0 0 10px 0" }}>
             {/* 1번 자리 내 캠 */}
             {publisher !== undefined ? (
-              <div style={{ height: '240px' }}
+              <div style={{ height: '200px' }}
                 onClick={() => {
                   if (isPointer() && !isDead(-1) && (props.role !== "police" || props.turn === "vote")) handleVote(-1);
                 }}
@@ -335,11 +281,11 @@ const AllCam = (props) => {
                 isDead={isDead(-1)}
               />
               </div>
-            ) : null}
+            ) : <div style={{ width: '320px', height: '200px' }} />}
           </Grid>
-          <Grid>
+          <Grid style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "0 0 10px 0" }}>
             {subscribers[2] !== undefined ? (
-              <div style={{ height: '240px' }}>
+              <div style={{ height: '200px' }}>
                 <div
                   onClick={() => {
                     if (isPointer() && !isDead(2)) handleVote(2);
@@ -351,13 +297,12 @@ const AllCam = (props) => {
                     isDead={isDead(2)}
                   />
                 </div>
-                <RoleComboBox />
               </div>
-            ) : null}
+            ) : <div style={{ width: '320px', height: '200px' }} />}
           </Grid>
-          <Grid>
+          <Grid style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "0 0 10px 0" }}>
             {subscribers[4] !== undefined ? (
-              <div style={{ height: '240px' }}>
+              <div style={{ height: '200px' }}>
                 <div
                   onClick={() => {
                     if (isPointer() && !isDead(4)) handleVote(4);
@@ -369,15 +314,14 @@ const AllCam = (props) => {
                     isDead={isDead(4)}
                   />
                 </div>
-                <RoleComboBox />
               </div>
-            ) : null}
+            ) : <div style={{ width: '320px', height: '200px' }} />}
           </Grid>
         </Grid>
         <Grid item xs={4}>
-          <Grid>
+          <Grid style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "0 0 10px 0" }}>
             {subscribers[0] !== undefined ? (
-              <div style={{ height: '240px' }}>
+              <div style={{ height: '200px' }}>
                 <div
                   onClick={() => {
                     if (isPointer() && !isDead(0)) handleVote(0);
@@ -389,14 +333,16 @@ const AllCam = (props) => {
                     isDead={isDead(0)}
                   />
                 </div>
-                <RoleComboBox />
               </div>
-            ) : null}
+            ) : <div style={{ width: '320px', height: '200px' }} />}
           </Grid>
-          <Grid>empty</Grid>
-          <Grid>
+          <Grid style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "0 0 10px 0" }}>
+            {/* 캐릭터 자리 */}
+            <div style={{ width: '320px', height: '200px' }} />
+          </Grid>
+          <Grid style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "0 0 10px 0" }}>
             {subscribers[5] !== undefined ? (
-              <div style={{ height: '240px' }}>
+              <div style={{ height: '200px' }}>
                 <div
                   onClick={() => {
                     if (isPointer() && !isDead(5)) handleVote(5);
@@ -408,15 +354,14 @@ const AllCam = (props) => {
                     isDead={isDead(5)}
                   />
                 </div>
-                <RoleComboBox />
               </div>
-            ) : null}
+            ) : <div style={{ width: '320px', height: '200px' }} />}
           </Grid>
         </Grid>
         <Grid item xs={4}>
-          <Grid>
+          <Grid style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "0 0 10px 0" }}>
             {subscribers[1] !== undefined ? (
-              <div style={{ height: '240px' }}>
+              <div style={{ height: '200px' }}>
                 <div
                   onClick={() => {
                     if (isPointer() && !isDead(1)) handleVote(1);
@@ -428,13 +373,12 @@ const AllCam = (props) => {
                     isDead={isDead(1)}
                   />
                 </div>
-                <RoleComboBox />
               </div>
-            ) : null}
+            ) : <div style={{ width: '320px', height: '200px' }} />}
           </Grid>
-          <Grid>
+          <Grid style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "0 0 10px 0" }}>
             {subscribers[3] !== undefined ? (
-              <div style={{ height: '240px' }}>
+              <div style={{ height: '200px' }}>
                 <div
                   onClick={() => {
                     if (isPointer() && !isDead(3)) handleVote(3);
@@ -446,13 +390,12 @@ const AllCam = (props) => {
                     isDead={isDead(3)}
                   />
                 </div>
-                <RoleComboBox />
               </div>
-            ) : null}
+            ) : <div style={{ width: '320px', height: '200px' }} />}
           </Grid>
-          <Grid>
+          <Grid style={{ display: "flex", justifyContent: "center", alignItems: "center", margin: "0 0 10px 0" }}>
             {subscribers[6] !== undefined ? (
-              <div style={{ height: '240px' }}>
+              <div style={{ height: '200px' }}>
                 <div
                   onClick={() => {
                     if (isPointer() && !isDead(6)) handleVote(6);
@@ -464,9 +407,8 @@ const AllCam = (props) => {
                     isDead={isDead(6)}
                   />
                 </div>
-                <RoleComboBox />
               </div>
-            ) : null}
+            ) : <div style={{ width: '320px', height: '200px' }} />}
           </Grid>
         </Grid>
       </Grid>

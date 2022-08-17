@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { blueGrey } from '@mui/material/colors';
+import { blueGrey } from "@mui/material/colors";
 
 import { Helper } from "../RoomNavCom/Helper";
 //MUI 모달 참조: https://mui.com/material-ui/react-modal/
@@ -32,7 +32,7 @@ const style = {
   bgcolor: "rgba(240, 240, 240, 1)",
   border: "1px solid #000",
   boxShadow: 24,
-  borderRadius: '2px'
+  borderRadius: "2px",
 };
 const Logo = styled.a`
   display: flex;
@@ -51,7 +51,7 @@ const theme = createTheme({
     },
     secondary: {
       // This is green.A700 as hex.
-      main: '#11cb5f',
+      main: "#11cb5f",
     },
   },
 });
@@ -73,14 +73,11 @@ export const NaviBar2 = forwardRef((props, ref) => {
   const [isHost, setIsHost] = useState(false);
   const isHostMsgRsv = (payload) => {
     let parsedData = JSON.parse(payload.body);
-    console.log("NaviBar: ", parsedData);
     if (parsedData.header.type === "join" && parsedData.data.nickname === myNickName) {
-      console.log("↑↑↑↑NaviBar isHost↑↑↑: ", parsedData.data.isHost);
       setIsHost(parsedData.data.isHost);
     }
   };
   const GameStarthandler = () => {
-    console.log("gamestartHandler");
     props.client.publish({
       destination: `${pubAddr}/game`,
       headers: { token: token },
@@ -92,15 +89,11 @@ export const NaviBar2 = forwardRef((props, ref) => {
     });
   };
   const returnListPage = () => {
-    //방을 나갈 때 redux의 내 위치 초기화
-    dispatch(setY(600));
-    dispatch(setX(350));
     //채팅 이벤트 삭제
     if (document.getElementById("text")) {
       document
         .getElementById("text")
         .removeEventListener("keydown", ({ key, composed, target }) => {
-          console.log(key + " " + composed + " " + target);
           if (key === "Enter" && composed) {
             props.sendData({ nickname: myNickName, message: target.value });
             target.value = "";
@@ -148,7 +141,11 @@ export const NaviBar2 = forwardRef((props, ref) => {
         <Stack spacing={1} direction='column' sx={{ p: 2 }}>
           <Stack spacing={1} direction='row'>
             <Button
-            sx={{color:'rgba(255,255,255)',border:'rgba(255,255,255) 1px solid',borderRadius: "2px"}}
+              sx={{
+                color: "rgba(255,255,255)",
+                border: "rgba(255,255,255) 1px solid",
+                borderRadius: "2px",
+              }}
               variant='outlined'
               size='small'
               onClick={() => {
@@ -158,7 +155,11 @@ export const NaviBar2 = forwardRef((props, ref) => {
               <QuestionMarkIcon /> {/* 도움말 */}
             </Button>
             <Button
-            sx={{color:'rgba(255,255,255)',border:'rgba(255,255,255) 1px solid',borderRadius: "2px"}}
+              sx={{
+                color: "rgba(255,255,255)",
+                border: "rgba(255,255,255) 1px solid",
+                borderRadius: "2px",
+              }}
               variant='outlined'
               size='small'
               onClick={() => {
@@ -171,7 +172,11 @@ export const NaviBar2 = forwardRef((props, ref) => {
           <Stack spacing={1} direction='row'>
             {isHost === true ? (
               <Button
-              sx={{color:'rgba(255,255,255)',border:'rgba(255,255,255) 1px solid',borderRadius: "2px"}}
+                sx={{
+                  color: "rgba(255,255,255)",
+                  border: "rgba(255,255,255) 1px solid",
+                  borderRadius: "2px",
+                }}
                 variant='outlined'
                 size='small'
                 onClick={() => {
@@ -184,7 +189,11 @@ export const NaviBar2 = forwardRef((props, ref) => {
 
             {isHost === true ? (
               <Button
-              sx={{color:'rgba(255,255,255)',border:'rgba(255,255,255) 1px solid',borderRadius: "2px"}}
+                sx={{
+                  color: "rgba(255,255,255)",
+                  border: "rgba(255,255,255) 1px solid",
+                  borderRadius: "2px",
+                }}
                 variant='outlined'
                 size='small'
                 onClick={() => {
@@ -194,7 +203,6 @@ export const NaviBar2 = forwardRef((props, ref) => {
                 게임설정
               </Button>
             ) : null}
-
           </Stack>
         </Stack>
       </ThemeProvider>
@@ -206,7 +214,7 @@ export const NaviBar2 = forwardRef((props, ref) => {
               width: 600,
               height: 35,
               backgroundColor: "var(--color-5);",
-              borderRadius: '2px'
+              borderRadius: "2px",
             }}
           >
             <Logo>

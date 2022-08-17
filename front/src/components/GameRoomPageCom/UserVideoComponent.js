@@ -3,6 +3,8 @@ import OpenViduVideoComponent from "./OvVideo";
 import "./UserVideo.css";
 import styled from 'styled-components';
 import "../../CSS/UserVideoComponent.css"
+import RoleComboBox from "../RoleComboBox";
+
 
 export default function UserVideoComponent(props) {
   const [audio, setAudio] = useState(false);
@@ -21,40 +23,22 @@ export default function UserVideoComponent(props) {
   const getNickname = () => {
       return JSON.parse(props.streamManager.stream.connection.data).clientData;
   };
-//   if (props.isPointer) {
-    
-// // const PointerScreen = styled.div`
-// // position: absolute;
-// // top: 0px;
-// // width: 320px;
-// // height: 200px;
-// // border-radius: 12px;
-// // display: flex;
-// // flex-direction: column;
-// // justify-content: space-between;
 
-// // &:hover {
-// //   background-color: #00000060;
-// // }
-// // `
-//     Screen = PointerScreen;
-//   } else {
-//     Screen = defaultScreen;
-//   }
   return (
     <div>
       {props.streamManager !== undefined ? (
-        <Video style={props.isPointer ? {cursor: "pointer"} : {cursor: "default"}}>
-          { props.isDead ? <p style={{ color: "#ffffff", height: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <Video style={props.isPointer ? {cursor: 'pointer'} : {cursor: 'default'}}>
+          { props.isDead ? <p style={{ color: '#ffffff', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               사망</p> : <OpenViduVideoComponent streamManager={props.streamManager} /> }
           <Screen id={ props.isPointer ? "clickBox" : ""}>
             <Header>
               <NameTag>
                 {getNickname()}
               </NameTag>
+              <RoleComboBox isPointer={props.isPointer} />
             </Header>
             { props.self ?
-            <Footer>
+            <Footer style={ props.isPointer ? { display: "none" } : null }>
               <VideoIcon onClick={toggleVideo}>
                 <img
                     src={ video ? "video-solid.svg" : "video-slash-solid.svg" }
@@ -76,17 +60,17 @@ export default function UserVideoComponent(props) {
 }
 
 const Video = styled.div`
-  width: 320px;
-  height: 200px;
-  background-color: var(--color-5);
-  border-radius: 12px;
-  position: relative;
-
-  video {
     width: 320px;
     height: 200px;
+    background-color: var(--color-5);
     border-radius: 12px;
-  }
+    position: relative;
+
+    video {
+        width: 320px;
+        height: 200px;
+        border-radius: 12px;
+    }
 `
 
 const Screen = styled.div`
@@ -142,17 +126,18 @@ const MicrophoneIcon = styled.div`
 `
 
 const Footer = styled.div`
-  display: flex;
-  justify-content: end;
-  align-items: end;
-  padding: 10px;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    padding: 10px;
 `
 
 const Header = styled.div`
-  display: flex;
+    display: flex;
 `
 
 const NameTag = styled.div`
+  height: 20px;
   background-color: #ccc;
   border-radius: 10px 6px 6px 6px;
   padding: 2px 10px;

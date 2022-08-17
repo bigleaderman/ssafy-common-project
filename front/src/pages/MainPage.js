@@ -145,6 +145,7 @@ const MainPage = () => {
       <Stack>
         <Box>
           <button
+            style={{position:"absolute",right:"45%", top:"40%", margin:0}}
             className='pulse-button'
             variant='outlined'
             onClick={() => {

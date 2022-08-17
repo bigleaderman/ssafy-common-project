@@ -9,7 +9,7 @@ const RoleComboBox = (props) => {
   const [role, setRole] = useState(null);
 
   return (
-    <Box>
+    <Box style={ props.isPointer ? { pointerEvents: "none" } : null }>
       <div>
         <ul>
           {roleList.map((roleName, index) => (
