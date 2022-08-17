@@ -147,7 +147,8 @@ public class GameSockController {
     @MessageMapping("/room/{room-seq}/game/mafia")
     public void mafiaChat(@DestinationVariable("room-seq") int roomSeq, @Payload GameProgressReq request) {
         gameSockService.gerUsers(roomSeq).forEach((k, v)->{
-            template.convertAndSend("/sub/room/{room-seq}/game/"+v.getNickname(), request);
+            if("mafia".equals(v.getRole()))
+                template.convertAndSend("/sub/room/{room-seq}/game/"+v.getNickname(), request);
         });
 
     }
@@ -155,7 +156,8 @@ public class GameSockController {
     @MessageMapping("/room/{room-seq}/game/ghost")
     public void ghostChat(@DestinationVariable("room-seq") int roomSeq, @Payload GameProgressReq request){
         gameSockService.gerUsers(roomSeq).forEach((k, v)->{
-            template.convertAndSend("/sub/room/{room-seq}/game/ghost", request);
+            if(gameSockService.isDead(roomSeq, k))
+                template.convertAndSend("/sub/room/{room-seq}/game/" + v.getNickname(), request);
         });
     }
 
