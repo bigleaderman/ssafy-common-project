@@ -156,6 +156,9 @@ public class RoomRepo {
 
     // 방에서 유저 삭제
     public void deleteUserSock(int roomSeq, int userSeq){
+        if(map.get(roomSeq) == null) return;
+        if(map.get(roomSeq).getUsers() == null) return;
+        if(map.get(roomSeq).getUsers().get(userSeq) == null) return;
         map.get(roomSeq).removeUser(userSeq);
     }
 
