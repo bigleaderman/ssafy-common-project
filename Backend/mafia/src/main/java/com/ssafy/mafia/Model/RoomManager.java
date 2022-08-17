@@ -6,6 +6,7 @@ import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.sql.Array;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -16,11 +17,11 @@ public class RoomManager {
     private int[] seatState;
     private int seatCnt;
     private int roomSeq;
-    private LinkedList<Integer> characters;
+    private List<Integer> characters;
     private boolean started = false;
 
     public RoomManager(){
-        characters = new LinkedList<>();
+        characters = Collections.synchronizedList(new ArrayList<Integer>());
         for(int i = 1; i <= 8; i++)
             characters.add(i);
         Collections.shuffle(characters);
@@ -31,7 +32,7 @@ public class RoomManager {
     }
 
     public int getCharacter(){
-        return characters.poll();
+        return characters.remove(0);
     }
 
     public void returnCharacter(int character){

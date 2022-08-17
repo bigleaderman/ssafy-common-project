@@ -27,6 +27,10 @@ public class GameSockService {
     // 방별 게임 매니저
     private Map<Integer, GameManager> gmMap = new ConcurrentHashMap<>();
 
+    public Map<Integer, Player> gerUsers(int roomSeq){
+        return gmMap.get(roomSeq).getUsers();
+    }
+
     public boolean isDead(int roomSeq, int userSeq){
         return gmMap.get(roomSeq).getUsers().get(userSeq).isDead();
     }

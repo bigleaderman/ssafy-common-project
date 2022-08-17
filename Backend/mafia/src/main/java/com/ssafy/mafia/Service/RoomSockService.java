@@ -52,6 +52,7 @@ public class RoomSockService {
         header.addProperty("type", "join");
 
         // data json build
+        data.addProperty("userSeq", user.getUserSeq());
         data.addProperty("nickname", message.getNickname());
         data.addProperty("color", message.getColor());
         data.addProperty("x", message.getX());
@@ -140,7 +141,9 @@ public class RoomSockService {
         if(list != null){
             // data build
             list.forEach((k, v)->{
-                users.add(v);
+                JsonObject tmp = v.deepCopy();
+                tmp.addProperty("userSeq", k);
+                users.add(tmp);
             });
         }
 
