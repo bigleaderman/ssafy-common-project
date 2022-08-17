@@ -46,8 +46,10 @@ public class RoomSockController {
                 && message.getData().getNickname() != null)
                 userSeq = userService.getUserByNickname(message.getData().getNickname()).getUserSeq();
 
-            if(token != null)
+            if(token != null){
+                log.info("[Room {}] 토큰 {}", roomSeq, token);
                 userSeq = Integer.parseInt(tokenProvider.getAuthentication(token).getName());
+            }
 
             type = message.getHeader().getType();
         } catch (Exception e){
