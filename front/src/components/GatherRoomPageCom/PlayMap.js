@@ -74,6 +74,7 @@ import {
 
 var StompJs = require("@stomp/stompjs");
 export default function PlayMap() {
+  console.log("PM 리랜더링 확인");
   //리로드 확인
   useBeforeunload((event) => {
     if (true) {
@@ -233,9 +234,6 @@ export default function PlayMap() {
   };
 
   const charMove = (imgSrc, characterNum, dir) => {
-    console.log("imgSrc: ", imgSrc);
-    console.log("characterNum: ", characterNum);
-    console.log("dir: ", dir);
     if (dir === undefined || dir === null) {
       console.log("character set");
       if (characterNum === 1) {
@@ -410,7 +408,7 @@ export default function PlayMap() {
   //소켓으로 정보를 받았을 때 처리 함수
   const onMessageReceived = (payload) => {
     var payloadData = JSON.parse(payload.body);
-    console.log("PlayMap onMR: ", payloadData);
+    // console.log("PlayMap onMR: ", payloadData);
 
     //자신 포함 모든 유저의 입장 신호 수신 시
     if (payloadData.header.type === "join") {
@@ -491,6 +489,8 @@ export default function PlayMap() {
 
     //유저 방 퇴장
     else if (payloadData.header.type === "leave") {
+      if(!otherUserData[payloadData.data.nickname])
+        return;
       let userNum = otherUserData[payloadData.data.nickname].num;
       remainNum[userNum] = false;
       document.getElementById(`char${userNum}`).style.display = "none";
@@ -502,7 +502,7 @@ export default function PlayMap() {
     }
     //상호작용
     else if (payloadData.header.type === "interact") {
-      console.log("PM ↑↑interact↑↑");
+      // console.log("PM ↑↑interact↑↑");
       let eachUser = otherUserData[payloadData.data.nickname];
       //본인 움직임은 제외
       if (payloadData.data.nickname === myNickName || eachUser === undefined) return;
@@ -551,11 +551,12 @@ export default function PlayMap() {
 
   //첫 렌더링될 때만 입력받는 input태그로 focus
   useEffect(() => {
+    console.log("PM useEffect 리랜더링 확인");
     myChar.current = document.getElementById("myCharacter");
     // myChar.current.style.background = myColor;
     myChar.current.style.display = "block";
     mapFocus.current.focus();
-
+    charMove(myChar.current, myCharNum.current );
     //랜더링 종료 시 인터벌 종료
     return () => {
       otherUserData = {};
@@ -775,12 +776,12 @@ export default function PlayMap() {
         
         {/* 모든 충돌감지 오브젝트 출력 */}
         {Object.entries(object).map((entrie, idx) => {
-          console.log("entrie: " + entrie[0]);
-          console.log("entrie[0].indexOf('_'): " + entrie[0].slice(0, entrie[0].indexOf("_")));
-          console.log(
-            "objectSize[entrie[0].indexOf('_')][0]: " +
-              objectSize[entrie[0].slice(0, entrie[0].indexOf("_"))][0]
-          );
+          // console.log("entrie: " + entrie[0]);
+          // console.log("entrie[0].indexOf('_'): " + entrie[0].slice(0, entrie[0].indexOf("_")));
+          // console.log(
+          //   "objectSize[entrie[0].indexOf('_')][0]: " +
+          //     objectSize[entrie[0].slice(0, entrie[0].indexOf("_"))][0]
+          // );
           return (
             <div
               key={entrie[0]}
