@@ -2,56 +2,56 @@ package com.ssafy.mafia.Repository;
 
 import com.ssafy.mafia.Entity.GameInfo;
 import com.ssafy.mafia.Entity.RoomInfo;
+import com.ssafy.mafia.Game.GameManager;
 import com.ssafy.mafia.Model.GameInfoDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
+@RequiredArgsConstructor
 @Transactional
 public class GameRepo {
-
-    @Autowired
-    private EntityManager em;
+    private Map<Integer, GameInfo> map = new ConcurrentHashMap<>();
 
     // 게임 정보 생성
     public GameInfo createGameInfo(RoomInfo roomInfo){
-        // 기본정보로 게임방 생성
         GameInfo entity = new GameInfo();
-
-        // 방 번호 설정
-        entity.setRoomInfoSeq(roomInfo);
-
-        // db insert
-        em.persist(entity);
-
-        // primary key update
-        em.flush();
-
-        // 게임 정보 리턴
+        map.put(roomInfo.getRoomSeq(), entity);
         return entity;
     }
 
     // 게임 정보 조회
     public GameInfo getGameInfo(int roomSeq){
-        // 방 정보 가져오기
-        RoomInfo roomInfo = em.find(RoomInfo.class, roomSeq);
+        // 방 번호로 게임 정보 불러오기
+        return map.get(roomSeq);
+    }
 
-        // 방 정보로 게임 정보 불러오기
-        List<GameInfo> datas = em.createQuery("select g from GameInfo g where g.roomInfoSeq=:roomInfo", GameInfo.class)
-                .setParameter("roomInfo", roomInfo)
-                .getResultList();
-
-        if(datas.size() == 0) return null;
-        else return datas.get(0);
+    // 게임 정보 수정
+    public GameInfo setGameInfo(int roomSeq, GameInfoDto gameInfo){
+        GameInfo entity = map.get(roomSeq);
+        entity.setDoctorNum(gameInfo.getDoctorNum());
+        entity.setPoliceNum(gameInfo.getPoliceNum());
+        entity.setMafiaNum(gameInfo.getMafiaNum());
+        entity.setTalkTimeoutSec(gameInfo.getTalkTimeoutSec());
+        entity.setVoteTimeoutSec(gameInfo.getVoteTimeoutSec());
+        entity.setNight(gameInfo.getNight());
+        return entity;
     }
 
     // 게임 정보 삭제
     public void deleteGameInfo(int roomSeq){
-        GameInfo entity = getGameInfo(roomSeq);
-        em.remove(entity);
+        map.remove(roomSeq);
+    }
+
+    // 게임 정보 제거
+    public void removeGameInfo(int roomSeq){
+        this.map.remove(roomSeq);
     }
 }

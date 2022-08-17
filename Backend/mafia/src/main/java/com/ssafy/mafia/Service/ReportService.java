@@ -13,7 +13,7 @@ public class ReportService {
 
     private final ReportRepo reportRepo;
 
-    public void report(ReportDto reportDto){
+    public void report(ReportDto reportDto) throws Exception{
         reportRepo.createReport(reportDto);
     }
 

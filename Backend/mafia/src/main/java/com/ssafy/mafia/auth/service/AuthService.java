@@ -4,15 +4,13 @@ package com.ssafy.mafia.auth.service;
 
 import com.ssafy.mafia.Entity.RefreshToken;
 import com.ssafy.mafia.Entity.User;
-import com.ssafy.mafia.auth.controller.dto.TokenDto;
-import com.ssafy.mafia.auth.controller.dto.TokenRequestDto;
-import com.ssafy.mafia.auth.controller.dto.UserRequestDto;
-import com.ssafy.mafia.auth.controller.dto.UserResponseDto;
+import com.ssafy.mafia.auth.controller.dto.*;
 import com.ssafy.mafia.auth.jwt.TokenProvider;
 import com.ssafy.mafia.auth.repository.RefreshTokenRepository;
 import com.ssafy.mafia.auth.repository.UserRepository;
 import com.ssafy.mafia.auth.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -21,6 +19,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -34,13 +34,18 @@ public class AuthService {
     private final EntityManager em;
 
     @Transactional
-    public UserResponseDto signup(UserRequestDto userRequestDto) {
+    public signupDto signup(UserRequestDto userRequestDto) {
         if (userRepository.existsByEmail(userRequestDto.getEmail())) {
             throw new RuntimeException("이미 가입되어 있는 유저입니다");
         }
 
         User user = userRequestDto.toUser(passwordEncoder);
-        return UserResponseDto.of(userRepository.save(user));
+        UserResponseDto.of(userRepository.save(user));
+
+
+        // signupDto로 넘겨주기기
+        signupDto result = signupDto.convert(user);
+        return result;
     }
 
     @Transactional
@@ -62,6 +67,10 @@ public class AuthService {
                 .build();
 
         refreshTokenRepository.save(refreshToken);
+
+        User user = em.find(User.class, Integer.parseInt(authentication.getName()));
+
+        user.setLogin(true);
 
         // 5. 토큰 발급
         return tokenDto;
@@ -102,6 +111,8 @@ public class AuthService {
         String key = Integer.toString(SecurityUtil.getCurrentUserId());
         RefreshToken refreshToken = em.find(RefreshToken.class,  key);
         refreshTokenRepository.delete(refreshToken);
+        User user = em.find(User.class, SecurityUtil.getCurrentUserId());
+        user.setLogin(false);
     }
 }
 

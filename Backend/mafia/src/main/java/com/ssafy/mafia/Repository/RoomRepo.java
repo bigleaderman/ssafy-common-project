@@ -1,41 +1,48 @@
 package com.ssafy.mafia.Repository;
 
 
-import com.ssafy.mafia.Entity.GameInfo;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.ssafy.mafia.Entity.RoomInfo;
 import com.ssafy.mafia.Entity.User;
 import com.ssafy.mafia.Model.RoomInfoDto;
-import lombok.RequiredArgsConstructor;
+import com.ssafy.mafia.Model.RoomManager;
+import com.ssafy.mafia.Model.RoomProtocol.RoomDataDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityManager;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Repository
-@RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class RoomRepo {
 
-    // 방별 유저를 위한 map
-    private final Map<Integer, List<Integer>> map = new LinkedHashMap<>();
+    // db 접근을 위한 entity manager
+    @Autowired
+    private EntityManager em;
 
-    private final EntityManager em;
+    // 방별 정보를 담고 있는 map
+    private Map<Integer, RoomManager> map = new ConcurrentHashMap<>();
 
-    // 전체 방 리스트 조회
+
+    /*********** 대기방 기능 **************/
+
     public List<RoomInfo> getAllRooms(){
         return em.createQuery("select r from RoomInfo r", RoomInfo.class).getResultList();
     }
 
-    // 방 신규 생성
-    public RoomInfo createRoom(RoomInfoDto roomInfo){
-        User hostUser = em.find(User.class, roomInfo.getHostUser());
+    public RoomManager getRoomManager(int roomSeq){
+        return map.get(roomSeq);
+    }
 
-        // 집어넣은 데이터 설정
+    public RoomInfo createRoom(RoomInfoDto roomInfo){
+        // 집어넣을 데이터 설정
         RoomInfo entity = new RoomInfo();
         entity.setTitle(roomInfo.getTitle());
-        entity.setHostUser(hostUser);
         entity.setCapacity(roomInfo.getCapacity());
 
         // DB insert
@@ -44,58 +51,147 @@ public class RoomRepo {
         // primary key 생성
         em.flush();
 
-        // 방 생성
-        map.put(entity.getRoomSeq(), new ArrayList<>());
-        // 방 입장
-        joinRoom(entity.getRoomSeq(), hostUser.getUserSeq());
+        // 방 관리자 생성
+        map.put(entity.getRoomSeq(), new RoomManager());
+        map.get(entity.getRoomSeq()).setRoomSeq(entity.getRoomSeq());
         
         // 데이터 리턴
         return entity;
     }
 
-    // 방 정보 수정
+    public void setRoomPassword(int roomSeq, String password){
+        RoomInfo entity = em.find(RoomInfo.class, roomSeq);
+        entity.setPassword(password);
+    }
+
+    public void setHostUser(int roomSeq, int userSeq){
+        // 호스트 변경
+        RoomInfo entity = em.find(RoomInfo.class, roomSeq);
+        entity.setHostUser(userSeq);
+    }
+
+    public int getHostUser(int roomSeq){
+        RoomInfo entity = em.find(RoomInfo.class, roomSeq);
+        return entity.getHostUser();
+    }
+
     public RoomInfo modifyRoomInfo(RoomInfoDto roomInfo){
         // 기존의 방 entity 불러오기
         RoomInfo entity = em.find(RoomInfo.class, roomInfo.getRoomSeq());
 
         // 신규 내용으로 update
         entity.setTitle(roomInfo.getTitle());
-        entity.setHostUser(em.find(User.class, roomInfo.getHostUser()));
+        entity.setHostUser(roomInfo.getHostUser());
         entity.setCapacity(roomInfo.getCapacity());
-
-        // DB에 update
-        em.merge(entity);
 
         // update 된 정보 return
         return entity;
     }
 
-    // 방 삭제
     public void deleteRoom(int roomSeq){
         map.remove(roomSeq);
         em.remove(em.find(RoomInfo.class, roomSeq));
     }
 
     // 방 상세정보 조회
-    public RoomInfo getRoomInfo(String roomSeq){
+    public RoomInfo getRoomInfo(int roomSeq){
         return em.find(RoomInfo.class, roomSeq);
     }
 
     // 방 입장
-    public void joinRoom(int roomSeq, int userSeq){
-        map.get(roomSeq).add(userSeq);
+    public void joinRoom(int roomSeq, User user){
+        RoomDataDto dummy = new RoomDataDto();
+        dummy.setNickname(user.getNickname());
+        dummy.setColor("#000000");
+        dummy.setStatus("move");
+        dummy.setX(350.0);
+        dummy.setY(600.0);
+        addUserSock(roomSeq, user.getUserSeq(), dummy);
     }
 
     // 방 퇴장
     public void leavRoom(int roomSeq, int userSeq){
-        int idx = map.get(roomSeq).indexOf(userSeq);
-        map.get(roomSeq).remove(idx);
+        map.get(roomSeq).removeUser(userSeq);
     }
 
     // 방 전체 인원 조회
-    public List<Integer> getAllUsersOfRoom(int roomSeq){
-        return map.get(roomSeq);
+    public Map<Integer, JsonObject> getAllUsersOfRoom(int roomSeq){
+        RoomManager rm = map.get(roomSeq);
+        if(rm == null){
+            log.error("[RoomRepo] 방({})이 없습니다.", roomSeq);
+            return null;
+        }
+        log.info("[RoomRepo] 방({}) 전체 인원 조회 :: {}", roomSeq, rm);
+        return map.get(roomSeq).getUsers();
     }
 
+    // 게임 시작시 잠금
+    public void lock(int roomSeq){
+        if(map.get(roomSeq) != null)
+            map.get(roomSeq).setStarted(true);
+    }
+
+    public void unlock(int roomSeq){
+        if(map.get(roomSeq)!=null)
+            map.get(roomSeq).setStarted(false);
+    }
+
+    public boolean locked(int roomSeq){
+        if(map.get(roomSeq) != null)
+            return map.get(roomSeq).isStarted();
+        return false;
+    }
+
+    /*
+    * ******************************* *
+    * 소켓 통신용
+    * ******************************* *
+    * */
+
+
+    public void updateUserSock(int roomSeq, int userSeq, RoomDataDto data){
+        map.get(roomSeq).updateUser(userSeq, data);
+    }
+
+
+    // 방에서 유저 삭제
+    public void deleteUserSock(int roomSeq, int userSeq){
+        map.get(roomSeq).removeUser(userSeq);
+    }
+
+    // 유저 추가
+    public void addUserSock(int roomSeq, int userSeq, RoomDataDto message){
+        log.info("[Room Repo {}] {} 유저 추가", roomSeq, userSeq);
+        map.get(roomSeq).addUser(userSeq, message);
+    }
+
+
+    public Map<Integer, JsonObject> getAllUsersOfRoomSock(int roomSeq){
+        if(map.get(roomSeq) == null){
+            log.error("[Room {}] 없는 방에 접근하고 있습니다.", roomSeq);
+            return null;
+        }
+        return map.get(roomSeq).getUsers();
+    }
+
+    // 유저 ready
+    public void seat(int roomSeq, int seatNum, int userSeq){
+        map.get(roomSeq).seat(userSeq, seatNum);
+    }
+
+    // 유저 레디 해제
+    public void stand(int roomSeq, int seatNum, int userSeq){
+        map.get(roomSeq).stand(userSeq, seatNum);
+    }
+
+    // 남은 좌석 정보 확인
+    public int[] getSeatInfo(int roomSeq){
+        return map.get(roomSeq).getSeatState();
+    }
+
+    // 앉은 좌석 수 확인
+    public int getSeatCnt(int roomSeq){
+        return this.map.get(roomSeq).getSeatCnt();
+    }
 
 }

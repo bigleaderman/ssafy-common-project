@@ -1,0 +1,25 @@
+.pulse-button {
+
+  color: #b80000;
+  /* color: #efe8e8; */
+  position: relative;
+  margin-left: 42%;
+  margin-top: 26.5%;
+  width: 180px;
+  height: 50px;
+  font-size: 24px;
+  font-weight: 800;
+  
+  /* font-family: ; */
+  /* border: solid 1.5px; */
+  border-radius: 10px;
+  box-shadow: 0 0 0 0 rgba(146,136,122, 0.7);
+  
+  background-color: rgba(64,62,53,0);
+  /* border-color: rgb(0, 0, 0); */
+  cursor: pointer;
+  -webkit-animation: pulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
+  -moz-animation: pulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
+  -ms-animation: pulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
+  animation: pulse 2s infinite cubic-bezier(0.66, 0, 0, 1);
+}

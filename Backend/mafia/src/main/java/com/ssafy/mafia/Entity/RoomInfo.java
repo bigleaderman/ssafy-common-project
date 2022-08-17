@@ -3,14 +3,14 @@ package com.ssafy.mafia.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@ToString
 public class RoomInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,17 +24,5 @@ public class RoomInfo {
 
     private int capacity;
 
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(referencedColumnName = "userSeq", name = "hostUser")
-    private User hostUser;
-
-
-    @JsonIgnore
-    @OneToOne(mappedBy = "roomInfoSeq", fetch = FetchType.LAZY)
-    private GameInfo roomInfoSeq;
-
-
-
-
+    private int hostUser;
 }
