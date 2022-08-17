@@ -23,9 +23,15 @@ import {
   Menu,
   MenuItem,
   Stack,
+  Modal,
+  Container,
+  FormControl,
+  InputLabel,
+  Select,
 } from "@mui/material";
 
 import axios from "axios";
+import { styleModal, middleButton } from "../../style";
 
 import { selectUser } from "../../redux/slice/UserSlice";
 
@@ -256,6 +262,8 @@ const UserBar = (props) => {
   // 유저 누르면 dropdown
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(0);
+  const [reportType, setreportType] = useState("")
+  const [reportedUserSeq, setreportedUserSeq] = useState(0)
 
   const handleClick = (fri, target) => {
     const friendYesNo = Array.from(friendList).filter((e) => e.nickname === fri.nickname);
@@ -309,6 +317,28 @@ const UserBar = (props) => {
       data: ff.userSeq,
     }).then((res) => console.log("친구 신청 성공"));
   };
+
+  
+  // 4. 신고하기 api보내기
+  const report = () => { 
+    
+    // // 욕설, 음란물, 혐오발언 ,폭력
+    // setreportType(e.target.value);
+    axios({
+      method : "post",
+      url: "/api/user/report",
+      headers : {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${me.accessToken}`,
+      },
+      data : {
+        reportType,
+        reportedUserSeq
+      }
+    }).then(setOpen(5))
+  }
+
+
   return (
     <>
       <TableContainer
@@ -367,6 +397,14 @@ const UserBar = (props) => {
         >
           친구 신청
         </MenuItem>
+        <MenuItem
+          onClick={() => {
+            setOpen(0)
+            setreportedUserSeq(ff.userSeq);
+            setOpen(4)
+          }}>
+        신고하기
+        </MenuItem>
       </Menu>
       {/* 친구 */}
       <Menu
@@ -377,6 +415,13 @@ const UserBar = (props) => {
         onClose={handleClose}
       >
         <MenuItem onClick={userProfile}>전적 보기</MenuItem>
+        <MenuItem
+          onClick={() => {
+            setOpen(0)
+            setOpen(4)
+          }}>
+        신고하기
+        </MenuItem>
       </Menu>
       {/* 전적보기 */}
       <Menu
@@ -412,6 +457,53 @@ const UserBar = (props) => {
             </p>
           </div>
       </Menu>
+      {/* 신고하는 모달 창 */}
+      <Container>
+        <Modal open={open === 4} onClose={handleClose} aria-labelledby='modal-title'>
+          <Box sx={{ ...styleModal, border: '2px solid #999', width: 400, height:230, backgroundColor:'rgba(50,50,50,0.3)'}}>
+            <h2 style={{ color: '#dcdcdc',marginBottom:10}} id='modal-title'>유저 신고</h2>
+            <FormControl fullWidth>
+                <InputLabel id='demo-simple-select-label'></InputLabel>
+                <Select
+                  sx={{ border: "#dcdcdc solid 1px", backgroundColor:'rgba(120,120,120,0.1)' }}
+                  labelId='demo-simple-select-label'
+                  id='demo-simple-select'
+                  value={reportType}
+                  onChange={(e) => {
+                    setreportType(e.target.value);
+                  }}
+                >
+                  <MenuItem value={"욕설"}>
+                    <h3 style={{ textAlign: "center", color : "#b4b4b4" }}>욕설</h3>
+                  </MenuItem>
+                  <MenuItem value={"음란물"}>
+                    <h3 style={{ textAlign: "center", color : "#b4b4b4" }}>음란물</h3>
+                  </MenuItem>
+                  <MenuItem value={"혐오발언"}>
+                    <h3 style={{ textAlign: "center", color : "#b4b4b4" }}>혐오발언</h3>
+                  </MenuItem>
+                  <MenuItem value={"폭력"}>
+                  <h3 style={{ textAlign: "center" , color : "#b4b4b4"}}>폭력</h3>
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            <Container sx={{position:'relative', left:14}}>
+              <Button sx={{...middleButton}} onClick={report}>확인</Button>
+              <Button sx={{...middleButton}} onClick={handleClose}>취소</Button>
+            </Container>
+          </Box>
+        </Modal>
+      </Container>
+      <Container>
+        <Modal open={open === 5} onClose={handleClose} aria-labelledby='modal-title'>
+          <Box sx={{ ...styleModal, border: '2px solid #999', width: 450, height:180, backgroundColor:'rgba(50,50,50,0.3)'}}>
+            <h2 style={{ color: '#dcdcdc',marginBottom:10}} id='modal-title'>{reportType}(으)로 신고에 성공했습니다</h2>
+            <Container sx={{position:'relative', left:14}}>
+              <Button sx={{...middleButton, position:'relative', left:65}} onClick={handleClose}>확인</Button>
+            </Container>
+          </Box>
+        </Modal>
+      </Container>
     </>
   );
 };

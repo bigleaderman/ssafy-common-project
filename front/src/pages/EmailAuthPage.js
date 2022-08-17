@@ -110,9 +110,9 @@ const SignUpPage = (props) => {
         onClose={handleModalClose}
         aria-labelledby="modal-title"
       >
-        <Box sx={{ ...styleModal, width: 1000,  }}>
+        <Box sx={{ ...styleModal, width: 500, backgroundColor:'rgba(30,30,30,0.7)', border:"2px solid #dcdcdc"}}>
           <h2 id="modal-title">{modalMessage}</h2>
-          <Button style={styleButton} onClick={handleModalClose}>확인</Button>
+          <Button sx ={{...middleButton, position:'relative', left:150, top:10}} onClick={handleModalClose}>확인</Button>
         </Box>
       </Modal>
       <Container>

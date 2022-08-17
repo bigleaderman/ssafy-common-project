@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container, styleTableContainer, styleContainer } from '../style.js';
-import { Table, TableHead, TableFooter, TableContainer, TableBody, Paper, TableRow, TableCell, TablePagination, Button } from '@mui/material';
+import { Table, TableHead, TableFooter, TableContainer, TableBody, Paper, TableRow, TableCell, TablePagination, Button, Stack } from '@mui/material';
 import { Link, useNavigate } from  "react-router-dom";
 import Loading from "../components/Loading.js";
 import {useSelector} from "react-redux"
@@ -9,7 +9,9 @@ import { CenterFocusStrong } from "@mui/icons-material";
 
 
 const RankPage = (props) => {
-  const [rankData, setRankData] = useState(null); 
+  const [rankData, setRankData] = useState(null);
+  const [searchData, setSearchData] = useState([]); 
+  const [booleanSearch, setBooleanSearch] = useState(false);
 
   useEffect(() => {
     axios.get('/api/game/topRank',{
@@ -19,7 +21,9 @@ const RankPage = (props) => {
       // }
     })
     .then(response => {
+      console.log(response.data)
       console.log(response);
+      setBooleanSearch(false)
       setRankData(response.data);
     });
   }, []);
@@ -27,6 +31,7 @@ const RankPage = (props) => {
 
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [searchContent, setSearchContent] = useState("");
   const navigate = useNavigate();
 
   const handleChangePage = (event, newPage) => {
@@ -37,6 +42,29 @@ const RankPage = (props) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   }
+
+  const findUser = () => {
+    // var hello = Array()
+    setSearchData([])
+    rankData.map((data, num) => {
+      if (data[0]?.includes(searchContent)){
+        // hello.push({...data, rank:num+1});
+        setSearchData(currentData=>[...currentData, {...data, rank:num+1}])
+      }
+    });
+    setBooleanSearch(true)
+    console.log(searchData)
+    
+    // while (start !== rankData.length) {
+    //   if (rankData[start][0].includes(searchContent)){
+    //     searchData.push(rankData[start]);
+    //     console.log(searchData);
+    //   }
+    //   start += 1;
+    // }
+    // setRankData(searchData)
+  }
+
   
   // const navigate = useNavigate();
 
@@ -62,6 +90,28 @@ const RankPage = (props) => {
         onClick={searchKeyword}>검색</button>
       </span> */}
       {/* <p>{noticeData}</p> */}
+      <Stack sx={{position:'relative', bottom:30}} direction="row" spacing={2}
+      style={{marginBottom:"1%", width:"30%"}}>
+        <input id="search" type={'text'}
+        style={{backgroundColor:"rgba(0,0,0,0.7)", color:'white', position:'relative', top:70, borderRadius: '2px'}}
+        value={searchContent}
+        onChange={(e) => {
+          setSearchContent(e.target.value);
+        }}
+        ></input>
+        <button
+        style={{ border: 'solid 2px var(--color-2)',
+                color: 'var(--color-2)',
+                backgroundColor: 'var(--color-5)',
+                padding: '2px 10px',
+                borderRadius: '2px',
+                fontSize: '16px',
+                marginLeft: '10px',
+                cursor: 'pointer',
+                textDecoration: 'none',
+              width:"30%", position:'relative', top:72}}
+        onClick={findUser}>검색</button>
+      </Stack>
       <TableContainer sx={{...styleContainer, position:'relative', top:30}} component={Paper}>
         <Table size="medium">
           <TableHead>
@@ -73,21 +123,38 @@ const RankPage = (props) => {
               <TableCell sx={{color:"#dcdcdc",fontWeight:'bold', position:"relative", left:20, width:80, fontSize:20}} align="center">RP</TableCell>
             </TableRow>
           </TableHead>
-            <TableBody>
-              {rankData
-                .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
-                .map((data, idx) => (
-                  <TableRow key={idx}>
-                    <TableCell sx={{color:"#dcdcdc", width:100, textAlign:"center", fontSize:20}} component="th" scope="row">
-                      {page * 10 + idx+1}
-                    </TableCell>
-                    <TableCell sx={{color:"#dcdcdc",position:"relative", width:80, textAlign:"center", fontSize:20}}>{data[0]}</TableCell>
-                    <TableCell sx={{color:"#dcdcdc",position:"relative", left:20, width:80, textAlign:"center", fontSize:20}}>{data[1]}</TableCell>
-                    <TableCell sx={{color:"#dcdcdc",position:"relative", left:20, width:80, textAlign:"center", fontSize:20}}>{data[2]}</TableCell>
-                    <TableCell sx={{color:"#dcdcdc",position:"relative", left:20, width:80, textAlign:"center", fontSize:20}}>{data[3]}</TableCell>
-                  </TableRow>
-                ))}
-          </TableBody >
+          {booleanSearch? 
+          <TableBody>
+          {searchData
+            .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+            .map((data, idx) => (
+              <TableRow key={idx}>
+                <TableCell sx={{color:"#dcdcdc", width:100, textAlign:"center", fontSize:20}} component="th" scope="row">
+                  {data["rank"]}
+                </TableCell>
+                <TableCell sx={{color:"#dcdcdc",position:"relative", width:80, textAlign:"center", fontSize:20}}>{data[0]}</TableCell>
+                <TableCell sx={{color:"#dcdcdc",position:"relative", left:20, width:80, textAlign:"center", fontSize:20}}>{data[1]}</TableCell>
+                <TableCell sx={{color:"#dcdcdc",position:"relative", left:20, width:80, textAlign:"center", fontSize:20}}>{data[2]}</TableCell>
+                <TableCell sx={{color:"#dcdcdc",position:"relative", left:20, width:80, textAlign:"center", fontSize:20}}>{data[3]}</TableCell>
+              </TableRow>
+            ))}
+        </TableBody >
+          : <TableBody>
+          {rankData
+            .slice(page * rowsPerPage, (page + 1) * rowsPerPage)
+            .map((data, idx) => (
+              <TableRow key={idx}>
+                <TableCell sx={{color:"#dcdcdc", width:100, textAlign:"center", fontSize:20}} component="th" scope="row">
+                  {page * 10 + idx+1}
+                </TableCell>
+                <TableCell sx={{color:"#dcdcdc",position:"relative", width:80, textAlign:"center", fontSize:20}}>{data[0]}</TableCell>
+                <TableCell sx={{color:"#dcdcdc",position:"relative", left:20, width:80, textAlign:"center", fontSize:20}}>{data[1]}</TableCell>
+                <TableCell sx={{color:"#dcdcdc",position:"relative", left:20, width:80, textAlign:"center", fontSize:20}}>{data[2]}</TableCell>
+                <TableCell sx={{color:"#dcdcdc",position:"relative", left:20, width:80, textAlign:"center", fontSize:20}}>{data[3]}</TableCell>
+              </TableRow>
+            ))}
+      </TableBody >}
+            
           <TableFooter>
             <TableRow >
               <TablePagination 

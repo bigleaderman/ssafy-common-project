@@ -106,7 +106,7 @@ const UserDetailPage = (props) => {
         </p>
       </div> */}
       <h2 style={{"color":"#dcdcdc", margin:10}}>유저 정보</h2>
-      <TableContainer style={styleTableContainer} component={Paper}>
+      <TableContainer sx={{...styleTableContainer, height:350}} component={Paper}>
         <Table size="medium">
           <TableHead>
             <TableRow>
@@ -134,7 +134,7 @@ const UserDetailPage = (props) => {
       </TableContainer>
       
       <h2 style={{"color":"#B90000", margin:10}}>신고한 내역</h2>
-      <TableContainer style={styleTableContainer} component={Paper}>
+      <TableContainer sx={{...styleTableContainer, height:450}} component={Paper}>
         <Table size="medium">
           <TableHead>
             <TableRow>
@@ -170,7 +170,7 @@ const UserDetailPage = (props) => {
       </TableContainer>
 
       <h2 style={{"color":"#B90000", margin:10}}>신고당한 내역</h2>
-      <TableContainer style={styleTableContainer} component={Paper}>
+      <TableContainer sx={{...styleTableContainer, height:450}} component={Paper}>
         <Table size="medium">
           <TableHead>
             <TableRow>
@@ -185,9 +185,9 @@ const UserDetailPage = (props) => {
                 .map((reportedData, i) => (
                   <TableRow key={i}>
                     
-                    <TableCell>{reportedData.reportType}</TableCell>
-                    <TableCell>{reportedData.reportingUser}</TableCell>
-                    <TableCell>{reportedData.reportingAt}</TableCell>
+                    <TableCell style={{color:'#dcdcdc'}}>{reportedData.reportType}</TableCell>
+                    <TableCell style={{color:'#dcdcdc'}}>{reportedData.reportingUser}</TableCell>
+                    <TableCell style={{color:'#dcdcdc'}}>{reportedData.reportingAt}</TableCell>
                   </TableRow>
                 ))}
           </TableBody>

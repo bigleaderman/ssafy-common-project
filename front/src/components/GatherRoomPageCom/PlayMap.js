@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { selectColor, selectX, selectY, setColor, setX, setY } from "../../redux/slice/CharSlice";
+import { selectColor, selectX, selectY, setColor, setX, setY,selecCharacter } from "../../redux/slice/CharSlice";
 import { selectUser } from "../../redux/slice/UserSlice";
 import { useBeforeunload } from "react-beforeunload";
 // import { useNavigate } from "react-router-dom";
@@ -150,7 +150,7 @@ export default function PlayMap() {
   let subGatherRoom = null;
   const acToken = useSelector(selectUser).accessToken;
   const myNickName = useSelector(selectUser).nickname;
-  const myCharNum = useRef();
+  const myCharNum = useRef(useSelector(selecCharacter));
   let myColor = "#" + Math.round(Math.random() * 0xffffff).toString(16);
 
   let seatNum, seatChange, seatNothing;
@@ -215,6 +215,7 @@ export default function PlayMap() {
   };
 
   const userJoin = () => {
+    console.log();
     client.publish({
       destination: pubAddr,
       headers: { token: acToken },
@@ -553,33 +554,20 @@ export default function PlayMap() {
   useEffect(() => {
     console.log("PM useEffect 리랜더링 확인");
     myChar.current = document.getElementById("myCharacter");
-    // myChar.current.style.background = myColor;
-    myChar.current.style.display = "block";
     mapFocus.current.focus();
+    console.log();
     charMove(myChar.current, myCharNum.current );
+    myChar.current.style.display = "block";
     //랜더링 종료 시 인터벌 종료
     return () => {
       otherUserData = {};
-      client.publish({
-        destination: pubAddr,
-        headers: { token: acToken, "content-type": "application/json" },
-        body: JSON.stringify({
-          header: {
-            type: "leave",
-          },
-          data: {
-            nickname: myNickName,
-          },
-        }),
-        skipContentLengthHeader: true,
-      });
 
       // client.deactivate();
       //랜더링 종료될 때 leave 신호 전송
       clearInterval(inputCheck);
       clearInterval(sendMyPos);
     };
-  }, [myColor, myChar]);
+  }, [myChar]);
 
   //약 60fps로 위치 정보 전송, 움직일 때만 전송
   const sendMyPos = setInterval(() => {

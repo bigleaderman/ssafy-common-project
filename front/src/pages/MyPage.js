@@ -259,18 +259,25 @@ const MyPage = (props) => {
               {/* <TextField style={styleTextField} id="email" name="email" placeholder="이메일" onChange={(e) => {setEmail(e.target.value)}}></TextField> */}
               {/* <Button style={styleButton} onClick={() => {checkEmail()}}>중복검사</Button> */}
             </Content>
-            <Content>
+
+            {/* Oauth이면 비밀번호 입력창을 안받기 */}
+            {oauth ?
+            null :
+            <>
+              <Content>
               <label style={{color:"#dcdcdc" , fontSize:20, height:20}} htmlFor="password" >비밀번호 </label>
               <TextField style={checkButton} type="password" id="password" name="password" value={password} 
               placeholder="비밀번호 변경" inputProps={{sx:{color:"#b4b4b4", fontSize:20}}}
               onChange={(e) => {setPassword(e.target.value)}}></TextField>
-            </Content>
-            <Content>
+              </Content>
+              <Content>
               <label style={{color:"#dcdcdc", fontSize:20, height:20}} htmlFor="password-check">비밀번호 확인 </label>
               <TextField style={checkButton} type="password" id="password-check" name="password-check" value={passwordCheck} 
               placeholder="비밀번호 변경" inputProps={{sx:{color:"#b4b4b4", fontSize:20}}} onChange={(e) => {setPasswordCheck(e.target.value)}}></TextField>
-            </Content>
-            {!isSamePassword() ? <span>비밀번호가 다릅니다.</span> : null}
+              </Content>
+              {!isSamePassword() ? <span>비밀번호가 다릅니다.</span> : null}
+            </>
+            }
             <Content>
               <label style={{color:"#b4b4b4", fontSize:20}} >가입일자 </label>
               <span style={{color:"#b4b4b4", fontSize:20}} id="signup-date">2022.07.25</span>

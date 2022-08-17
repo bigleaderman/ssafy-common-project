@@ -2,7 +2,7 @@ import React, { useState } from "react";
 // import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login, getUser } from "../redux/slice/UserSlice";
-import { Container, styleButton, styleModal,} from '../style.js';
+import { Container, styleButton, styleModal, middleButton} from '../style.js';
 import { Modal, Box, Button,} from '@mui/material';
 import { Link, useNavigate, Navigate } from  "react-router-dom";
 import axios from 'axios';
@@ -31,6 +31,7 @@ const SignInPage = (props) => {
     console.log("kakao 로그인");
     window.open('https://kauth.kakao.com/oauth/authorize?client_id=9e9b8aade342d72cf01ce50e6136e7e1&redirect_uri=https://i7d106.p.ssafy.io/oauth/callback/kakao&response_type=code', '_self');
   }
+
 
   const onClickLogin = () => {
     axios({
@@ -73,6 +74,7 @@ const SignInPage = (props) => {
   const [signUpPassword, setSignUpPassword] = useState('');
   const [signUpPasswordCheck, setSignUpPasswordCheck] = useState('');
   const [modalMessage, setModalMessage] = useState('');
+  const [emailcheck, setEmailcheck] = useState(false);
   const userSeq = useSelector(state => state.user.userSeq);
 
   const goEmailAuthPage = () => {
@@ -125,6 +127,14 @@ const SignInPage = (props) => {
   const handleModalClose = () => {
     setModalOpen(false);
   };
+
+  const emailcheckModalOpen = () => {
+    setEmailcheck(true);
+  }
+
+  const emailcheckModalClose = () => {
+    setEmailcheck(false);
+  }
 
   const isSamePassword = () => {
     return signUpPassword === signUpPasswordCheck;
@@ -213,7 +223,7 @@ const SignInPage = (props) => {
             <Link style={{fontSize:15}} className="forgot-pass" to={`/findpassword`}>Forgot password?</Link>
             <button  style={ { color:"rgba(240,240,240)", height:45 ,borderRadius: 2, backgroundColor:"rgba(80,0,0,0.7)"}}  type="button" className="submit" onClick={onClickLogin}>Sign In</button>
             {/* <img style={{width:'260px', cursor: 'pointer'}} src="kakao_login_large_narrow.png" onClick={clickKakaoLogin} /> */}
-            <KaKaoLoginButton onClick={clickKakaoLogin}><KakaoLogo src={'comment-solid.svg'} />카카오 로그인</KaKaoLoginButton>
+            <KaKaoLoginButton onClick={emailcheckModalOpen}><KakaoLogo src={'comment-solid.svg'} />카카오 로그인</KaKaoLoginButton>
             {/* <button type="button" className="fb-btn" style={{marginBottom:"16px"}} onClick={clickKakaoLogin}>Connect with <span style={{color:"yellow"}}>Kakao</span></button> */}
 
           </div>
@@ -238,6 +248,17 @@ const SignInPage = (props) => {
                               cursor: 'pointer',
                               textDecoration: 'none',}} onClick={handleModalClose}>확인</Button>
             </Box>
+          </Modal>
+          <Modal
+            open={emailcheck}
+            onClose={emailcheckModalClose}
+            aria-labelledby="modal-title">
+            <Box sx={{ ...styleModal, border: '2px solid #999', width: 400, height:230, backgroundColor:'rgba(50,50,50,0.3)'}}>
+              <h2 id="modal-title" sx={{textAlign:'center'}}>이메일 정보 동의를 <br/>필수적으로 선택해주세요</h2>
+              <Button sx={{...middleButton, position:'relative', left:40, top:15}} onClick={clickKakaoLogin}>확인</Button>
+              <Button sx={{...middleButton, position:'relative', left:40, top:15}} onClick={emailcheckModalClose}>취소</Button>
+            </Box>
+
           </Modal>
 
           <div className="sub-cont">
