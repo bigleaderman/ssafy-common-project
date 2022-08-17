@@ -127,15 +127,19 @@ public class RoomRepo {
 
     // 게임 시작시 잠금
     public void lock(int roomSeq){
-        map.get(roomSeq).setStarted(true);
+        if(map.get(roomSeq) != null)
+            map.get(roomSeq).setStarted(true);
     }
 
     public void unlock(int roomSeq){
-        map.get(roomSeq).setStarted(false);
+        if(map.get(roomSeq)!=null)
+            map.get(roomSeq).setStarted(false);
     }
 
     public boolean locked(int roomSeq){
-        return map.get(roomSeq).isStarted();
+        if(map.get(roomSeq) != null)
+            return map.get(roomSeq).isStarted();
+        return false;
     }
 
     /*
