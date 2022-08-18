@@ -197,9 +197,11 @@ function Nav() {
         userSeq: me.userSeq,
       },
     };
-    // 3-3. 구독하고 나 등록
+ // 받는 데이터 : 현재 랜덤매칭 대기자 몇명? or 매칭 성공
+
+    // 소켓 구독 + 랜덤매칭 queue에 나를 추가
     if (me.redUser) {
-      stompClient.subscribe(`/sub/game-matching-reduser`, receivedRandomRed); // 받는 데이터 : 현재 랜덤매칭 대기자 몇명? or 매칭 성공
+      stompClient.subscribe(`/sub/game-matching-reduser`, receivedRandomRed);
       stompClient.send(`/pub/game-matching-reduser`, headers, JSON.stringify(sendRandomData));
     } else {
       stompClient.subscribe(`/sub/game-matching-user`, receivedRandom);
@@ -594,7 +596,7 @@ function Nav() {
                   justifyContent: "center",
                 }}
               >
-                매칭 중...
+                레드 유저 매칭 중
                 <br />
                 {randomDataRed}명 대기중
                 <br />

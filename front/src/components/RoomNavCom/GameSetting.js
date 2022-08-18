@@ -82,6 +82,9 @@ export const GameSetting = (props) => {
         "현재 입장 중인 유저보다 더 적게 인원을 설정할 수 없습니다.";
       return;
     }
+    console.log("talkTimeV: " + talkTimeV);
+    console.log("voteTimeV: " + voteTimeV);
+    console.log("nightTImeV: " + nightTImeV);
 
     dispatch(SetRoomTitle(inputTitle));
     dispatch(setLimit(conLimitV));
@@ -116,7 +119,15 @@ export const GameSetting = (props) => {
     props.setOpen(false);
   };
   return (
-    <div style={{ borderRadius: '2px', height: '630px', width: 600, paddingTop: 10,backgroundColor:'#ffffff' }}>
+    <div
+      style={{
+        borderRadius: "2px",
+        height: "630px",
+        width: 600,
+        paddingTop: 10,
+        backgroundColor: "#ffffff",
+      }}
+    >
       <Stack direction='column' spacing={2} justifyContent='center' alignItems='center'>
         <Stack direction='row' spacing={2}>
           {/* 방 제목 변경  */}

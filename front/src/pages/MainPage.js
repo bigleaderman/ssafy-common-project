@@ -54,11 +54,15 @@ const MainPage = () => {
   };
   // 2. 닉네임 등록
   const [openNick, setOpenNick] = useState(false); // 닉네임 모달 관련
+  const [nickNo, setNickNo] = useState(""); //  닉네임 중복검사 결과
+  const [nickYes, setNickYes] = useState("");
   const handleOpenNick = () => {
     setOpenNick(true);
   };
   const handleCloseNick = () => {
     setOpenNick(false);
+    setNickNo("");
+    setNickYes("");
   };
   const [newNick, setNewNick] = useState(""); // 닉네임
   const [dupNick, setDupNick] = useState(false); // 닉네임 중복 여부
@@ -76,10 +80,12 @@ const MainPage = () => {
       .then((response) => {
         if (!response.data) {
           setDupNick(true);
-          alert("사용 가능한 닉네임입니다!"); // 3. 룸리스트 페이지 가기 버튼 누르기
+          setNickYes("사용 가능한 닉네임입니다!");
+          setNickNo("");
         } else {
           setDupNick(false);
-          alert("이미 존재하는 닉네임입니다!");
+          setNickNo("이미 존재하는 닉네임입니다!");
+          setNickYes("");
         }
       })
       .catch((err) => console.log("실패", err));
@@ -103,7 +109,7 @@ const MainPage = () => {
         navigate("/roomList"); // 4. 데이터 저장 + 룸 리스트 페이지로
       });
     } else {
-      alert("닉네임이 필요합니다.");
+      setNickNo("닉네임이 필요합니다.");
     }
   };
   // 4. 데이터 저장(방 목록, 친구 목록, 나에게 친구 신청한 목록 redux)
@@ -228,6 +234,10 @@ const MainPage = () => {
               >
                 중복검사
               </Button>
+            </Box>
+            <Box>
+              {nickYes ? <div style={{ color: "green", textAlign: "center" }}>{nickYes}</div> : <div style={{height:'16px'}}></div>}
+              {nickNo ? <div style={{ color: "red", textAlign: "center" }}>{nickNo}</div> : <div style={{height:'16px'}}></div>}
             </Box>
             <Box
               sx={{
