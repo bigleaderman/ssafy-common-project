@@ -108,8 +108,9 @@ public class GameManager {
 //        Collections.shuffle(role);
 
         int r = 0;
-        for(Integer key : users.keySet())
-            users.get(key).setRole(role.get(r++));
+        for(Map.Entry<Integer, Player> entry : users.entrySet()){
+            entry.getValue().setRole(role.get(r++));
+        }
 
         log.info("[Game] User Role 할당 완료");
     }
