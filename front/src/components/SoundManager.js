@@ -6,12 +6,7 @@ import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 const SoundManager = () => {
   const [temp, setTemp] = useState(true);
 
-  const [sound, setSound] = useState(new Howl(
-    {src: [Bgm1],
-    loop: true,
-    volume:0.2,
-    }
-    ));
+  const [sound, setSound] = useState(new Howl({ src: [Bgm1], loop: true, volume: 0.05 }));
 
   sound.once("load", function () {
     sound.play();
@@ -23,12 +18,12 @@ const SoundManager = () => {
   }
   function playMusic() {
     setTemp(true);
-    setSound((prev) => prev.volume(0.2));
+    setSound((prev) => prev.volume(0.02));
   }
 
-    return (
-        <>
-         {temp ? (
+  return (
+    <>
+      {temp ? (
         <button
           style={{ position: "absolute", top: "5px", right: "40px", width: 20 }}
           onClick={stopMusic}
@@ -43,9 +38,8 @@ const SoundManager = () => {
           <VolumeOffIcon sx={{ fontSize: 40 }} />
         </button>
       )}
-        </>
-    )
+    </>
+  );
 };
-
 
 export default SoundManager;

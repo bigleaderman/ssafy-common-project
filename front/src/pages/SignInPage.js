@@ -184,32 +184,9 @@ const SignInPage = (props) => {
   }
   
   return (
-    <Container>
+    <Container  >
       { isRedirect && <Navigate to="/"/> }
-      { wrongInputData ?
-          <Modal
-            open={wrongInputData}
-            onClose={handleWrongInputDataClose}
-            aria-labelledby="modal-title"
-          >
-            <Box sx={{ ...styleModal, width: 400, backgroundColor:"rgba(30,30,30,0.7)" }}>
-              <h2 id="modal-title">존재하지 않는 이메일이거나 틀린 비밀번호입니다.</h2>
-              <Button style={{width:"50%",
-                              border: 'solid 2px var(--color-2)',
-                              color: 'var(--color-2)',
-                              backgroundColor: 'var(--color-5)',
-                              padding: '10px 10px',
-                              borderRadius: '2px',
-                              fontSize: '16px',
-                              marginLeft: '25%',
-                              marginTop:"2%",
-                              cursor: 'pointer',
-                              textDecoration: 'none',}} onClick={handleWrongInputDataClose}>확인</Button>
-            </Box>
-          </Modal>
-      : null }
-      
-        <div className={check ? "cont" : "cont s--signup"}>
+        <div className={check ? "cont" : "cont s--signup"} style={{height:'550px'}}>
           <div className="form sign-in">
             <h2 style={{color:'white'}}>Welcome back</h2>
             <label>
@@ -221,6 +198,8 @@ const SignInPage = (props) => {
               <input type="password" placeholder="Password" value={password} style={{backgroundColor:"rgba(0,0,0,0.3)", height:35 ,borderRadius: 2, marginBottom:10, color:'#c8c8c8'}} id="password" onChange={(e) => {setPassword(e.target.value)}}/>
             </label>
             <Link style={{fontSize:15}} className="forgot-pass" to={`/findpassword`}>Forgot password?</Link>
+            <span> {wrongInputData ? <div style={{color:'red'}}>존재하지 않는 이메일이거나 틀린 비밀번호입니다.</div>: <div style={{height:'18px'}}></div>}</span>
+           
             <button  style={ { color:"rgba(240,240,240)", height:45 ,borderRadius: 2, backgroundColor:"rgba(80,0,0,0.7)"}}  type="button" className="submit" onClick={onClickLogin}>Sign In</button>
             {/* <img style={{width:'260px', cursor: 'pointer'}} src="kakao_login_large_narrow.png" onClick={clickKakaoLogin} /> */}
             <KaKaoLoginButton onClick={emailcheckModalOpen}><KakaoLogo src={'comment-solid.svg'} />카카오 로그인</KaKaoLoginButton>
@@ -233,7 +212,7 @@ const SignInPage = (props) => {
             onClose={handleModalClose}
             aria-labelledby="modal-title"
           >
-            <Box sx={{ ...styleModal, width: 450, backgroundColor:"rgba(30,30,30,0.7)" }}>
+            <Box sx={{ ...styleModal, width: 450, backgroundColor:"rgba(30,30,30,0.7)"}}>
               <h2 id="modal-title">{modalMessage}</h2>
               <Button style={{width:100,
               position: 'relative', left:40,
@@ -282,6 +261,7 @@ const SignInPage = (props) => {
                 <span>E-mail</span>
                 <input type="text" placeholder="E-mail" value={signUpEmail} style={{backgroundColor:"rgba(0,0,0,0.3)", height:35, borderRadius: 2, color:'#c8c8c8'}} id="signUpEmail" onChange={(e) => {setIsValidEmail(false); setSignUpEmail(e.target.value);}}
                 onBlur={() => {if (signUpEmail.length) checkEmail(); else handleModalOpen('이메일을 입력해주세요.');}}/>
+                <div></div>
                 {/* <Button style={styleButton} onClick={() => {if (signUpEmail.length) checkEmail(); else handleModalOpen('이메일을 입력해주세요.');}}>중복검사</Button> */}
               </label>
               <label>

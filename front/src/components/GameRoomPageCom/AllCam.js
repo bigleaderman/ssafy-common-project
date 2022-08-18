@@ -279,6 +279,7 @@ const AllCam = (props) => {
                 self={true}
                 isPointer={isPointer() && !isDead(-1) && (props.role !== "police" || props.turn === "vote")}
                 isDead={isDead(-1)}
+                isNight={props.turn === "night"}
               />
               </div>
             ) : <div style={{ width: '320px', height: '200px' }} />}

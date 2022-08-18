@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import OpenViduVideoComponent from "./OvVideo";
 import "./UserVideo.css";
 import styled from 'styled-components';
@@ -9,6 +9,16 @@ import RoleComboBox from "../RoleComboBox";
 export default function UserVideoComponent(props) {
   const [audio, setAudio] = useState(false);
   const [video, setVideo] = useState(false);
+
+  useEffect(() => {
+    if (props.isNight) {
+      props.streamManager.publishAudio(false);
+      props.streamManager.publishVideo(false);
+    } else {
+      props.streamManager.publishAudio(audio);
+      props.streamManager.publishVideo(video);
+    }
+  })
 
   const toggleAudio = () => {
       setAudio(!audio);
@@ -38,7 +48,7 @@ export default function UserVideoComponent(props) {
               <RoleComboBox isPointer={props.isPointer} />
             </Header>
             { props.self ?
-            <Footer style={ props.isPointer ? { display: "none" } : null }>
+            <Footer style={ (props.isPointer || props.isNight) ? { display: "none" } : null }>
               <VideoIcon onClick={toggleVideo}>
                 <img
                     src={ video ? "video-solid.svg" : "video-slash-solid.svg" }

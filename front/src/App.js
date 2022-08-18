@@ -15,7 +15,6 @@ import CreateNoticePage from "./pages/CreateNoticePage";
 import UpdateNoticePage from "./pages/UpdateNoticePage";
 import NoticeDetailPage from "./pages/NoticeDetailPage";
 import FindPasswordPage from "./pages/FindPasswordPage";
-import ChangePasswordPage from "./pages/ChangePasswordPage";
 import WelcomeMessagePage from "./pages/WelcomeMessagePage";
 import PageNotFoundPage from "./pages/PageNotFoundPage";
 import EmailAuthPage from "./pages/EmailAuthPage";
@@ -164,12 +163,6 @@ function App() {
             path='/findpassword'
             // element={token ? <FindPasswordPage /> : <Navigate to='/' />}
             element={<FindPasswordPage />}
-          />
-          <Route
-            exact
-            path='/changepassword'
-            // element={token ? <ChangePasswordPage /> : <Navigate to='/' />}
-            element={<ChangePasswordPage />}
           />
           <Route exact path='/welcome' element={<WelcomeMessagePage />} />
           <Route

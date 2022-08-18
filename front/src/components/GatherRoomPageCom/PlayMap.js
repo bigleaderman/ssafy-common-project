@@ -1,7 +1,15 @@
 import React, { useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { selectColor, selectX, selectY, setColor, setX, setY,selecCharacter } from "../../redux/slice/CharSlice";
+import {
+  selectColor,
+  selectX,
+  selectY,
+  setColor,
+  setX,
+  setY,
+  selecCharacter,
+} from "../../redux/slice/CharSlice";
 import { selectUser } from "../../redux/slice/UserSlice";
 import { useBeforeunload } from "react-beforeunload";
 // import { useNavigate } from "react-router-dom";
@@ -120,7 +128,7 @@ export default function PlayMap() {
   const chairSize = 40;
   //y, x
   const objectSize = {
-    wall: [60, 520],
+    wall: [60, 550],
     wallRight: [60, 460],
     pcTable: [230, 50],
     bar: [400, 80],
@@ -236,10 +244,8 @@ export default function PlayMap() {
 
   const charMove = (imgSrc, characterNum, dir) => {
     if (dir === undefined || dir === null) {
-      console.log("character set");
       if (characterNum === 1) {
         imgSrc.children[0].src = DRS;
-        console.log(imgSrc.children[0].src);
       } else if (characterNum === 2) {
         imgSrc.children[0].src = FRS;
       } else if (characterNum === 3) {
@@ -346,7 +352,7 @@ export default function PlayMap() {
         else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === RDLS)
           imgSrc.children[0].src = RDLW;
         else if ((dir === "w" || dir === "s") && imgSrc.children[0].src === RDRS)
-          imgSrc.children[0].src = RDRW; 
+          imgSrc.children[0].src = RDRW;
 
         if (dir === "p") {
           if (imgSrc.children[0].src === RDRW) imgSrc.children[0].src = RDRS;
@@ -424,6 +430,7 @@ export default function PlayMap() {
 
       //이미 방에 접속해있는 유저인 경우 처리해주지 않음
       if (otherUserData[payloadData.data.nickname]) return;
+
       //새로 접속해온 경우 남아있는 자리를 확인 후 입력
       for (let i in remainNum) {
         if (!remainNum[i]) {
@@ -490,8 +497,7 @@ export default function PlayMap() {
 
     //유저 방 퇴장
     else if (payloadData.header.type === "leave") {
-      if(!otherUserData[payloadData.data.nickname])
-        return;
+      if (!otherUserData[payloadData.data.nickname]) return;
       let userNum = otherUserData[payloadData.data.nickname].num;
       remainNum[userNum] = false;
       document.getElementById(`char${userNum}`).style.display = "none";
@@ -556,7 +562,7 @@ export default function PlayMap() {
     myChar.current = document.getElementById("myCharacter");
     mapFocus.current.focus();
     console.log();
-    charMove(myChar.current, myCharNum.current );
+    charMove(myChar.current, myCharNum.current);
     myChar.current.style.display = "block";
     //랜더링 종료 시 인터벌 종료
     return () => {
@@ -656,15 +662,17 @@ export default function PlayMap() {
       }
       //의자 외
       else {
-        if(pX.current < object[key][1] + objectSize[objName][1] &&
+        if (
+          pX.current < object[key][1] + objectSize[objName][1] &&
           pX.current + charSize > object[key][1] &&
           pY.current < object[key][0] + objectSize[objName][0] &&
-          charSize + pY.current > object[key][0]){
+          charSize + pY.current > object[key][0]
+        ) {
           if (keyPress[87]) pY.current += speed;
           if (keyPress[83]) pY.current -= speed; // down - s
           if (keyPress[65]) pX.current += speed; // left - a
           if (keyPress[68]) pX.current -= speed;
-          }
+        }
       }
     }
 
@@ -761,7 +769,7 @@ export default function PlayMap() {
       >
         {/* 배경 이미지 출력 */}
         <img src={BG2} alt='BackgroundImg' style={{ width: "100%", height: "100%" }} />
-        
+
         {/* 모든 충돌감지 오브젝트 출력 */}
         {Object.entries(object).map((entrie, idx) => {
           // console.log("entrie: " + entrie[0]);
@@ -792,10 +800,20 @@ export default function PlayMap() {
             height: charSize,
             position: "absolute",
             display: "none",
+            color: "white",
+            fontWeight: "bolder",
           }}
         >
           <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
-          <div style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}>
+          <div
+            style={{
+              top: -20,
+              width: 200,
+              position: "absolute",
+              left: -100 + 25,
+              color: "#ffffff",
+            }}
+          >
             {myNickName !== undefined ? myNickName : "need login"}
           </div>
         </div>
@@ -809,12 +827,19 @@ export default function PlayMap() {
             height: charSize,
             position: "absolute",
             display: "none",
+            color: "white",
+            fontWeight: "bolder",
           }}
         >
           <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
           <div
             id='char1Name'
-            style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}
+            style={{
+              top: -20,
+              width: 200,
+              position: "absolute",
+              left: -100 + 25,
+            }}
           ></div>
         </div>
         <div
@@ -825,12 +850,20 @@ export default function PlayMap() {
             height: charSize,
             position: "absolute",
             display: "none",
+            color: "white",
+            fontWeight: "bolder",
           }}
         >
           <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
           <div
             id='char2Name'
-            style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}
+            style={{
+              top: -20,
+              width: 200,
+              position: "absolute",
+              left: -100 + 25,
+              color: "#ffffff",
+            }}
           ></div>
         </div>
         <div
@@ -841,12 +874,20 @@ export default function PlayMap() {
             height: charSize,
             position: "absolute",
             display: "none",
+            color: "white",
+            fontWeight: "bolder",
           }}
         >
           <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
           <div
             id='char3Name'
-            style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}
+            style={{
+              top: -20,
+              width: 200,
+              position: "absolute",
+              left: -100 + 25,
+              color: "#ffffff",
+            }}
           ></div>
         </div>
         <div
@@ -857,12 +898,20 @@ export default function PlayMap() {
             height: charSize,
             position: "absolute",
             display: "none",
+            color: "white",
+            fontWeight: "bolder",
           }}
         >
           <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
           <div
             id='char4Name'
-            style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}
+            style={{
+              top: -20,
+              width: 200,
+              position: "absolute",
+              left: -100 + 25,
+              color: "#ffffff",
+            }}
           ></div>
         </div>
         <div
@@ -873,12 +922,20 @@ export default function PlayMap() {
             height: charSize,
             position: "absolute",
             display: "none",
+            color: "white",
+            fontWeight: "bolder",
           }}
         >
           <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
           <div
             id='char5Name'
-            style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}
+            style={{
+              top: -20,
+              width: 200,
+              position: "absolute",
+              left: -100 + 25,
+              color: "#ffffff",
+            }}
           ></div>
         </div>
         <div
@@ -889,12 +946,20 @@ export default function PlayMap() {
             height: charSize,
             position: "absolute",
             display: "none",
+            color: "white",
+            fontWeight: "bolder",
           }}
         >
           <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
           <div
             id='char6Name'
-            style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}
+            style={{
+              top: -20,
+              width: 200,
+              position: "absolute",
+              left: -100 + 25,
+              color: "#ffffff",
+            }}
           ></div>
         </div>
         <div
@@ -905,12 +970,20 @@ export default function PlayMap() {
             height: charSize,
             position: "absolute",
             display: "none",
+            color: "white",
+            fontWeight: "bolder",
           }}
         >
           <img alt='DinoLeftStand' style={{ width: charSize, height: charSize }} />
           <div
             id='char7Name'
-            style={{ top: -20, width: 200, position: "absolute", left: -100 + 25 }}
+            style={{
+              top: -20,
+              width: 200,
+              position: "absolute",
+              left: -100 + 25,
+              color: "#ffffff",
+            }}
           ></div>
         </div>
         <input

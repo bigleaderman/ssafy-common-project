@@ -27,15 +27,21 @@ const RoleComboBox = (props) => {
 };
 
 const Box = styled.div`
+  position: absolute;
   font-size: 14px;
   width: 320px;
-  height: 40px;
   display: flex;
   justify-content: end;
   align-items: center;
   text-decoration: none;
+    padding: 0;
+    margin: 0;
   div {
     display: flex;
+    background-color: #000000;
+    border-radius: 6px 6px 6px 6px;
+    padding: 0;
+    margin: 0;
   }
   ul {
     align-items: center;
@@ -48,12 +54,16 @@ const Box = styled.div`
       font-size: 14px;
       width: 50px;
       color: #ccc;
+      height: 26px;
     }
   }
   #roleState {
     font-size: 14px;
     width: 50px;
     color: #ccc;
+    padding: 0;
+    margin: 0;
+    height: 26px;
   }
   &:hover {
     li {

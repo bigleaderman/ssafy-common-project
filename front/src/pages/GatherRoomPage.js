@@ -24,17 +24,14 @@ import { styleButton, styleModal } from "../style.js";
 //socktjs
 import SockJS from "sockjs-client";
 import { setInterval } from "stompjs";
-import { Navigate } from "react-router-dom";
 import styled from "styled-components";
 
 //howler.js
-import { Howl, Howler } from "howler";
-import Morning from "../Sound/Morning.mp3"
+import { Howl } from "howler";
+import Morning from "../Sound/Morning.mp3";
 import KillByMafia from "../Sound/KillByMafia.mp3";
 import Gavel from "../Sound/Gavel.mp3";
 import Night from "../Sound/Night.mp3";
-
-
 
 var StompJs = require("@stomp/stompjs");
 
@@ -60,32 +57,16 @@ const Logo = styled.a`
   }
 `;
 
-function useInterval(callback, delay) {
-  const savedCallback = useRef();
-
-  // Remember the latest callback.
-  useEffect(() => {
-    savedCallback.current = callback;
-  }, [callback]);
-
-  // Set up the interval.
-  useEffect(() => {
-    function tick() {
-      savedCallback.current();
-    }
-    if (delay !== null) {
-      let id = setInterval(tick, delay);
-      return () => clearInterval(id);
-    }
-  }, [delay]);
-}
-
 const GatherRoom = () => {
   console.log("GatherRoom 리랜더링 확인");
-  const debugTime = 11;
+  const debugTime = 6;
   const nightTime = useSelector(selectNightTime) + 1;
   const talkTime = useSelector(selectTalkTime) + 1;
   const voteTime = useSelector(selectVoteTime) + 1;
+  console.log("talkTime: " + talkTime);
+  console.log("voteTime: " + voteTime);
+  console.log("nightTime: " + nightTime);
+
   const NaviBarComRef = useRef();
   const sideComponentRef = useRef();
   const token = useSelector((state) => state.user.accessToken);
@@ -94,7 +75,7 @@ const GatherRoom = () => {
   const subAddr = `/sub/room/${roomNum}`;
   const pubAddr = `/pub/room/${roomNum}`;
   const pubGameAddr = `${pubAddr}/game`;
-  const [currentGameState, setCurrentGameState] = useState(["게임 준비 중...",'#ccc']);
+  const [currentGameState, setCurrentGameState] = useState(["게임 준비 중...", "#ccc"]);
   const [IsGameStart, setIsGameStart] = useState(false);
   const [myRole, setMyRole] = useState("");
   const [stateTimer, setStateTimer] = useState(0);
@@ -106,6 +87,7 @@ const GatherRoom = () => {
   const [modalMessage, setModalMessage] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
   let isActResult = "";
+
   const client = useMemo(
     () =>
       new StompJs.Client({
@@ -136,19 +118,9 @@ const GatherRoom = () => {
   client.webSocketFactory = () => {
     return new SockJS("https://i7d106.p.ssafy.io:8080/ws");
   };
-  // const client = new StompJs.Client({
-  //   //websocket 주소만 입력 가능 * ws://, wss:// 로 시작
-  //   // brokerURL: "https://i7d106.p.ssafy.io:8080/ws",
-  //   connectHeaders: {},
-  //   debug: function (str) {
-  //     console.log(str);
-  //   },
-  //   reconnectDelay: 5000,
-  //   heartbeatIncoming: 4000,
-  //   heartbeatOutgoing: 4000,
-  // });
 
   const finishGame = () => {
+    setCurrentGameState(["게임 준비 중...", "#ccc"]);
     handleClose();
     setIsGameStart(false);
   };
@@ -223,13 +195,11 @@ const GatherRoom = () => {
   };
 
   const onMessageReceived = (payload) => {
-    // handleModalClose();
-    console.log(payload);
     let parsedData = "";
     try {
       parsedData = JSON.parse(payload.body);
     } catch (error) {
-      console.log("NOT JSON: "+payload);
+      console.log("NOT JSON data: " + payload);
       return;
     }
 
@@ -239,22 +209,24 @@ const GatherRoom = () => {
     //게임 시작 신호 수신
     if (parsedData.type === "session-created") {
       console.log("↑세션 생성 완료");
-      setCurrentGameState(["세션 생성 완료",'#ccc']);
+      setCurrentGameState(["세션 생성 완료", "#ccc"]);
       //게더맵 => 캠 화면 변경
       setIsGameStart(true);
     }
     //게임 시작 신호 수신
     else if (parsedData.type === "game-start") {
       setDead([]);
-      setCurrentGameState(["🏁 게임 시작",'rgba(255,255,255)']);
+      setCurrentGameState(["🏁 게임 시작", "rgba(255,255,255)"]);
       //main bar에 낮 시작 문구 작성
     }
     //본인 역할 확인
     else if (parsedData.type === "role") {
       console.log("↑본인 역할 확인");
-      // setStateTimer(5);
       setStateTimer(debugTime);
-      setMyRole(parsedData.data.role);
+      if (parsedData.data.role === "civil") setMyRole("시민");
+      else if (parsedData.data.role === "police") setMyRole("경찰");
+      else if (parsedData.data.role === "doctor") setMyRole("의사");
+      else if (parsedData.data.role === "mafia") setMyRole("마피아");
 
       //X초 뒤 역할 확인 소켓 전홍
       setTimeout(() => {
@@ -264,41 +236,33 @@ const GatherRoom = () => {
         // setTimeout(roleClientPublish, 4000);
         // clearInterval(intTimer1);
       }, debugTime * 1000);
-      setCurrentGameState(["🕵️‍♂️ 자신의 역할 확인 중",'rgba(255,255,255)']);
+      setCurrentGameState(["🕵️‍♂️ 자신의 역할 확인 중", "rgba(255,255,255)"]);
     }
     //낮 시간 시작
     else if (parsedData.type === "talk-start") {
       console.log("↑낮 시작");
-      setCurrentGameState(["☀️ 낮이 시작되었습니다.",'rgba(255,255,255)']);
+      setCurrentGameState(["☀️ 낮이 되었습니다.", "rgba(255,255,255)"]);
       //**************************************** */
       //1. 새소리는 낮 시작될 때마다 재생
       //**************************************** */
-      const morningSound = new Howl(
-        {src: [Morning],
-        loop: false,
-        volume:0.3,
-        }
-        )
-        morningSound.play();
-
-      // setStateTimer(parsedData.data.time);
-      setStateTimer(debugTime);
+      const morningSound = new Howl({ src: [Morning], loop: false, volume: 0.03 });
+      morningSound.play();
+      setStateTimer(parsedData.data.time);
 
       setTimeout(() => {
-        // clearInterval(intTimer);
         //낮 시간 종료 신호 전송
         setTimeout(talkEndClientPublish, 0);
         // setTimeout(talkEndClientPublish, 2000);
         // setTimeout(talkEndClientPublish, 4000);
-      }, debugTime * 1000);
+      }, parsedData.data.time * 1000);
     }
-    //
+    //투표 시작
     else if (parsedData.type === "vote-ready") {
       console.log("↑투표 받는 중");
-      //  let debugTime = parsedData.data.time;
-      // setStateTimer(parsedData.data.time);
-      setStateTimer(debugTime);
-      setCurrentGameState(["🗳️ 처형할 인물에 투표하십시오.",'rgba(255,255,255)']);
+      console.log("voteTime: " + voteTime);
+
+      setStateTimer(parsedData.data.time);
+      setCurrentGameState(["🗳️ 처형할 인물에 투표하십시오.", "rgba(255,255,255)"]);
       setTurn("vote");
       //투표 종료 신호 전송
       setTimeout(() => {
@@ -306,7 +270,7 @@ const GatherRoom = () => {
         setTimeout(voteResultClientPublish, 0);
         setTimeout(voteResultClientPublish, 2000);
         setTimeout(voteResultClientPublish, 4000);
-      }, debugTime * 1000);
+      }, parsedData.data.time * 1000);
     }
     //투표 종료, 투표 결과 공개
     else if (parsedData.type === "vote-result") {
@@ -315,24 +279,20 @@ const GatherRoom = () => {
       //**************************************** */
       //2. 누군가 처형당했다면 땅땅땅 판사 두드리는 소리
       //**************************************** */
-      if(parsedData.data?.dead){
-        const GavelSound = new Howl(
-          {src: [Gavel],
-          loop: false,
-          volume:0.3,
-          }
-          )
-          GavelSound.play();
+      if (parsedData.data?.dead) {
+        const GavelSound = new Howl({ src: [Gavel], loop: false, volume: 0.03 });
+        GavelSound.play();
       }
       setStateTimer(debugTime);
-      setCurrentGameState(["⏱️ 투표가 종료되었습니다.",'rgba(255,255,255)']);
-      console.log(parsedData.data);
+      setCurrentGameState(["⏱️ 투표가 종료되었습니다.", "rgba(255,255,255)"]);
+
       //아무도 투표하지 않았다면
       if (parsedData.data === undefined) {
         console.log("아무도 투표하지 않았습니다.");
       } else {
         setSelectResult(parsedData);
       }
+
       setTimeout(() => {
         setTimeout(voteCheckClientPublish, 0);
         setTimeout(voteCheckClientPublish, 2000);
@@ -342,24 +302,17 @@ const GatherRoom = () => {
     //밤 시작
     else if (parsedData.type === "night") {
       console.log("↑밤 시작");
-      setCurrentGameState(["🌙 밤이 시작되었습니다.",'rgba(	255, 255, 255)']);
-      const NightSound = new Howl(
-        {src: [Night],
-        loop: false,
-        volume:0.3,
-        }
-        )
-        NightSound.play();
+      setCurrentGameState(["🌙 밤이 시작되었습니다.", "rgba(	255, 255, 255)"]);
+      const NightSound = new Howl({ src: [Night], loop: false, volume: 0.03 });
+      NightSound.play();
 
-      // setStateTimer(parsedData.data.time);
-      // setStateTimer(debugTime);
       setTurn("night");
-      setStateTimer(debugTime);
+      setStateTimer(parsedData.data.time);
       setTimeout(() => {
         setTimeout(nightResultClientPublish, 0);
         setTimeout(nightResultClientPublish, 2000);
         setTimeout(nightResultClientPublish, 4000);
-      }, debugTime * 1000);
+      }, parsedData.data.time * 1000);
     }
     // 경찰 활동 결과 데이터
     else if (parsedData.type === "act-result") {
@@ -374,7 +327,6 @@ const GatherRoom = () => {
           roleData = "경찰";
         }
         handleModalOpen(parsedData.data.target + "은 " + roleData + "입니다.");
-        console.log(parsedData.data.target + "은 " + roleData + "입니다");
       }
     }
     //밤 투표 결과 데이터
@@ -382,26 +334,15 @@ const GatherRoom = () => {
       isActResult = parsedData.type;
       handleModalClose();
       console.log("밤 투표 결과");
+      console.log("dead", parsedData.data.dead);
       setDead((currentDead) => [...currentDead, parsedData.data.dead]);
       //**************************************** */
       //3. 마피아가 살해에 성공했다면 탕, 총 소리
       //**************************************** */
-      // if(parsedData.data?.dead){
-      //   const KillSound = new Howl(
-      //     {src: [KillByMafia],
-      //     loop: false,
-      //     volume:0.2,
-      //     }
-      //     )
-      //     KillSound.play();
-      // }
+
       setStateTimer(debugTime);
       setTurn("");
       console.log("밤 선택 결과 데이터: ");
-      // log
-      // if(parsedData.data.dead === ){
-      //   console.log();
-      // }
 
       setTimeout(() => {
         setTimeout(nightCheckClientPublish, 0);
@@ -410,25 +351,25 @@ const GatherRoom = () => {
       }, debugTime * 1000);
 
       if (parsedData.data.dead.length !== 0) {
-        const KillSound = new Howl(
-          {src: [KillByMafia],
-          loop: false,
-          volume:0.2,
-          }
-          )
-          KillSound.play();
-        setCurrentGameState(
-          [`🔪 날이 밝았습니다. ${parsedData.data.dead[0]}이 마피아에 의해 살해당했습니다.`,'rgba(255,255,255)']
-        );
+        const KillSound = new Howl({ src: [KillByMafia], loop: false, volume: 0.05 });
+        KillSound.play();
+        setCurrentGameState([
+          `🔪 날이 밝았습니다. ${parsedData.data.dead[0]}이 마피아에 의해 살해당했습니다.`,
+          "rgba(255,255,255)",
+        ]);
+        console.log("밤 활동 결과");
+        console.log("dead", parsedData.data.dead);
+        setDead((currentDead) => [...currentDead, parsedData.data.dead[0]]);
       } else {
-        setCurrentGameState(`날이 밝았습니다. 아무도 죽지 않았습니다.`);
+        console.log("날이 밝고 아무도 안죽었을 때");
+        setCurrentGameState(["날이 밝았습니다. 아무도 죽지 않았습니다.", "#ccc"]);
       }
     }
     //게임 종료 신호
     else if (parsedData.type === "gameover") {
+      setStateTimer("");
       console.log("↑게임 종료");
-      setStateTimer(0);
-      setCurrentGameState([`👑 ${parsedData.data.winner} 승리!`,'rgba(255,255,255)']);
+      setCurrentGameState([`👑 ${parsedData.data.winner} 승리!`, "rgba(255,255,255)"]);
       setRoleList(parsedData.data.roleInfo);
       handleOpen();
       //게임 종료 후 복귀
@@ -467,6 +408,7 @@ const GatherRoom = () => {
     //소켓 연결 코드는 한번만 랜더링
 
     return () => {
+      finishGame();
       client.publish({
         destination: pubAddr,
         headers: { token: token, "content-type": "application/json" },
