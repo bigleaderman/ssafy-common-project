@@ -229,15 +229,15 @@ const AllCam = (props) => {
       setTimeout(() => voteClientPublish(targetNickname), 2000);
       setTimeout(() => voteClientPublish(targetNickname), 4000);
     } else if (props.turn === "night") {
-      if (props.role === "mafia") {
+      if (props.role === "마피아") {
         setTimeout(() => nightActClientPublish(targetNickname, "mafia"), 0);
         setTimeout(() => nightActClientPublish(targetNickname, "mafia"), 2000);
         setTimeout(() => nightActClientPublish(targetNickname, "mafia"), 4000);
-      } else if (props.role === "police") {
+      } else if (props.role === "경찰") {
         setTimeout(() => nightActClientPublish(targetNickname, "police"), 0);
         setTimeout(() => nightActClientPublish(targetNickname, "police"), 2000);
         setTimeout(() => nightActClientPublish(targetNickname, "police"), 4000);
-      } else if (props.role === "doctor") {
+      } else if (props.role === "의사") {
         setTimeout(() => nightActClientPublish(targetNickname, "doctor"), 0);
         setTimeout(() => nightActClientPublish(targetNickname, "doctor"), 2000);
         setTimeout(() => nightActClientPublish(targetNickname, "doctor"), 4000);
@@ -248,8 +248,10 @@ const AllCam = (props) => {
   const isPointer = () => {
     if (props.turn === "vote") {
       return voteIndex === null;
-    } else if (props.turn === "night" && props.role !== "civil") {
+    } else if (props.turn === "night" && props.role !== "시민") {
       return voteIndex === null;
+    } else {
+      return false;
     }
   };
 
@@ -271,13 +273,13 @@ const AllCam = (props) => {
             {publisher !== undefined ? (
               <div style={{ height: '200px' }}
                 onClick={() => {
-                  if (isPointer() && !isDead(-1) && (props.role !== "police" || props.turn === "vote")) handleVote(-1);
+                  if (isPointer() && !isDead(-1) && (props.role !== "경찰" || props.turn === "vote")) handleVote(-1);
                 }}
               >
               <UserVideoComponent
                 streamManager={publisher}
                 self={true}
-                isPointer={isPointer() && !isDead(-1) && (props.role !== "police" || props.turn === "vote")}
+                isPointer={isPointer() && !isDead(-1) && (props.role !== "경찰" || props.turn === "vote")}
                 isDead={isDead(-1)}
                 isNight={props.turn === "night"}
               />

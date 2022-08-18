@@ -45,10 +45,13 @@ export function MainBar(props) {
         </h3>
       </Grid>
       <Grid item xs={5}>
-        <h2 style={{ color: props.currentGameState[1] }}>{props.currentGameState[0]}</h2>
-        {props.myRole !== "" ? (
-          <h5 style={{ color: "#ccc", marginTop: 45 }}>당신의 역할은 [{props.myRole}] 입니다.</h5>
-        ) : null}
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
+          <h2 style={{ color: props.currentGameState[1] }}>{props.currentGameState[0]}</h2>
+          {props.currentGameState[2] ? <h3 style={{ color: props.currentGameState[1] }}>{props.currentGameState[2]}</h3> : null}
+          {props.myRole !== "" ? (
+            <h5 style={{ color: "#ccc" }}>당신의 역할은 [{props.myRole}] 입니다.</h5>
+          ) : null}
+        </div>
       </Grid>
       <Grid item xs={4} sx={{ pr: 2, pt: 3 }}>
         <h4 style={{ textAlign: "right", marginBottom: 2, color: "#ccc" }}>

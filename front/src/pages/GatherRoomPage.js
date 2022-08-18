@@ -209,7 +209,7 @@ const GatherRoom = () => {
     //게임 시작 신호 수신
     if (parsedData.type === "session-created") {
       console.log("↑세션 생성 완료");
-      setCurrentGameState(["세션 생성 완료", "#ccc"]);
+      setCurrentGameState(["세션 생성 완료", "rgba(255,255,255)"]);
       //게더맵 => 캠 화면 변경
       setIsGameStart(true);
     }
@@ -302,7 +302,7 @@ const GatherRoom = () => {
     //밤 시작
     else if (parsedData.type === "night") {
       console.log("↑밤 시작");
-      setCurrentGameState(["🌙 밤이 시작되었습니다.", "rgba(	255, 255, 255)"]);
+      setCurrentGameState(["🌙 밤이 시작되었습니다.", "rgba(255, 255, 255)"]);
       const NightSound = new Howl({ src: [Night], loop: false, volume: 0.03 });
       NightSound.play();
 
@@ -354,15 +354,16 @@ const GatherRoom = () => {
         const KillSound = new Howl({ src: [KillByMafia], loop: false, volume: 0.05 });
         KillSound.play();
         setCurrentGameState([
-          `🔪 날이 밝았습니다. ${parsedData.data.dead[0]}이 마피아에 의해 살해당했습니다.`,
+          "🔪 날이 밝았습니다.",
           "rgba(255,255,255)",
+          `${parsedData.data.dead[0]}이 마피아에 의해 살해당했습니다.`
         ]);
         console.log("밤 활동 결과");
         console.log("dead", parsedData.data.dead);
         setDead((currentDead) => [...currentDead, parsedData.data.dead[0]]);
       } else {
         console.log("날이 밝고 아무도 안죽었을 때");
-        setCurrentGameState(["날이 밝았습니다. 아무도 죽지 않았습니다.", "#ccc"]);
+        setCurrentGameState(["날이 밝았습니다.", "rgba(255,255,255)", "아무도 죽지 않았습니다."]);
       }
     }
     //게임 종료 신호
