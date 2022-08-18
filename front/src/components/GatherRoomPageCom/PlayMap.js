@@ -812,6 +812,7 @@ export default function PlayMap() {
               position: "absolute",
               left: -100 + 25,
               color: "#ffffff",
+              cursor: "default",
             }}
           >
             {myNickName !== undefined ? myNickName : "need login"}
@@ -839,6 +840,8 @@ export default function PlayMap() {
               width: 200,
               position: "absolute",
               left: -100 + 25,
+              color: "#ffffff",
+              cursor: "default",
             }}
           ></div>
         </div>
@@ -863,6 +866,7 @@ export default function PlayMap() {
               position: "absolute",
               left: -100 + 25,
               color: "#ffffff",
+              cursor: "default",
             }}
           ></div>
         </div>
@@ -887,6 +891,7 @@ export default function PlayMap() {
               position: "absolute",
               left: -100 + 25,
               color: "#ffffff",
+              cursor: "default",
             }}
           ></div>
         </div>
@@ -911,6 +916,7 @@ export default function PlayMap() {
               position: "absolute",
               left: -100 + 25,
               color: "#ffffff",
+              cursor: "default",
             }}
           ></div>
         </div>
@@ -935,6 +941,7 @@ export default function PlayMap() {
               position: "absolute",
               left: -100 + 25,
               color: "#ffffff",
+              cursor: "default",
             }}
           ></div>
         </div>
@@ -959,6 +966,7 @@ export default function PlayMap() {
               position: "absolute",
               left: -100 + 25,
               color: "#ffffff",
+              cursor: "default",
             }}
           ></div>
         </div>
@@ -983,6 +991,7 @@ export default function PlayMap() {
               position: "absolute",
               left: -100 + 25,
               color: "#ffffff",
+              cursor: "default",
             }}
           ></div>
         </div>

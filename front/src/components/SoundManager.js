@@ -6,7 +6,7 @@ import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 const SoundManager = () => {
   const [temp, setTemp] = useState(true);
 
-  const [sound, setSound] = useState(new Howl({ src: [Bgm1], loop: true, volume: 0.05 }));
+  const [sound, setSound] = useState(new Howl({ src: [Bgm1], loop: true, volume: 0.02 }));
 
   sound.once("load", function () {
     sound.play();

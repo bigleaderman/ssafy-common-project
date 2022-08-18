@@ -296,6 +296,7 @@ const AllCam = (props) => {
                     streamManager={subscribers[2]}
                     isPointer={isPointer() && !isDead(2)}
                     isDead={isDead(2)}
+                    isNight={props.turn === "night"}
                   />
                 </div>
               </div>
@@ -313,6 +314,7 @@ const AllCam = (props) => {
                     streamManager={subscribers[4]}
                     isPointer={isPointer() && !isDead(4)}
                     isDead={isDead(4)}
+                    isNight={props.turn === "night"}
                   />
                 </div>
               </div>
@@ -332,6 +334,7 @@ const AllCam = (props) => {
                     streamManager={subscribers[0]}
                     isPointer={isPointer() && !isDead(0)}
                     isDead={isDead(0)}
+                    isNight={props.turn === "night"}
                   />
                 </div>
               </div>
@@ -353,6 +356,7 @@ const AllCam = (props) => {
                     streamManager={subscribers[5]}
                     isPointer={isPointer() && !isDead(5)}
                     isDead={isDead(5)}
+                    isNight={props.turn === "night"}
                   />
                 </div>
               </div>
@@ -372,6 +376,7 @@ const AllCam = (props) => {
                     streamManager={subscribers[1]}
                     isPointer={isPointer() && !isDead(1)}
                     isDead={isDead(1)}
+                    isNight={props.turn === "night"}
                   />
                 </div>
               </div>
@@ -389,6 +394,7 @@ const AllCam = (props) => {
                     streamManager={subscribers[3]}
                     isPointer={isPointer() && !isDead(3)}
                     isDead={isDead(3)}
+                    isNight={props.turn === "night"}
                   />
                 </div>
               </div>
@@ -406,6 +412,7 @@ const AllCam = (props) => {
                     streamManager={subscribers[6]}
                     isPointer={isPointer() && !isDead(6)}
                     isDead={isDead(6)}
+                    isNight={props.turn === "night"}
                   />
                 </div>
               </div>
