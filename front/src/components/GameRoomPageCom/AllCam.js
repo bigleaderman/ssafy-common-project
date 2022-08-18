@@ -24,7 +24,6 @@ const AllCam = (props) => {
   const [publisher, setPublisher] = useState(undefined);
   const [voteIndex, setVoteIndex] = useState(null);
   const [currentTurn, setCurrentTurn] = useState('');
-  const [userList, setUserList] = useState([]);
   // let publisher;
 
   useEffect(() => {
@@ -55,7 +54,6 @@ const AllCam = (props) => {
     let index = subscribers.indexOf(streamManager, 0);
     if (index > -1) {
       setSubscribers([...subscribers].splice(index, 1));
-      setUserList([...userList].splice(index, 1));
     }
   };
 
@@ -70,7 +68,6 @@ const AllCam = (props) => {
       const tmpSubscriber = mySession.subscribe(event.stream, undefined);
       // Update the state with the new subscribers
       setSubscribers((currentSubscribers) => [...currentSubscribers, tmpSubscriber]);
-      setUserList((currentUserList) => [...currentUserList, JSON.parse(tmpSubscriber.stream.connection.data).clientData])
     });
 
     mySession.on("streamDestroyed", (event) => {
@@ -223,7 +220,7 @@ const AllCam = (props) => {
     if (index < 0) {
       targetNickname = currentUser.nickname;
     } else {
-      targetNickname = userList[index];
+      targetNickname = JSON.parse(subscribers[index].stream.connection.data).clientData;
     }
 
     console.log(targetNickname, "를 지목함");
@@ -263,7 +260,7 @@ const AllCam = (props) => {
       return props.dead.indexOf(currentUser.nickname) >= 0
     }
     else {
-      return props.dead.indexOf(userList[index]) >= 0
+      return props.dead.indexOf(JSON.parse(subscribers[index].stream.connection.data).clientData) >= 0
     }
   }
 
