@@ -274,6 +274,8 @@ public class GameSockService {
 
     public JsonObject nightResult(int roomSeq, int userSeq){
         gmMap.get(roomSeq).ready("night-check", userService.getUserInfo(userSeq));
+        log.info("[Game {}] member {}, ready member {}", roomSeq, gmMap.get(roomSeq).getUsers().size(),
+                gmMap.get(roomSeq).getReadyQueue().size());
         if(gmMap.get(roomSeq).isReady()){
             JsonObject jo = new JsonObject();
             jo.addProperty("type", "night-result");
@@ -329,6 +331,8 @@ public class GameSockService {
 
     public JsonObject nightCheck(int roomSeq, int userSeq){
         gmMap.get(roomSeq).ready("night-check", userService.getUserInfo(userSeq));
+        log.info("[Game {}] member {}, ready member {}", roomSeq, gmMap.get(roomSeq).getUsers().size(),
+                gmMap.get(roomSeq).getReadyQueue().size());
         if(gmMap.get(roomSeq).isReady()){
             if(gmMap.get(roomSeq).isGameOver()){
                 // 게임 오버
