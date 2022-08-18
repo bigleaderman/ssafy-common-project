@@ -276,13 +276,13 @@ const AllCam = (props) => {
             {publisher !== undefined ? (
               <div style={{ height: '200px' }}
                 onClick={() => {
-                  if (isPointer() && !isDead(-1) && (props.role !== "police" || props.turn === "vote")) handleVote(-1);
+                  if (isPointer() && !isDead(-1) && (props.role !== "경찰" || props.turn === "vote")) handleVote(-1);
                 }}
               >
               <UserVideoComponent
                 streamManager={publisher}
                 self={true}
-                isPointer={isPointer() && !isDead(-1) && (props.role !== "police" || props.turn === "vote")}
+                isPointer={isPointer() && !isDead(-1) && (props.role !== "경찰" || props.turn === "vote")}
                 isDead={isDead(-1)}
                 isNight={props.turn === "night"}
               />
