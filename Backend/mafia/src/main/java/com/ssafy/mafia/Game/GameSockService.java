@@ -111,6 +111,7 @@ public class GameSockService {
     public JsonObject talkEnd(int roomSeq, int userSeq){
         log.info("[Game {}] {} 대화 종료", roomSeq, userSeq);
         gmMap.get(roomSeq).ready("talk-end", userService.getUserInfo(userSeq));
+        log.info("[Game {}] 종료인원 {}", roomSeq, gmMap.get(roomSeq).getUsers().size());
         if(gmMap.get(roomSeq).isReady()){
             JsonObject jo = new JsonObject();
             jo.addProperty("type", "vote-ready");
