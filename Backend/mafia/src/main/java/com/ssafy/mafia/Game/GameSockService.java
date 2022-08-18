@@ -97,8 +97,8 @@ public class GameSockService {
             jo.add("data", data);
 
             // Next Stop
-            gmMap.get(roomSeq).readyClear();
             gmMap.get(roomSeq).setStatus("talk-end");
+            gmMap.get(roomSeq).readyClear();
             return jo;
         }
         return null;
@@ -121,8 +121,8 @@ public class GameSockService {
             jo.add("data", data);
 
             // Next Stop
-            gmMap.get(roomSeq).readyClear();
             gmMap.get(roomSeq).setStatus("vote-result");
+            gmMap.get(roomSeq).readyClear();
             return jo;
         }
         return null;
@@ -166,9 +166,9 @@ public class GameSockService {
             data.add("list", ja);
 
             // Next Step
+            gmMap.get(roomSeq).setStatus("vote-check");
             gmMap.get(roomSeq).voteClear();
             gmMap.get(roomSeq).readyClear();
-            gmMap.get(roomSeq).setStatus("vote-check");
 
             return data;
         }
@@ -194,8 +194,8 @@ public class GameSockService {
                 jo.add("data", data);
 
                 // Next Step
-                gmMap.get(roomSeq).readyClear();
                 gmMap.get(roomSeq).setStatus("night-result");
+                gmMap.get(roomSeq).readyClear();
                 return jo;
             }
         }
@@ -203,7 +203,9 @@ public class GameSockService {
     }
 
     public JsonObject nightAct(int roomSeq, int userSeq, String target){
+
         String role = getUserRole(roomSeq, userSeq);
+        log.info("[Game {}] 밤 활동 {}", role);
         if(role.equals("mafia"))
             mafiaAct(roomSeq, userSeq, target);
         if(role.equals("doctor"))
@@ -274,7 +276,7 @@ public class GameSockService {
 
     public JsonObject nightResult(int roomSeq, int userSeq){
         if(gmMap.get(roomSeq).ready("night-result", userService.getUserInfo(userSeq))!=0)
-            log.info("[Game {}] member {}, ready member {}", roomSeq, gmMap.get(roomSeq).getUsers().size(),
+            log.info("[Game {}] member {}, ready member {}", roomSeq, userSeq,
                 gmMap.get(roomSeq).getReadyQueue().size());
 
         if(gmMap.get(roomSeq).isReady()){
@@ -320,9 +322,9 @@ public class GameSockService {
             jo.add("data", data);
 
             // Next Step
+            gmMap.get(roomSeq).setStatus("night-check");
             gmMap.get(roomSeq).readyClear();
             gmMap.get(roomSeq).targetClear();
-            gmMap.get(roomSeq).setStatus("night-check");
 
             log.info("[Game {}] 밤 종료", roomSeq);
             return jo;
@@ -332,7 +334,7 @@ public class GameSockService {
 
     public JsonObject nightCheck(int roomSeq, int userSeq){
         if(gmMap.get(roomSeq).ready("night-check", userService.getUserInfo(userSeq))!=0)
-            log.info("[Game {}] member {}, ready member {}", roomSeq, gmMap.get(roomSeq).getUsers().size(),
+            log.info("[Game {}] member {}, ready member {}", roomSeq, userSeq,
                     gmMap.get(roomSeq).getReadyQueue().size());
 
         if(gmMap.get(roomSeq).isReady()){
@@ -350,8 +352,8 @@ public class GameSockService {
                 jo.add("data", data);
 
                 // Next Stop
-                gmMap.get(roomSeq).readyClear();
                 gmMap.get(roomSeq).setStatus("talk-end");
+                gmMap.get(roomSeq).readyClear();
                 return jo;
             }
         }
