@@ -31,7 +31,7 @@ public class GameManager {
 
     public GameManager(){
         this.gameInfo = new GameInfo();
-        this.users = new ConcurrentHashMap<>();
+        this.users = Collections.synchronizedMap(new LinkedHashMap<>());
         this.readyQueue = new HashSet<>();
         this.vote = new ConcurrentHashMap<>();
         this.status = "ready";
@@ -105,7 +105,7 @@ public class GameManager {
         for(int i = 0; i < n; i++)
             role.add("civil");
 
-        Collections.shuffle(role);
+//        Collections.shuffle(role);
 
         int r = 0;
         for(Integer key : users.keySet())
