@@ -24,6 +24,7 @@ const AllCam = (props) => {
   const [publisher, setPublisher] = useState(undefined);
   const [voteIndex, setVoteIndex] = useState(null);
   const [currentTurn, setCurrentTurn] = useState('');
+  const [userList, setUserList] = useState([]);
   // let publisher;
 
   useEffect(() => {
@@ -54,6 +55,7 @@ const AllCam = (props) => {
     let index = subscribers.indexOf(streamManager, 0);
     if (index > -1) {
       setSubscribers([...subscribers].splice(index, 1));
+      setUserList([...userList].splice(index, 1));
     }
   };
 
@@ -68,6 +70,7 @@ const AllCam = (props) => {
       const tmpSubscriber = mySession.subscribe(event.stream, undefined);
       // Update the state with the new subscribers
       setSubscribers((currentSubscribers) => [...currentSubscribers, tmpSubscriber]);
+      setUserList((currentUserList) => [...currentUserList, JSON.parse(tmpSubscriber.stream.connection.data).clientData])
     });
 
     mySession.on("streamDestroyed", (event) => {
@@ -220,7 +223,7 @@ const AllCam = (props) => {
     if (index < 0) {
       targetNickname = currentUser.nickname;
     } else {
-      targetNickname = JSON.parse(subscribers[index].stream.connection.data).clientData;
+      targetNickname = userList[index];
     }
 
     console.log(targetNickname, "를 지목함");
@@ -229,15 +232,15 @@ const AllCam = (props) => {
       setTimeout(() => voteClientPublish(targetNickname), 2000);
       setTimeout(() => voteClientPublish(targetNickname), 4000);
     } else if (props.turn === "night") {
-      if (props.role === "mafia") {
+      if (props.role === "마피아") {
         setTimeout(() => nightActClientPublish(targetNickname, "mafia"), 0);
         setTimeout(() => nightActClientPublish(targetNickname, "mafia"), 2000);
         setTimeout(() => nightActClientPublish(targetNickname, "mafia"), 4000);
-      } else if (props.role === "police") {
+      } else if (props.role === "경찰") {
         setTimeout(() => nightActClientPublish(targetNickname, "police"), 0);
         setTimeout(() => nightActClientPublish(targetNickname, "police"), 2000);
         setTimeout(() => nightActClientPublish(targetNickname, "police"), 4000);
-      } else if (props.role === "doctor") {
+      } else if (props.role === "의사") {
         setTimeout(() => nightActClientPublish(targetNickname, "doctor"), 0);
         setTimeout(() => nightActClientPublish(targetNickname, "doctor"), 2000);
         setTimeout(() => nightActClientPublish(targetNickname, "doctor"), 4000);
@@ -248,8 +251,10 @@ const AllCam = (props) => {
   const isPointer = () => {
     if (props.turn === "vote") {
       return voteIndex === null;
-    } else if (props.turn === "night" && props.role !== "civil") {
+    } else if (props.turn === "night" && props.role !== "시민") {
       return voteIndex === null;
+    } else {
+      return false;
     }
   };
 
@@ -258,7 +263,7 @@ const AllCam = (props) => {
       return props.dead.indexOf(currentUser.nickname) >= 0
     }
     else {
-      return props.dead.indexOf(JSON.parse(subscribers[index].stream.connection.data).clientData) >= 0
+      return props.dead.indexOf(userList[index]) >= 0
     }
   }
 

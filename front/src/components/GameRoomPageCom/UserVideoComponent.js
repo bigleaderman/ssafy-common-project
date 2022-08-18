@@ -26,9 +26,12 @@ export default function UserVideoComponent(props) {
   return (
     <div>
       {props.streamManager !== undefined ? (
-        <Video style={props.isPointer ? {cursor: 'pointer'} : {cursor: 'default'}}>
-          { (props.isDead || (props.isNight && !props.self)) ? <p style={{ color: '#ffffff', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              { props.isDead ? "사망" : "" }</p> : <OpenViduVideoComponent streamManager={props.streamManager} /> }
+        <Video style={props.isPointer && (!props.isDead) ? {cursor: 'pointer'} : {cursor: 'default'}}>
+          { (props.isDead || (props.isNight && !props.self))
+          ? <p style={{ color: '#ffffff', height: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              { props.isDead ? "사망" : "" }
+            </p>
+          : <OpenViduVideoComponent streamManager={props.streamManager} /> }
           <Screen id={ props.isPointer ? "clickBox" : ""}>
             <Header>
               <NameTag>{getNickname()}</NameTag>
