@@ -63,7 +63,7 @@ const NoticeDetailPage = () => {
           <hr style={{width:1200, position:'relative', left:50}} />
           <br />
           <p
-          style={{ color:"#b4b4b4", width:"93%", height:"60%", position:'relative', left:50}}
+          style={{ color:"#b4b4b4", width:"93%", height:"60%", position:'relative', left:50, whiteSpace:"pre-wrap"}}
           >{noticeData.content}</p>
           
         </div>
