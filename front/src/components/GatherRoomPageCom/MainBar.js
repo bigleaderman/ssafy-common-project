@@ -13,6 +13,10 @@ import { selectRoomTitle } from "../../redux/slice/RoomTitleSlice";
 import { selectNightTime, selectTalkTime, selectVoteTime } from "../../redux/slice/GameTimeSlice";
 
 export function MainBar(props) {
+  const doc = useSelector(selectCntDoc);
+  const cop = useSelector(selectCntCop);
+  const maf = useSelector(selectCntMaf);
+  const civil = useSelector(selectCntLimit) - doc - cop - maf;
   console.log("props.stateTimer: ", props.stateTimer);
   let letTImer = props.stateTimer;
   let outerInterval = setInterval(() => {
@@ -35,7 +39,6 @@ export function MainBar(props) {
         <h4 style={{ textAlign: "left", color: "#ccc" }}>
           [{roomNum}] {useSelector(selectRoomTitle)}
         </h4>
-        {/* <h4 style={{ textAlign: "left", color: "#ccc" }}></h4> */}
         <h3 id='timer' style={{ textAlign: "left", color: "#ccc", marginTop: 55 }}>
           {props.timer.current}
           {Number.isInteger(props.timer.current) ? "초 남았습니다." : null}
@@ -64,18 +67,10 @@ export function MainBar(props) {
             </h5>
           </Grid>
           <Grid item ws={6}>
-            <h5 style={{ textAlign: "right", color: "#ccc" }}>
-              시민 : {useSelector(selectCntCivil)}명
-            </h5>
-            <h5 style={{ textAlign: "right", color: "#ccc" }}>
-              의사 : {useSelector(selectCntDoc)}명
-            </h5>
-            <h5 style={{ textAlign: "right", color: "#ccc" }}>
-              경찰 : {useSelector(selectCntCop)}명
-            </h5>
-            <h5 style={{ textAlign: "right", color: "#ccc" }}>
-              마피아 : {useSelector(selectCntMaf)}명
-            </h5>
+            <h5 style={{ textAlign: "right", color: "#ccc" }}>시민 : {civil}명</h5>
+            <h5 style={{ textAlign: "right", color: "#ccc" }}>의사 : {doc}명</h5>
+            <h5 style={{ textAlign: "right", color: "#ccc" }}>경찰 : {cop}명</h5>
+            <h5 style={{ textAlign: "right", color: "#ccc" }}>마피아 : {maf}명</h5>
           </Grid>
         </Grid>
       </Grid>

@@ -1,21 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import {
-  Button,
-  Modal,
-  Box,
-  Typography,
-  Paper,
-  Stack,
-  Link,
-} from "@mui/material";
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import LockOpenOutlinedIcon from '@mui/icons-material/LockOpenOutlined';
-import VpnKeyIcon from '@mui/icons-material/VpnKey';
-import VpnKeyOffIcon from '@mui/icons-material/VpnKeyOff';
+import { Button, Modal, Box, Typography, Paper, Stack, Link } from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
+import VpnKeyIcon from "@mui/icons-material/VpnKey";
+import VpnKeyOffIcon from "@mui/icons-material/VpnKeyOff";
 
 import { useNavigate } from "react-router-dom";
-import {middleButton} from "../../style.js"
+import { middleButton } from "../../style.js";
 
 import { useSelector, useDispatch } from "react-redux";
 import { roomNum } from "../../redux/slice/RoomNumSlice";
@@ -27,7 +19,6 @@ import { setCon } from "../../redux/slice/CntConSlice";
 import { setLimit } from "../../redux/slice/CntLimitSlice";
 import { SetRoomTitle } from "../../redux/slice/RoomTitleSlice";
 import axios from "axios";
-
 
 const Logo = styled.a`
   display: flex;
@@ -47,7 +38,7 @@ const style = {
   border: "2px solid #000",
   boxShadow: 24,
   p: 4,
-  height:250,
+  height: 250,
   borderRadius: "2px",
   bgcolor: "rgba(255, 255, 255)",
 };
@@ -86,6 +77,7 @@ function RoomItem({ room }) {
         }
       )
       .then((res) => {
+        console.log("in roomItem res: " + res);
         if (res.data.roomResponse.capacity - res.data.roomResponse.participants > 0) {
           dispatch(roomNum(res.data.roomResponse.roomSeq)); // 방 번호
           dispatch(SetRoomTitle(res.data.roomResponse.title)); // 방 제목
@@ -129,15 +121,37 @@ function RoomItem({ room }) {
         onClick={() => {
           goGame();
         }}
-      > {room.title === '' ? null: 
-        <Paper sx={{ width: "500px", height: "63px", p: 0, ml: 4, backgroundColor:"rgba(255,255,255)", color:"black" ,borderRadius: "2px"}}>
-          <Stack direction='row' justifyContent='space-around' alignItems='flex-end' sx={{pt:1}}>
-            <h3 style={{width:'60px'}}>{room.roomSeq}번</h3>
-            <h2 style={{width:'300px',textAlign:'left',verticalAlign: 'bottom' }}>{room.title}</h2>
-            <h3>{room.locked ? <VpnKeyIcon /> : <VpnKeyOffIcon/>}</h3>
-            <h4>{room.participants}/{room.capacity}</h4>
-          </Stack>
-        </Paper>}
+      >
+        {" "}
+        {room.title === "" ? null : (
+          <Paper
+            sx={{
+              width: "500px",
+              height: "63px",
+              p: 0,
+              ml: 4,
+              backgroundColor: "rgba(255,255,255)",
+              color: "black",
+              borderRadius: "2px",
+            }}
+          >
+            <Stack
+              direction='row'
+              justifyContent='space-around'
+              alignItems='flex-end'
+              sx={{ pt: 1 }}
+            >
+              <h3 style={{ width: "60px" }}>{room.roomSeq}번</h3>
+              <h2 style={{ width: "300px", textAlign: "left", verticalAlign: "bottom" }}>
+                {room.title}
+              </h2>
+              <h3>{room.locked ? <VpnKeyIcon /> : <VpnKeyOffIcon />}</h3>
+              <h4>
+                {room.participants}/{room.capacity}
+              </h4>
+            </Stack>
+          </Paper>
+        )}
       </Link>
 
       {/* 비밀번호 있는 방 누를 때 뜨는 모달 */}
@@ -147,26 +161,37 @@ function RoomItem({ room }) {
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
-        <Box sx={{...style,borderRadius: '2px'}}>
+        <Box sx={{ ...style, borderRadius: "2px" }}>
           <Box
             sx={{
               width: 397.5,
               height: 31,
               backgroundColor: "var(--color-5);",
-              position:'relative',
-              bottom:33,
-              right:33
+              position: "relative",
+              bottom: 33,
+              right: 33,
             }}
           >
             <Logo>
               <img src='logo.svg' alt='logo' />
             </Logo>
           </Box>
-          <Typography id='modal-modal-title' variant='h6' component='h2' sx={{fontSize:30, position:'relative', bottom:20}}>
+          <Typography
+            id='modal-modal-title'
+            variant='h6'
+            component='h2'
+            sx={{ fontSize: 30, position: "relative", bottom: 20 }}
+          >
             비밀번호
           </Typography>
           <input
-            style={{border: 'solid 1px var(--color-5)', borderRadius:'2px', height:50, position:'relative', bottom:5}}
+            style={{
+              border: "solid 1px var(--color-5)",
+              borderRadius: "2px",
+              height: 50,
+              position: "relative",
+              bottom: 5,
+            }}
             type='password'
             placeholder='Password'
             onChange={(e) => {
@@ -174,7 +199,7 @@ function RoomItem({ room }) {
             }}
           />
           <Button
-            sx={{...middleButton, position:'relative', left: 50,borderRadius: '2px'}}
+            sx={{ ...middleButton, position: "relative", left: 50, borderRadius: "2px" }}
             onClick={() => {
               CheckPassword();
             }}
@@ -182,7 +207,7 @@ function RoomItem({ room }) {
             확인
           </Button>
           <Button
-            sx={{...middleButton, position:'relative', left: 45,borderRadius: '2px'}}
+            sx={{ ...middleButton, position: "relative", left: 45, borderRadius: "2px" }}
             onClick={() => {
               handleClose();
             }}
@@ -198,17 +223,16 @@ function RoomItem({ room }) {
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
-        
-        <Box sx={{...style, borderRadius: '2px', backgroundColor:'rgba(220, 220, 220, 0.9)'}}>
+        <Box sx={{ ...style, borderRadius: "2px", backgroundColor: "rgba(220, 220, 220, 0.9)" }}>
           <Box
             sx={{
               width: 397.5,
               height: 31,
               backgroundColor: "var(--color-5);",
-              borderRadius: '2px',
-              position:'relative',
-              bottom:33,
-              right:33
+              borderRadius: "2px",
+              position: "relative",
+              bottom: 33,
+              right: 33,
             }}
           >
             <Logo>
@@ -218,7 +242,12 @@ function RoomItem({ room }) {
           <Typography id='modal-modal-title' variant='h6' component='h2'>
             방에 인원이 가득 찼습니다.
           </Typography>
-          <Button sx={{...middleButton, position:'relative', left: 100,borderRadius: '2px'}} onClick={() => rejectClose()}>확인</Button>
+          <Button
+            sx={{ ...middleButton, position: "relative", left: 100, borderRadius: "2px" }}
+            onClick={() => rejectClose()}
+          >
+            확인
+          </Button>
         </Box>
       </Modal>
     </>

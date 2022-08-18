@@ -1,15 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export const GameDataSlice = createSlice({
-    name: "CntCivilSlice",
-    initialState: {
-        value: 4,
+  name: "CntCivilSlice",
+  initialState: {
+    value: 2,
+  },
+  reducers: {
+    setCivil: (state, action) => {
+      state.value = action.payload;
     },
-    reducers: {
-        setCivil: (state, action) => {
-            state.value = action.payload;
-        },
-    },
+  },
 });
 
 export const { setCivil } = GameDataSlice.actions;
